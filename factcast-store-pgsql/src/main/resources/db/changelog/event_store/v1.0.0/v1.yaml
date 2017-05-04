@@ -31,7 +31,7 @@ databaseChangeLog:
             endDelimiter: \nGO
             sql: CREATE INDEX idx_fact_header ON fact USING GIN(header jsonb_path_ops)
         - createProcedure:
-            dbms: postgresql
+            dbms: postgresql 
             encoding: utf8
             path: createInsertFactTrigger.sql
             relativeToChangelogFile: true   
