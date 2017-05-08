@@ -2,6 +2,7 @@ package org.factcast.server.rest.resources;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -22,7 +23,6 @@ import org.factcast.core.subscription.observer.FactObserver;
 import org.factcast.core.util.FactCastJson;
 import org.factcast.server.rest.resources.cache.Cacheable;
 import org.factcast.server.rest.resources.cache.NoCache;
-import org.factcast.server.rest.util.SetableSupplier;
 import org.glassfish.jersey.media.sse.EventOutput;
 import org.glassfish.jersey.media.sse.SseFeature;
 import org.springframework.stereotype.Component;
@@ -60,13 +60,13 @@ public class EventsResource implements JerseyResource {
     public EventOutput getServerSentEvents(
             @NotNull @Valid @BeanParam SubscriptionRequestParams subscriptionRequestParams) {
         final EventOutput eventOutput = new EventOutput();
-        SubscriptionRequestTO req = subscriptionRequestParams.toRequest(objectMapper);
-        SetableSupplier<Subscription> subsup = new SetableSupplier<>();
+        SubscriptionRequestTO req = subscriptionRequestParams.toRequest();
+        AtomicReference<Subscription> subscription = new AtomicReference<Subscription>(null);
         FactObserver observer = eventObserverFactory.createFor(eventOutput, linkFactoryContext
-                .getBaseUri(), subsup);
+                .getBaseUri(), subscription);
 
         Subscription sub = factStore.subscribe(req, observer);
-        subsup.set(sub);
+        subscription.set(sub);
 
         return eventOutput;
     }
@@ -80,7 +80,7 @@ public class EventsResource implements JerseyResource {
         try {
             fact = factStore.fetchById(UUID.fromString(id));
         } catch (IllegalArgumentException e) {
-            throw new WebApplicationException(404);
+            throw new NotFoundException();
         }
         FactJson returnValue = fact.map(f -> {
             try {
@@ -93,6 +93,6 @@ public class EventsResource implements JerseyResource {
                 throw new WebApplicationException(500);
             }
         }).orElseThrow(NotFoundException::new);
-        return schemaCreator.forFactWithId(returnValue, id);
+        return schemaCreator.forFactWithId(returnValue);
     }
 }

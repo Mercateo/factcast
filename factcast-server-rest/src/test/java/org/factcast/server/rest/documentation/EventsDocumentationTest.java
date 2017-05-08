@@ -18,6 +18,11 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
 import org.factcast.server.rest.FactCastRestApplication;
+import org.factcast.server.rest.TestFacts;
+import org.factcast.server.rest.documentation.util.ConstrainedFields;
+import org.factcast.server.rest.documentation.util.Descriptors;
+import org.factcast.server.rest.documentation.util.HyperschemaLinkExtractor;
+import org.factcast.server.rest.documentation.util.SpringConfig;
 import org.factcast.server.rest.resources.FactJson;
 import org.glassfish.jersey.media.sse.EventInput;
 import org.glassfish.jersey.media.sse.SseFeature;
@@ -127,7 +132,7 @@ public class EventsDocumentationTest extends JerseyTest {
         ResponseHeadersSnippet headerDoc = responseHeaders(headerWithName(HttpHeaders.CACHE_CONTROL)
                 .description("Caching for 1000000 seconds."));
 
-        final Response response = target("/events/" + SetupRunner.one.id().toString()).register(
+        final Response response = target("/events/" + TestFacts.one.id().toString()).register(
                 documentationConfiguration(this.documentation)).register(document("event",
                         preprocessRequest(removeHeaders("User-Agent")), preprocessResponse(
                                 prettyPrint()), links, responseDoc, headerDoc)).request().get();
