@@ -164,7 +164,7 @@ public class PGFactStream {
             condensedExecutor.cancel();
         }
 
-        log.info("{} disconnected ", request);
+        log.debug("{} disconnected ", request);
     }
 
     @RequiredArgsConstructor
