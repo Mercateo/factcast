@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="true">
+  <jmxConfigurator/>
+
+  <property resource="application.properties"/>
+  <property name="PROJECT" value="${spring.application.name}"/>
+
+  <!-- logz.io config start -->
+  <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+  <!-- logz.io config end -->
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>DEBUG</level>
+    </filter>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <Pattern>
+        %d{HH:mm:ss} %-5level %logger - %msg%n
+      </Pattern>
+    </encoder>
+  </appender>
+
+  <appender name="LOGZIO" class="io.logz.logback.LogzioLogbackAppender">
+    <token>wHDXrFVHmDcQuQEkfegHmacZoqVRMQLE</token>
+    <logzioUrl>https://listener-eu.logz.io:8071</logzioUrl>
+    <logzioType>java</logzioType>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>DEBUG</level>
+    </filter>
+    <additionalFields>appname=${PROJECT};stage=${APPLICATION_ENVIRONMENT}</additionalFields>
+    <!--<debug>true</debug>-->
+  </appender>
+
+  <root level="INFO">
+    <if condition='property("spring.profiles.active").contains("local")'>
+      <then>
+      </then>
+      <else>
+        <appender-ref ref="LOGZIO"/>
+      </else>
+    </if>
+    <appender-ref ref="STDOUT"/>
+  </root>
+</configuration>

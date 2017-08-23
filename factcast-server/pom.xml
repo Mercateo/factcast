@@ -51,8 +51,23 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-aws-jdbc</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.logz.logback</groupId>
+			<artifactId>logzio-logback-appender</artifactId>
+			<version>1.0.16</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.janino</groupId>
+			<artifactId>janino</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<finalName>factcast</finalName>
 		<plugins>
 			<plugin>
