@@ -1,6 +1,7 @@
 package org.factcast.core;
 
 import java.util.Optional;
+import java.util.OptionalLong;
 import java.util.UUID;
 
 import org.factcast.core.subscription.Subscription;
@@ -24,4 +25,7 @@ public interface ReadFactCast {
     Subscription subscribeToIds(@NonNull SubscriptionRequest request, @NonNull IdObserver observer);
 
     Optional<Fact> fetchById(@NonNull UUID id);
+
+    @NonNull
+    OptionalLong serialOf(@NonNull UUID id);
 }

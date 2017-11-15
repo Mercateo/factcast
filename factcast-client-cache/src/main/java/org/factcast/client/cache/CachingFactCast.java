@@ -2,6 +2,7 @@ package org.factcast.client.cache;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalLong;
 import java.util.UUID;
 
 import org.factcast.core.Fact;
@@ -76,8 +77,15 @@ public class CachingFactCast implements FactCast {
     }
 
     @Override
+    @NonNull
     public Optional<Fact> fetchById(UUID id) {
         return lookup.lookup(id);
+    }
+
+    @Override
+    @NonNull
+    public OptionalLong serialOf(@NonNull UUID ids) {
+        return delegate.serialOf(ids);
     }
 
 }

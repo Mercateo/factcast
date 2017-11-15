@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalLong;
 import java.util.UUID;
 
 import org.factcast.core.Fact;
@@ -61,6 +62,8 @@ public class PGFactStore implements FactStore {
 
     private Timer fetchLatency;
 
+    private Timer seqLookupLatency;
+
     private Meter subscriptionCatchupMeter;
 
     private Meter subscriptionFollowMeter;
@@ -77,6 +80,7 @@ public class PGFactStore implements FactStore {
         publishMeter = registry.meter(names.factPublishingMeter());
 
         fetchLatency = registry.timer(names.fetchLatency());
+        seqLookupLatency = registry.timer(names.seqLookupLatency());
 
         subscriptionCatchupMeter = registry.meter(names.subscribeCatchup());
         subscriptionFollowMeter = registry.meter(names.subscribeFollow());
@@ -92,11 +96,20 @@ public class PGFactStore implements FactStore {
 
             log.trace("Inserting {} fact(s) in batches of {}", numberOfFactsToPublish, BATCH_SIZE);
 
-            jdbcTemplate.batchUpdate(PGConstants.INSERT_FACT, copiedListOfFacts, BATCH_SIZE, (
-                    statement, fact) -> {
-                statement.setString(1, fact.jsonHeader());
-                statement.setString(2, fact.jsonPayload());
-            });
+            jdbcTemplate.batchUpdate(PGConstants.INSERT_FACT, copiedListOfFacts,
+                    BATCH_SIZE, (
+                            statement, fact) -> {
+                        statement.setString(1, fact.jsonHeader());
+                        statement.setString(2, fact.jsonPayload());
+                    });
+
+            // add serials to headers
+            jdbcTemplate.batchUpdate(PGConstants.UPDATE_FACT_SERIALS, copiedListOfFacts,
+                    BATCH_SIZE, (
+                            statement, fact) -> {
+                        final String idMatch = "{\"id\":\"" + fact.id() + "\"}";
+                        statement.setString(1, idMatch);
+                    });
 
             publishMeter.mark(numberOfFactsToPublish);
 
@@ -116,6 +129,10 @@ public class PGFactStore implements FactStore {
         return PGFact.from(resultSet);
     }
 
+    private Long extractSerFromResultSet(ResultSet resultSet, int rowNum) throws SQLException {
+        return Long.valueOf(resultSet.getString(PGConstants.COLUMN_SER));
+    }
+
     @Override
     public Subscription subscribe(@NonNull SubscriptionRequestTO request,
             @NonNull FactObserver observer) {
@@ -133,6 +150,28 @@ public class PGFactStore implements FactStore {
         try (Context time = fetchLatency.time();) {
             return jdbcTemplate.query(PGConstants.SELECT_BY_ID, new Object[] { "{\"id\":\"" + id
                     + "\"}" }, this::extractFactFromResultSet).stream().findFirst();
+        }
+    }
+
+    @Override
+    public OptionalLong serialOf(UUID l) {
+        try (Context time = seqLookupLatency.time();) {
+            List<Long> res = jdbcTemplate.query(PGConstants.SELECT_SER_BY_ID, new Object[] {
+                    "{\"id\":\"" + l + "\"}" }, this::extractSerFromResultSet);
+
+            if (res.size() > 1) {
+                throw new IllegalStateException("Event ID appeared twice!?");
+            } else if (res.isEmpty()) {
+                return OptionalLong.empty();
+            }
+
+            Long ser = res.get(0);
+            if (ser != null && ser.longValue() > 0) {
+                return OptionalLong.of(ser.longValue());
+            } else {
+                return OptionalLong.empty();
+            }
+
         }
     }
 
