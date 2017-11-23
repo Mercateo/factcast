@@ -50,15 +50,9 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
-	<!-- <reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.5-SNAPSHOT</version>
-			</plugin>
-		</plugins>
-	</reporting> -->
+	<!-- <reporting> <plugins> <plugin> <groupId>org.codehaus.mojo</groupId> 
+		<artifactId>findbugs-maven-plugin</artifactId> <version>3.0.5-SNAPSHOT</version> 
+		</plugin> </plugins> </reporting> -->
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -208,6 +202,25 @@
 						<phase>process-sources</phase>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>external.atlassian.jgitflow</groupId>
+				<artifactId>jgitflow-maven-plugin</artifactId>
+				<version>1.0-m5.1</version>
+				<configuration>
+					<flowInitContext>
+						<masterBranchName>release</masterBranchName>
+						<developBranchName>master</developBranchName>
+						<featureBranchPrefix>feature-</featureBranchPrefix>
+						<releaseBranchPrefix>release-</releaseBranchPrefix>
+						<hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
+						<versionTagPrefix>version-</versionTagPrefix>
+					</flowInitContext>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<noDeploy>true</noDeploy>
+					<squash>false</squash>
+					<scmCommentPrefix>[RELEASE] </scmCommentPrefix>
+				</configuration>
 			</plugin>
 		</plugins>
 		<resources>
