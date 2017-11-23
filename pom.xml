@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.factcast</groupId>
 	<artifactId>factcast</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.2</version>
 
 	<packaging>pom</packaging>
 
@@ -50,15 +49,9 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.5-SNAPSHOT</version>
-			</plugin>
-		</plugins>
-	</reporting>
+	<!-- <reporting> <plugins> <plugin> <groupId>org.codehaus.mojo</groupId> 
+		<artifactId>findbugs-maven-plugin</artifactId> <version>3.0.5-SNAPSHOT</version> 
+		</plugin> </plugins> </reporting> -->
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -134,6 +127,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.20</version>
 				<configuration>
+					<forkCount>1</forkCount>
 					<excludes>
 						<exclude>**/*IT.java</exclude>
 						<exclude>**/*MT.java</exclude>
@@ -148,6 +142,7 @@
 					<includes>
 						<include>**/*IT.java</include>
 					</includes>
+					<forkCount>1</forkCount>
 				</configuration>
 				<executions>
 					<execution>
@@ -206,6 +201,25 @@
 						<phase>process-sources</phase>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>external.atlassian.jgitflow</groupId>
+				<artifactId>jgitflow-maven-plugin</artifactId>
+				<version>1.0-m5.1</version>
+				<configuration>
+					<flowInitContext>
+						<masterBranchName>release</masterBranchName>
+						<developBranchName>master</developBranchName>
+						<featureBranchPrefix>feature-</featureBranchPrefix>
+						<releaseBranchPrefix>release-</releaseBranchPrefix>
+						<hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
+						<versionTagPrefix>version-</versionTagPrefix>
+					</flowInitContext>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<noDeploy>true</noDeploy>
+					<squash>false</squash>
+					<scmCommentPrefix>[RELEASE] </scmCommentPrefix>
+				</configuration>
 			</plugin>
 		</plugins>
 		<resources>
@@ -294,7 +308,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore />
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -313,7 +327,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore />
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
