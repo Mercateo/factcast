@@ -30,8 +30,7 @@ public class RdsDataSourceFactorBeanPostProcessor implements BeanPostProcessor {
 
         TomcatJdbcDataSourceFactory fac = new TomcatJdbcDataSourceFactory();
 
-        fac.setRemoveAbandonedTimeout(360000);
-        fac.setMaxWait(20000);
+        fac.setTestOnBorrow(true);
         return fac;
 
     }
