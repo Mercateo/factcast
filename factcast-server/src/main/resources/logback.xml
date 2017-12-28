@@ -3,7 +3,7 @@
   <jmxConfigurator/>
 
   <property resource="application.properties"/>
-  <property name="PROJECT" value="${spring.application.name}"/>
+  <property name="APPNAME" value="${spring.application.name}"/>
 
   <!-- logz.io config start -->
   <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
@@ -27,7 +27,7 @@
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
       <level>DEBUG</level>
     </filter>
-    <additionalFields>appname=${PROJECT};stage=${APPLICATION_ENVIRONMENT}</additionalFields>
+    <additionalFields>appname=${APPNAME};account=${AWS_ACCOUNTNAME};stage=${STAGE};team=core</additionalFields>
     <!--<debug>true</debug>-->
   </appender>
 
