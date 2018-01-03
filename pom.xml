@@ -50,17 +50,21 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
-	<!-- <reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.5-SNAPSHOT</version>
-			</plugin>
-		</plugins>
-	</reporting> -->
+	<!-- <reporting> <plugins> <plugin> <groupId>org.codehaus.mojo</groupId> 
+		<artifactId>findbugs-maven-plugin</artifactId> <version>3.0.5-SNAPSHOT</version> 
+		</plugin> </plugins> </reporting> -->
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>1.2.1</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-core</artifactId>
+				<version>1.2.1</version>
+			</dependency>
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
@@ -111,16 +115,6 @@
 			<artifactId>annotations</artifactId>
 			<version>3.0.1u2</version>
 			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-			<version>1.2.1</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -219,11 +213,11 @@
 					</execution>
 				</executions>
 			</plugin>
-			  <plugin>
-			      <groupId>com.gemnasium</groupId>
-			      <artifactId>gemnasium-maven-plugin</artifactId>
-			      <version>0.2.0</version>
-			  </plugin>
+			<plugin>
+				<groupId>com.gemnasium</groupId>
+				<artifactId>gemnasium-maven-plugin</artifactId>
+				<version>0.2.0</version>
+			</plugin>
 		</plugins>
 		<resources>
 			<resource>
