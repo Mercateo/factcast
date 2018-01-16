@@ -23,9 +23,9 @@ import lombok.SneakyThrows;
  * Note: creating an instance involves deserializing the header from JS. This is
  * probably not optimal considering performance. If you extend FactCast,
  * consider creating a dedicated Fact Impl.
- * 
+ *
  * For caching purposes, this thing should be Externalizable.
- * 
+ *
  * @see PGFact
  * @author uwe.schaefer@mercateo.com
  *
@@ -86,11 +86,11 @@ public class DefaultFact implements Fact, Externalizable {
         Set<UUID> aggIds;
 
         @JsonProperty
-        final Map<String, String> meta = new HashMap<>();
+        final Map<String, Object> meta = new HashMap<>();
     }
 
     @Override
-    public String meta(String key) {
+    public Object meta(String key) {
         return deserializedHeader.meta.get(key);
     }
 

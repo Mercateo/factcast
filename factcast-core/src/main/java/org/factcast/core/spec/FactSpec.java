@@ -14,7 +14,7 @@ import lombok.Setter;
 
 /**
  * Defines a Specification of facts to match for a subscription.
- * 
+ *
  * @author uwe.schaefer@mercateo.com
  *
  */
@@ -37,7 +37,7 @@ public class FactSpec {
 
     @NonNull
     @JsonProperty
-    final Map<String, String> meta = new HashMap<>();
+    final Map<String, Object> meta = new HashMap<>();
 
     public FactSpec meta(@NonNull String k, @NonNull String v) {
         meta.put(k, v);

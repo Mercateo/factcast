@@ -34,12 +34,12 @@ public interface Fact {
     @NonNull
     String jsonPayload();
 
-    String meta(String key);
+    Object meta(String key);
 
     default long serial() {
-        String s = meta("_ser");
+        Object s = meta("_ser");
         if (s != null) {
-            return Long.valueOf(s).longValue();
+            return Long.valueOf(String.valueOf(s)).longValue();
         } else {
             throw new IllegalStateException("'_ser' Meta attribute not found");
         }
