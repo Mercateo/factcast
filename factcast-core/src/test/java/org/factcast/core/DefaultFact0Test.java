@@ -1,5 +1,6 @@
 package org.factcast.core;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
@@ -54,7 +55,7 @@ public class DefaultFact0Test {
     public void testMetaDeser() throws Exception {
         Fact f = DefaultFact.of("{\"id\":\"" + UUID.randomUUID()
                 + "\",\"ns\":\"default\",\"meta\":{\"foo\":7}}", "{}");
-        assertEquals("7", f.meta("foo"));
+        assertEquals(Integer.valueOf(7), f.meta("foo"));
     }
 
     @Test
@@ -115,7 +116,7 @@ public class DefaultFact0Test {
         final UUID aid = UUID.randomUUID();
         Fact f = DefaultFact.of("{\"id\":\"" + id
                 + "\",\"ns\":\"narf\",\"type\":\"foo\",\"aggIds\":[\"" + aid
-                + "\"],\"meta\":{\"foo\":7}}", "{}");
+                + "\"],\"meta\":{\"foo\":128}}", "{}");
 
         Fact copy = copyBySerialization(f);
 
@@ -150,4 +151,35 @@ public class DefaultFact0Test {
         assertEquals(f1, f2);
 
     }
+
+    @Test
+    public void testArrayOfIdsInMeta() throws Exception {
+
+        // given
+        UUID id = UUID.randomUUID();
+        UUID metaId1 = UUID.randomUUID();
+        UUID metaId2 = UUID.randomUUID();
+        UUID metaId3 = UUID.randomUUID();
+        // @formatter:off
+        String header = "{\"id\":\""+id+ "\",\"ns\":\"narf\",\"type\":\"foo\",\"aggIds\":[\""+id+"\"]," 
+                + "\"meta\":{" 
+                    + "\"ids\":[\"" 
+                        + metaId1 + "\",\"" 
+                        + metaId2 + "\",\"" 
+                        + metaId3 + "\"" 
+                    + "]"
+                + "}}";
+        // @formatter:on
+
+        // when
+        Fact f = DefaultFact.of(header, "{}");
+
+        // then
+        assertThat(f.meta("ids")).asList().containsExactlyInAnyOrder( //
+                metaId1.toString(), //
+                metaId2.toString(), //
+                metaId3.toString());
+
+    }
+
 }

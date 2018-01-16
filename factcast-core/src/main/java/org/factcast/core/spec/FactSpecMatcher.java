@@ -36,7 +36,7 @@ public final class FactSpecMatcher implements Predicate<Fact> {
 
     final UUID aggId;
 
-    final Map<String, String> meta;
+    final Map<String, Object> meta;
 
     final String script;
 

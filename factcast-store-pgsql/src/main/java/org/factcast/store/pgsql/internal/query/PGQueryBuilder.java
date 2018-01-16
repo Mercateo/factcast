@@ -6,11 +6,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import org.factcast.core.spec.FactSpec;
 import org.factcast.core.subscription.SubscriptionRequestTO;
 import org.factcast.store.pgsql.internal.PGConstants;
 import org.springframework.jdbc.core.PreparedStatementSetter;
+
+import com.google.common.annotations.VisibleForTesting;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Provides {@link PreparedStatementSetter} and the corresponding SQL from a
  * list of {@link FactSpec}s.
- * 
+ *
  * @author uwe.schaefer@mercateo.com
  *
  */
@@ -55,15 +58,26 @@ public class PGQueryBuilder {
                     p.setString(++count, "{\"aggIds\": [\"" + agg + "\"]}");
                 }
 
-                Map<String, String> meta = spec.meta();
-                for (Entry<String, String> e : meta.entrySet()) {
-                    p.setString(++count, "{\"meta\":{\"" + e.getKey() + "\":\"" + e.getValue()
-                            + "\" }}");
+                Map<String, Object> meta = spec.meta();
+                for (Entry<String, Object> e : meta.entrySet()) {
+                    p.setString(++count, extractMetaJson(e.getKey(), e.getValue()));
                 }
             }
 
             p.setLong(++count, serial.get());
         };
+    }
+
+    @VisibleForTesting
+    String extractMetaJson(String key, Object value) {
+        if (value instanceof List) {
+            List<Object> list = (List) value;
+            String collect = list.stream().map(String::valueOf).map(v -> "\"" + v + "\"").collect(
+                    Collectors.joining(","));
+            return "{\"meta\":{\"" + key + "\":[" + collect + "] }}";
+        } else {
+            return "{\"meta\":{\"" + key + "\":\"" + value + "\" }}";
+        }
     }
 
     private String createWhereClause() {
@@ -86,7 +100,7 @@ public class PGQueryBuilder {
                 sb.append("AND " + PGConstants.COLUMN_HEADER + " @> ?::jsonb ");
             }
 
-            Map<String, String> meta = spec.meta();
+            Map<String, Object> meta = spec.meta();
             meta.entrySet().forEach(e -> {
                 sb.append("AND " + PGConstants.COLUMN_HEADER + " @> ?::jsonb ");
             });

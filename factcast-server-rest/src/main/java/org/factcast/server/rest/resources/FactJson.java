@@ -25,7 +25,7 @@ import lombok.Value;
 /**
  * return object for the resources returning facts to the client. Also used in
  * the new transactions in the payload
- * 
+ *
  * @author joerg_adler
  *
  */
@@ -66,7 +66,7 @@ public class FactJson {
         final Set<UUID> aggIds;
 
         @JsonProperty
-        final Map<String, String> meta = new HashMap<>();
+        final Map<String, Object> meta = new HashMap<>();
 
         @JsonAnySetter
         @IgnoreInRestSchema
