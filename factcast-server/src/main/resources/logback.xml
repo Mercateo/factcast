@@ -21,7 +21,7 @@
   </appender>
 
   <appender name="LOGZIO" class="io.logz.logback.LogzioLogbackAppender">
-    <token>wHDXrFVHmDcQuQEkfegHmacZoqVRMQLE</token>
+    <token>${CoreLogzIOToken}</token>
     <logzioUrl>https://listener-eu.logz.io:8071</logzioUrl>
     <logzioType>java</logzioType>
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
