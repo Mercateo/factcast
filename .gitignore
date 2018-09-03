@@ -11,3 +11,5 @@ target
 **/bin/*
 *.versionsBackup*
 test_local.sh
+/.metadata/
+.recommenders
