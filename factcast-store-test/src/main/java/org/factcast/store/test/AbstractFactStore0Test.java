@@ -627,7 +627,7 @@ public abstract class AbstractFactStore0Test {
         }
     }
 
-    @Test(timeout=1000000)
+    @Test(timeout=10000)
     @DirtiesContext
     public void testUniqueIdentConstraintInBatch() throws Exception {
 
