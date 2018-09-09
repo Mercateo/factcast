@@ -13,3 +13,4 @@ target
 test_local.sh
 /.metadata/
 .recommenders
+**/dependency-reduced*
