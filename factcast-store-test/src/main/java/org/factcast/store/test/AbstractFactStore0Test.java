@@ -45,7 +45,7 @@ public abstract class AbstractFactStore0Test {
 
     static final FactSpec ANY = FactSpec.ns("default");
 
-    FactCast uut;
+    protected FactCast uut;
 
     @Before
     public void setUp() throws Exception {
@@ -602,55 +602,56 @@ public abstract class AbstractFactStore0Test {
     @DirtiesContext
     public void testUniqueIdentConstraintInLog() throws Exception {
 
-        String ident = "my_unique_ident";
+        String ident = UUID.randomUUID().toString();
 
         UUID id = UUID.randomUUID();
         UUID id2 = UUID.randomUUID();
         Fact f1 = Fact.of("{\"id\":\"" + id
                 + "\",\"type\":\"someType\",\"ns\":\"default\",\"aggIds\":[\"" + id
-                + "\"],\"meta\":{\"uniqueIdentifier\":\"" + ident + "\"}}",
+                + "\"],\"meta\":{\"unique_identifier\":\"" + ident + "\"}}",
                 "{}");
         Fact f2 = Fact.of("{\"id\":\"" + id2
                 + "\",\"type\":\"someType\",\"ns\":\"default\",\"aggIds\":[\"" + id2
-                + "\"],\"meta\":{\"uniqueIdentifier\":\"" + ident + "\"}}",
+                + "\"],\"meta\":{\"unique_identifier\":\"" + ident + "\"}}",
                 "{}");
         uut.publish(f1);
 
         // needs to fail due to uniqueIdentitfier not being unique
         try {
             uut.publish(f2);
-            fail("Expected IllegalArgumentException due to uniqueIdentifier being used a sencond time");
+            fail("Expected IllegalArgumentException due to unique_identifier being used a sencond time");
         } catch (IllegalArgumentException e) {
 
             // make sure, f1 was stored before
-            assertNotNull(uut.fetchById(id));
+            assertTrue(uut.fetchById(id).isPresent());
         }
     }
 
+    @Test(timeout=1000000)
     @DirtiesContext
     public void testUniqueIdentConstraintInBatch() throws Exception {
 
-        String ident = "my_unique_ident";
-
+        String ident = UUID.randomUUID().toString();
+        
         UUID id = UUID.randomUUID();
         UUID id2 = UUID.randomUUID();
         Fact f1 = Fact.of("{\"id\":\"" + id
                 + "\",\"type\":\"someType\",\"ns\":\"default\",\"aggIds\":[\"" + id
-                + "\"],\"meta\":{\"uniqueIdentifier\":\"" + ident + "\"}}",
+                + "\"],\"meta\":{\"unique_identifier\":\"" + ident + "\"}}",
                 "{}");
         Fact f2 = Fact.of("{\"id\":\"" + id2
                 + "\",\"type\":\"someType\",\"ns\":\"default\",\"aggIds\":[\"" + id2
-                + "\"],\"meta\":{\"uniqueIdentifier\":\"" + ident + "\"}}",
+                + "\"],\"meta\":{\"unique_identifier\":\"" + ident + "\"}}",
                 "{}");
 
         // needs to fail due to uniqueIdentitfier not being unique
         try {
             uut.publish(Arrays.asList(f1, f2));
-            fail("Expected IllegalArgumentException due to uniqueIdentifier being used twice in a batch");
+            fail("Expected IllegalArgumentException due to unique_identifier being used twice in a batch");
         } catch (IllegalArgumentException e) {
 
             // make sure, f1 was not stored either
-            assertNull(uut.fetchById(id));
+            assertFalse(uut.fetchById(id).isPresent());
         }
     }
 

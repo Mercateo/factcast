@@ -160,13 +160,13 @@ public class InMemFactStore implements FactStore, DisposableBean {
         }
 
         // test on unique idents in batch
-        if (factsToPublish.stream().filter(f->f.meta("uniqueIdentifier")!=null).collect(Collectors.groupingBy(f -> f.meta("uniqueIdentifier"))).values().stream().anyMatch(c->c.size()>1)) {
-            throw new IllegalArgumentException("duplicate uniqueIdentifier in factsToPublish - uniqueIdentifier must be unique!");
+        if (factsToPublish.stream().filter(f->f.meta("unique_identifier")!=null).collect(Collectors.groupingBy(f -> f.meta("unique_identifier"))).values().stream().anyMatch(c->c.size()>1)) {
+            throw new IllegalArgumentException("duplicate unique_identifier in factsToPublish - unique_identifier must be unique!");
         }
 
         // test on unique idents in log        
-        if (factsToPublish.stream().anyMatch(f -> uniqueIdentifiers.contains(f.meta("uniqueIdentifier")))) {
-            throw new IllegalArgumentException("duplicate uniqueIdentifier - uniqueIdentifier must be unique!");
+        if (factsToPublish.stream().anyMatch(f -> uniqueIdentifiers.contains(f.meta("unique_identifier")))) {
+            throw new IllegalArgumentException("duplicate unique_identifier - unique_identifier must be unique!");
         }
 
         factsToPublish.forEach(f -> {
@@ -176,7 +176,7 @@ public class InMemFactStore implements FactStore, DisposableBean {
 
             store.put(ser, inMemFact);
             ids.add(inMemFact.id());
-            Optional.ofNullable(f.meta("uniqueIdentifier")).ifPresent(uniqueIdentifiers::add);
+            Optional.ofNullable(f.meta("unique_identifier")).ifPresent(uniqueIdentifiers::add);
 
             List<InMemFollower> subscribers = activeFollowers.stream()
                     .filter(s -> s.test(inMemFact))
