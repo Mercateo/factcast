@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -e
+
+PREFIX="> pre-commit [$(basename $0)]"
+TMP_SPACE=/tmp/git-hooks/pre-commit/$REPO_NAME/$(date +%s%N)
+
+mvn formatter:format
+
+exit 0
