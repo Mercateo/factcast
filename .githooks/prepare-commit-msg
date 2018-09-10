@@ -16,7 +16,7 @@ BRANCH_NAME=$(git symbolic-ref --short HEAD)
 BRANCH_NAME="${BRANCH_NAME##*/}"
 
 if [[ "$BRANCH_NAME" == *issue* ]]; then
-  JIRA_TICKET=$( echo $BRANCH_NAME | sed -E 's/^.*(issue[^-]+).*/\1/' )
-  sed -i.bak -e "1s/^/#$JIRA_TICKET: /" $1
+  ISSUE=$( echo $BRANCH_NAME | sed -E 's/^.*issue(.*)/\1/'  )
+  sed -i.bak -e "1s/^/#$ISSUE: /" $1
 fi
 
