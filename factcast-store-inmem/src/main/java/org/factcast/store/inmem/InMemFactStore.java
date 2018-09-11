@@ -239,23 +239,4 @@ public class InMemFactStore implements FactStore, DisposableBean {
         return OptionalLong.empty();
     }
 
-    public void clear() {
-        this.store.clear();
-
-        // i'd say, there is a lot missing:
-
-        this.activeFollowers.forEach(c -> {
-            try {
-                c.subscription.close();
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        });
-        this.uniqueIdentifiers.clear();
-        this.ids.clear();
-
-        // i'd like to reconsider this patch. lets review the usecase.
-
-    }
 }
