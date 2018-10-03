@@ -10,6 +10,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>factcast-bom</artifactId>
+	<packaging>pom</packaging>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
