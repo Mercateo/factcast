@@ -18,6 +18,7 @@ package org.factcast.client.grpc;
 import static io.grpc.stub.ClientCalls.asyncServerStreamingCall;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalLong;
 import java.util.UUID;
@@ -31,6 +32,7 @@ import org.factcast.core.subscription.SubscriptionRequestTO;
 import org.factcast.core.subscription.observer.FactObserver;
 import org.factcast.grpc.api.conv.ProtoConverter;
 import org.factcast.grpc.api.conv.ProtocolVersion;
+import org.factcast.grpc.api.conv.ServerConfig;
 import org.factcast.grpc.api.gen.FactStoreProto;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_Fact;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_Facts;
@@ -70,6 +72,10 @@ class GrpcFactStore implements FactStore, InitializingBean {
     final RemoteFactStoreStub stub;
 
     final ProtoConverter converter = new ProtoConverter();
+
+    private ProtocolVersion serverProtocolVersion;
+
+    private Map<String, String> serverProperties;
 
     @Autowired
     GrpcFactStore(AddressChannelFactory channelFactory) {
@@ -151,8 +157,12 @@ class GrpcFactStore implements FactStore, InitializingBean {
     }
 
     public void testCompatibility() {
-        ProtocolVersion serverProtocolVersion = converter.fromProto(blockingStub.protocolVersion(
+        ServerConfig cfg = converter.fromProto(blockingStub.handshake(
                 converter.empty()));
+
+        serverProtocolVersion = cfg.version();
+        serverProperties = cfg.properties();
+
         if (!PROTOCOL_VERSION.isCompatibleTo(serverProtocolVersion))
             throw new IncompatibleProtocolVersions("Apparently, the local Protocol Version "
                     + PROTOCOL_VERSION + " is not compatible with the Server's "

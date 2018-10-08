@@ -15,7 +15,9 @@
  */
 package org.factcast.server.grpc;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
@@ -26,14 +28,15 @@ import org.factcast.core.store.FactStore;
 import org.factcast.core.subscription.SubscriptionRequestTO;
 import org.factcast.grpc.api.conv.ProtoConverter;
 import org.factcast.grpc.api.conv.ProtocolVersion;
-import org.factcast.grpc.api.gen.FactStoreProto;
+import org.factcast.grpc.api.conv.ServerConfig;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_Empty;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_Facts;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_Notification;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_OptionalFact;
-import org.factcast.grpc.api.gen.FactStoreProto.MSG_ProtocolVersion;
+import org.factcast.grpc.api.gen.FactStoreProto.MSG_ServerConfig;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_SubscriptionRequest;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_UUID;
+import org.factcast.grpc.api.gen.RemoteFactStoreGrpc;
 import org.factcast.grpc.api.gen.RemoteFactStoreGrpc.RemoteFactStoreImplBase;
 
 import io.grpc.Status;
@@ -55,7 +58,7 @@ import net.devh.springboot.autoconfigure.grpc.server.GrpcService;
  */
 @Slf4j
 @RequiredArgsConstructor
-@GrpcService(FactStoreProto.class)
+@GrpcService(RemoteFactStoreGrpc.class)
 @SuppressWarnings("all")
 public class FactStoreGrpcService extends RemoteFactStoreImplBase {
     final static ProtocolVersion PROTOCOL_VERSION = ProtocolVersion.of(1, 0, 0);
@@ -124,10 +127,17 @@ public class FactStoreGrpcService extends RemoteFactStoreImplBase {
     }
 
     @Override
-    public void protocolVersion(MSG_Empty request,
-            StreamObserver<MSG_ProtocolVersion> responseObserver) {
-        responseObserver.onNext(converter.toProto(PROTOCOL_VERSION));
+    public void handshake(@NonNull MSG_Empty request,
+            @NonNull StreamObserver<MSG_ServerConfig> responseObserver) {
+
+        ServerConfig cfg = ServerConfig.of(PROTOCOL_VERSION, collectProperties());
+
+        responseObserver.onNext(converter.toProto(cfg));
         responseObserver.onCompleted();
+    }
+
+    private Map<String, String> collectProperties() {
+        return new HashMap<>();
     }
 
     private void resetDebugInfo(@NonNull SubscriptionRequestTO req) {
