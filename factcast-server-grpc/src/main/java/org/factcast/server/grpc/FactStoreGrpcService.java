@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import org.factcast.core.Fact;
 import org.factcast.core.store.FactStore;
 import org.factcast.core.subscription.SubscriptionRequestTO;
+import org.factcast.grpc.api.Capabilities;
 import org.factcast.grpc.api.conv.ProtoConverter;
 import org.factcast.grpc.api.conv.ProtocolVersion;
 import org.factcast.grpc.api.conv.ServerConfig;
@@ -137,7 +138,26 @@ public class FactStoreGrpcService extends RemoteFactStoreImplBase {
     }
 
     private Map<String, String> collectProperties() {
-        return new HashMap<>();
+        HashMap<String, String> properties = new HashMap<>();
+        evaluateLZ4Availability(properties);
+
+        log.info("Handshake properties: {} ", properties);
+        return properties;
+    }
+
+    private void evaluateLZ4Availability(HashMap<String, String> properties) {
+        String lz4_available = String.valueOf(isClassAvailable(
+                "net.jpountz.lz4.LZ4Constants"));
+        properties.put(Capabilities.CODEC_LZ4.toString(), lz4_available);
+    }
+
+    private boolean isClassAvailable(String string) {
+        try {
+            Class<?> forName = Class.forName(string);
+            return forName != null;
+        } catch (ClassNotFoundException e) {
+        }
+        return false;
     }
 
     private void resetDebugInfo(@NonNull SubscriptionRequestTO req) {

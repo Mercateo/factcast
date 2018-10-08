@@ -126,7 +126,7 @@ public class GrpcFactStore0Test {
                                 ProtocolVersion.of(1, 0, 0),
                                 new HashMap<>())));
 
-        uut.testCompatibility();
+        uut.initialize();
     }
 
     @Test
@@ -136,7 +136,7 @@ public class GrpcFactStore0Test {
                         ServerConfig.of(
                                 ProtocolVersion.of(1, 1, 0),
                                 new HashMap<>())));
-        uut.testCompatibility();
+        uut.initialize();
     }
 
     @Test(expected = IncompatibleProtocolVersions.class)
@@ -147,7 +147,7 @@ public class GrpcFactStore0Test {
                                 ProtocolVersion.of(2, 0, 0),
                                 new HashMap<>())));
 
-        uut.testCompatibility();
+        uut.initialize();
     }
 
 }
