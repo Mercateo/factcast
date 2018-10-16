@@ -67,12 +67,19 @@ class DefaultFactCast implements FactCast {
         factsToPublish.forEach(f -> {
             if (lacksRequiredNamespace(f))
                 throw new IllegalArgumentException("Fact " + f.id() + " lacks required namespace.");
+            if (lacksRequiredId(f))
+                throw new IllegalArgumentException("Fact " + f.jsonHeader()
+                        + " lacks required id.");
         });
         store.publish(factsToPublish);
     }
 
     private boolean lacksRequiredNamespace(Fact f) {
         return f.ns() == null || f.ns().trim().isEmpty();
+    }
+
+    private boolean lacksRequiredId(Fact f) {
+        return f.id() == null;
     }
 
     @Override

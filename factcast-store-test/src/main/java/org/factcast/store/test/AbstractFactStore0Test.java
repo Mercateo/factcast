@@ -661,4 +661,9 @@ public abstract class AbstractFactStore0Test {
                 + "\",\"type\":\"someType\"}", "{}"));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testChecksMandatoryIdOnPublish() throws Exception {
+        uut.publish(Fact.of("{\"ns\":\"default\",\"type\":\"someType\"}", "{}"));
+    }
+
 }
