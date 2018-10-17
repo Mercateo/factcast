@@ -154,6 +154,7 @@
             <ignores>
               <ignore>org.factcast.grpc.api.gen.*</ignore>
             </ignores>
+            <ignoreMethodAnnotation>lombok.Generated</ignoreMethodAnnotation>
             <excludes>
               <exclude>org/factcast/**/*Configuration.class</exclude>
               <exclude>org/factcast/**/*Test.class</exclude>
