@@ -160,6 +160,30 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <excludes>
+            <exclude>**/*Configuration.class</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.eluder.coveralls</groupId>
         <artifactId>coveralls-maven-plugin</artifactId>
         <version>4.3.0</version>
@@ -216,11 +240,11 @@
               <pluginExecutions>
                 <pluginExecution>
                   <pluginExecutionFilter>
-                    <groupId> org.commonjava.maven.plugins
+                    <groupId> org.commonjava.maven.plugins 
 										</groupId>
-                    <artifactId> directory-maven-plugin
+                    <artifactId> directory-maven-plugin 
 										</artifactId>
-                    <versionRange> [0.3.1,)
+                    <versionRange> [0.3.1,) 
 										</versionRange>
                     <goals>
                       <goal>highest-basedir</goal>
@@ -232,11 +256,11 @@
                 </pluginExecution>
                 <pluginExecution>
                   <pluginExecutionFilter>
-                    <groupId> org.apache.maven.plugins
+                    <groupId> org.apache.maven.plugins 
 										</groupId>
-                    <artifactId> maven-enforcer-plugin
+                    <artifactId> maven-enforcer-plugin 
 										</artifactId>
-                    <versionRange> [1.0,)
+                    <versionRange> [1.0,) 
 										</versionRange>
                     <goals>
                       <goal>enforce</goal>
