@@ -147,7 +147,7 @@
         <version>2.7</version>
         <configuration>
           <format>xml</format>
-          <maxmem>512m</maxmem>
+          <maxmem>1024m</maxmem>
           <!-- aggregated reports for multi-module projects -->
           <aggregate>true</aggregate>
           <instrumentation>
@@ -155,11 +155,14 @@
               <ignore>org.factcast.grpc.api.gen.*</ignore>
               <ignore>org.factcast.example.*</ignore>
             </ignores>
-            <ignoreMethodAnnotation>lombok.Generated</ignoreMethodAnnotation>
+            <ignoreMethodAnnotations>
+              <ignoreMethodAnnotation>lombok.Generated</ignoreMethodAnnotation>
+            </ignoreMethodAnnotations>
             <excludes>
               <exclude>**/*Configuration.class</exclude>
               <exclude>**/*Test.class</exclude>
-              <exclude> org/factcast/example/**/*.class</exclude>
+              <exclude>org/factcast/example/**/*.class</exclude>
+              <exclude>org/factcast/grpc/api/gen/*.class</exclude>
             </excludes>
           </instrumentation>
         </configuration>
