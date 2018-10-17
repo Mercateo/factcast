@@ -153,11 +153,13 @@
           <instrumentation>
             <ignores>
               <ignore>org.factcast.grpc.api.gen.*</ignore>
+              <ignore>org.factcast.example.*</ignore>
             </ignores>
             <ignoreMethodAnnotation>lombok.Generated</ignoreMethodAnnotation>
             <excludes>
-              <exclude>org/factcast/**/*Configuration.class</exclude>
-              <exclude>org/factcast/**/*Test.class</exclude>
+              <exclude>**/*Configuration.class</exclude>
+              <exclude>**/*Test.class</exclude>
+              <exclude> org/factcast/example/**/*.class</exclude>
             </excludes>
           </instrumentation>
         </configuration>
