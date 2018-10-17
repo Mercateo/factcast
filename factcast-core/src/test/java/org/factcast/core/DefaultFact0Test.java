@@ -160,6 +160,7 @@ public class DefaultFact0Test {
     public void testOfNoNs() throws Exception {
         Fact.of("{\"id\":\"" + UUID.randomUUID() + "\"}", "{}");
     }
+
     @Test(expected = IllegalArgumentException.class)
     public void testOfEmptyNs() throws Exception {
         Fact.of("{\"id\":\"" + UUID.randomUUID() + "\",\"ns\":\"\"}", "{}");

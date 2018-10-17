@@ -108,14 +108,13 @@ public class DefaultFactCast0Test {
         assertTrue(l.contains(f));
 
     }
-    
-    @Test(expected=IllegalArgumentException.class)
+
+    @Test(expected = IllegalArgumentException.class)
     public void testNoId() throws Exception {
         uut.publish(new Test0Fact().id(null));
     }
-    
-    
-    @Test(expected=IllegalArgumentException.class)
+
+    @Test(expected = IllegalArgumentException.class)
     public void testNoNamespace() throws Exception {
         uut.publish(new Test0Fact().ns(null));
     }
@@ -185,11 +184,12 @@ public class DefaultFactCast0Test {
     @Test
     public void testSerialOf() throws Exception {
         when(store.serialOf(any(UUID.class))).thenReturn(OptionalLong.empty());
-        UUID id=UUID.randomUUID();
+        UUID id = UUID.randomUUID();
         uut.serialOf(id);
         verify(store).serialOf(same(id));
     }
-    @Test(expected=NullPointerException.class)
+
+    @Test(expected = NullPointerException.class)
     public void testSerialOfNull() throws Exception {
         uut.serialOf(null);
     }

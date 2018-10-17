@@ -76,12 +76,12 @@ public class CachingFactCast0Test {
 
     @Test(expected = NullPointerException.class)
     public void testPublishNull() throws Exception {
-        uut.publish((Fact)null);
+        uut.publish((Fact) null);
     }
 
     @Test(expected = NullPointerException.class)
     public void testPublishNullArgs() throws Exception {
-        uut.publish((List<Fact>)null);
+        uut.publish((List<Fact>) null);
     }
 
     @Test
@@ -95,32 +95,34 @@ public class CachingFactCast0Test {
         verify(fc).subscribeToIds(same(rs), same(observer));
     }
 
-
-    @Test(expected=NullPointerException.class)
+    @Test(expected = NullPointerException.class)
     public void testSubscribeToIdsNullParam() throws Exception {
-        uut.subscribeToIds(null, f->{});
+        uut.subscribeToIds(null, f -> {
+        });
     }
 
-    @Test(expected=NullPointerException.class)
+    @Test(expected = NullPointerException.class)
     public void testSubscribeToIdsNullParams() throws Exception {
         uut.subscribeToIds(null, null);
     }
-    
-    @Test(expected=NullPointerException.class)
+
+    @Test(expected = NullPointerException.class)
     public void testSubscribeToIdsNullObserverParam() throws Exception {
         uut.subscribeToIds(mock(SubscriptionRequest.class), null);
     }
-    @Test(expected=NullPointerException.class)
+
+    @Test(expected = NullPointerException.class)
     public void testSubscribeToFactsNullParam() throws Exception {
-        uut.subscribeToFacts(null, f->{});
+        uut.subscribeToFacts(null, f -> {
+        });
     }
 
-    @Test(expected=NullPointerException.class)
+    @Test(expected = NullPointerException.class)
     public void testSubscribeToFactsNullParams() throws Exception {
         uut.subscribeToFacts(null, null);
     }
-    
-    @Test(expected=NullPointerException.class)
+
+    @Test(expected = NullPointerException.class)
     public void testSubscribeToFactsNullObserverParam() throws Exception {
         uut.subscribeToFacts(mock(SubscriptionRequest.class), null);
     }
@@ -157,7 +159,7 @@ public class CachingFactCast0Test {
         underlyingObserver.onError(e);
         verify(observer).onError(same(e));
     }
-    
+
     @Test
     public void testSerialOf() throws Exception {
         UUID id = UUID.randomUUID();
@@ -165,7 +167,7 @@ public class CachingFactCast0Test {
         verify(fc).serialOf(same(id));
     }
 
-    @Test(expected=NullPointerException.class)
+    @Test(expected = NullPointerException.class)
     public void testSerialOfNull() throws Exception {
         uut.serialOf(null);
     }

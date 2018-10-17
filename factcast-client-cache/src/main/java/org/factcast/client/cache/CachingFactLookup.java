@@ -38,7 +38,6 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class CachingFactLookup {
-    
 
     public static final String CACHE_NAME = "factcast.lookup.fact";
 
