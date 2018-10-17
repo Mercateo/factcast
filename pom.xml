@@ -150,6 +150,15 @@
           <maxmem>512m</maxmem>
           <!-- aggregated reports for multi-module projects -->
           <aggregate>true</aggregate>
+          <instrumentation>
+            <ignores>
+              <ignore>org.factcast.grpc.api.gen.*</ignore>
+            </ignores>
+            <excludes>
+              <exclude>org/factcast/**/*Configuration.class</exclude>
+              <exclude>org/factcast/**/*Test.class</exclude>
+            </excludes>
+          </instrumentation>
         </configuration>
       </plugin>
       <plugin>
