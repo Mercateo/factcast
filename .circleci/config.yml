@@ -54,5 +54,5 @@ jobs:
       - run: 
           name: FullTest
           command: |
-            mvn -B clean install verify jacoco:report-aggregate coveralls:report -DrepoToken=sMBbBcjrybuhdwKHFC61BvBU5y4oAjNEt -Dpg_url=$pg_url
+            mvn -B clean install verify jacoco:report coveralls:report -DrepoToken=sMBbBcjrybuhdwKHFC61BvBU5y4oAjNEt -Dpg_url=$pg_url
             bash <(curl -s https://codecov.io/bash)
