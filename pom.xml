@@ -142,30 +142,28 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <version>2.7</version>
-        <configuration>
-          <format>xml</format>
-          <maxmem>1024m</maxmem>
-          <!-- aggregated reports for multi-module projects -->
-          <aggregate>true</aggregate>
-          <instrumentation>
-            <ignores>
-              <ignore>org.factcast.grpc.api.gen.*</ignore>
-              <ignore>org.factcast.example.*</ignore>
-            </ignores>
-            <ignoreMethodAnnotations>
-              <ignoreMethodAnnotation>lombok.Generated</ignoreMethodAnnotation>
-            </ignoreMethodAnnotations>
-            <excludes>
-              <exclude>**/*Configuration.class</exclude>
-              <exclude>**/*Test.class</exclude>
-              <exclude>org/factcast/example/**/*.class</exclude>
-              <exclude>org/factcast/grpc/api/gen/*.class</exclude>
-            </excludes>
-          </instrumentation>
-        </configuration>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <excludes>
+                <exclude>**/*Configuration</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.eluder.coveralls</groupId>
