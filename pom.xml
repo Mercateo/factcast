@@ -148,6 +148,7 @@
         <configuration>
           <excludes>
             <exclude>**/*Configuration.class</exclude>
+            <exclude>**/factcast-example/**/*.class</exclude>
           </excludes>
         </configuration>
         <executions>
