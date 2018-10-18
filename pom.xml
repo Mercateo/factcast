@@ -147,8 +147,9 @@
         <version>0.8.2</version>
         <configuration>
           <excludes>
-            <exclude>**/*Configuration.class</exclude>
-            <exclude>**/factcast-example/**/*.class</exclude>
+            <exclude>**/*Configuration.*</exclude>
+            <exclude>org/factcast/example/**/*</exclude>
+            <exclude>org/factcast/example/*</exclude>
           </excludes>
         </configuration>
         <executions>
@@ -159,7 +160,7 @@
           </execution>
           <execution>
             <id>report</id>
-            <phase>test</phase>
+            <phase>post-integration-test</phase>
             <goals>
               <goal>report</goal>
             </goals>
