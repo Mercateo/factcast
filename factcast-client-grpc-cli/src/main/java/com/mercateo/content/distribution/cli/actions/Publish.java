@@ -22,12 +22,12 @@ import java.io.IOException;
 
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.commons.io.FileUtils;
 import org.factcast.core.Fact;
 import org.factcast.core.FactCast;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.common.io.Files;
 import com.mercateo.content.distribution.cli.AbstractAction;
 import com.mercateo.content.distribution.cli.CLI;
 
@@ -62,8 +62,8 @@ public class Publish extends AbstractAction {
         String headerFilename = commandLine.getOptionValue("h");
         String payloadFilename = commandLine.getOptionValue("p");
 
-        String header = FileUtils.readFileToString(new File(headerFilename), UTF_8);
-        String payload = FileUtils.readFileToString(new File(payloadFilename), UTF_8);
+        String header = String.join("", Files.readLines(new File(headerFilename), UTF_8));
+        String payload = String.join("", Files.readLines(new File(payloadFilename), UTF_8));
 
         return Fact.of(header, payload);
     }
