@@ -21,8 +21,9 @@ public class PGCatchupQueue0Test {
         uut.notifyDone();
         assertTrue(uut.isDone());
     }
+
     @Test
     public void testCapacity() throws Exception {
-        assertEquals(71,uut.remainingCapacity());
+        assertEquals(71, uut.remainingCapacity());
     }
 }

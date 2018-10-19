@@ -193,6 +193,6 @@ public class ProtoConverter0Test {
 
     @Test
     public void testEmpty() throws Exception {
-        assertEquals(MSG_Empty.newBuilder().build(),uut.empty());
+        assertEquals(MSG_Empty.newBuilder().build(), uut.empty());
     }
 }
