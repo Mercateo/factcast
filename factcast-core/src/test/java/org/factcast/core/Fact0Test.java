@@ -4,7 +4,11 @@ import static org.junit.Assert.*;
 
 import java.util.UUID;
 
+import org.factcast.core.util.FactCastJson;
 import org.junit.Test;
+import org.mockito.Mockito;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class Fact0Test {
 
@@ -104,4 +108,26 @@ public class Fact0Test {
         assertEquals("bang", f.meta("buh"));
         assertEquals("{\"a\":2}", f.jsonPayload());
     }
+
+	@Test(expected=NullPointerException.class)
+	public void testOfJsonNodeJsonNodeNull1() throws Exception {
+	Fact.of(null, Mockito.mock(JsonNode.class));
+	}
+	@Test(expected=NullPointerException.class)
+	public void testOfJsonNodeJsonNodeNull2() throws Exception {
+	Fact.of(Mockito.mock(JsonNode.class),null);
+	}
+	@Test(expected=NullPointerException.class)
+	public void testOfJsonNodeJsonNodeNull() throws Exception {
+	Fact.of((JsonNode)null, null);
+	}
+	
+	@Test
+	public void testOfJsonNode() throws Exception {
+	JsonNode payload=FactCastJson.newObjectNode();
+	String headerString = "{\"id\":\""+UUID.randomUUID()+"\",\"ns\":\"ns\"}";
+	JsonNode header=FactCastJson.toObjectNode(headerString);
+	assertEquals(headerString,Fact.of(header, payload).jsonHeader());
+	
+	}
 }
