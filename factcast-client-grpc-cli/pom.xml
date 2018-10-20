@@ -35,6 +35,16 @@
       <artifactId>commons-lang</artifactId>
       <version>2.6</version>
     </dependency>
+    <dependency>
+      <groupId>args4j</groupId>
+      <artifactId>args4j</artifactId>
+      <version>2.33</version>
+    </dependency>
+    <dependency>
+      <groupId>com.beust</groupId>
+      <artifactId>jcommander</artifactId>
+      <version>1.71</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -51,6 +61,9 @@
             </configuration>
           </execution>
         </executions>
+        <configuration>
+          <finalName>fc-cli</finalName>
+        </configuration>
       </plugin>
     </plugins>
   </build>
