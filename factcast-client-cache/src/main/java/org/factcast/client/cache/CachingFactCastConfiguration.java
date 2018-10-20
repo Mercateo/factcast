@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import lombok.Generated;
+import lombok.NonNull;
 
 /**
  * Spring configuration class that provides a CachingFactCast by wrapping a
@@ -39,7 +40,7 @@ public class CachingFactCastConfiguration {
     }
 
     @Bean
-    public CachingFactLookup cachingFactLookup(FactStore store) {
+    public CachingFactLookup cachingFactLookup(@NonNull FactStore store) {
         return new CachingFactLookup(store);
     }
 }
