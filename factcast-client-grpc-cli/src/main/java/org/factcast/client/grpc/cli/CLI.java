@@ -35,15 +35,18 @@ public class CLI {
 
     public static void main(String[] args) {
 
-        if (args == null || args.length == 0)
-            args = new String[] { "--help" };
+        String[] arguments = args;
+
+        if (arguments == null || arguments.length == 0)
+            arguments = new String[] { "--help" };
+
         Parser parser = new Parser(
                 new Catchup(),
                 new Follow(),
                 new Publish(),
                 new Fetch());
         try {
-            Command cmd = parser.parse(args);
+            Command cmd = parser.parse(arguments);
             if (cmd != null)
                 cmd.runWith(SpringApplication.run(CLI.class, new String[] {})
                         .getBean(FactCast.class));
