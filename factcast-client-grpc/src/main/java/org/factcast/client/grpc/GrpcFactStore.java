@@ -71,15 +71,17 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
 
     static final ProtocolVersion PROTOCOL_VERSION = ProtocolVersion.of(1, 0, 0);
 
-    private RemoteFactStoreBlockingStub blockingStub;
+    private final RemoteFactStoreBlockingStub blockingStub;
 
-    private RemoteFactStoreStub stub;
+    private final RemoteFactStoreStub stub;
 
     private final ProtoConverter converter = new ProtoConverter();
 
     private ProtocolVersion serverProtocolVersion;
 
     private Map<String, String> serverProperties;
+
+    private final AtomicBoolean initialized = new AtomicBoolean(false);
 
     @Autowired
     GrpcFactStore(AddressChannelFactory channelFactory) {
@@ -193,8 +195,6 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
             this.stub = stub.withCompression(LZ4Codec.ENCODING);
         }
     }
-
-    private AtomicBoolean initialized = new AtomicBoolean(false);
 
     @Override
     public synchronized void afterSingletonsInstantiated() {
