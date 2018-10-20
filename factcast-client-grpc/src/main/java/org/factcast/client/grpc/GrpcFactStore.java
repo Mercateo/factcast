@@ -71,9 +71,9 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
 
     static final ProtocolVersion PROTOCOL_VERSION = ProtocolVersion.of(1, 0, 0);
 
-    private final RemoteFactStoreBlockingStub blockingStub;
+    private RemoteFactStoreBlockingStub blockingStub;
 
-    private final RemoteFactStoreStub stub;
+    private RemoteFactStoreStub stub;
 
     private final ProtoConverter converter = new ProtoConverter();
 
