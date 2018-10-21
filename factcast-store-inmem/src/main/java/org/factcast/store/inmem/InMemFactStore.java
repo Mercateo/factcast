@@ -43,7 +43,6 @@ import org.factcast.core.subscription.observer.FactObserver;
 import org.springframework.beans.factory.DisposableBean;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Predicates;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -171,9 +170,10 @@ public class InMemFactStore implements FactStore, DisposableBean {
                     "duplicate unique_identifier in factsToPublish - unique_identifier must be unique!");
         }
 
-        // test on unique idents in log        
-        if (factsToPublish.stream().anyMatch(f -> uniqueIdentifiers.contains(f.meta(
-                "unique_identifier")))) {
+        // test on unique idents in log
+        if (factsToPublish.stream()
+                .anyMatch(f -> uniqueIdentifiers.contains(f.meta(
+                        "unique_identifier")))) {
             throw new IllegalArgumentException(
                     "duplicate unique_identifier - unique_identifier must be unique!");
         }
