@@ -26,7 +26,6 @@ import com.beust.jcommander.Parameters;
         commandDescription = "lists all namespaces in the factstore in no particular order")
 public class EnumerateNamespaces implements Command {
 
-
     @Override
     public void runWith(FactCast fc, Options opt) {
         fc.enumerateNamespaces().forEach(System.out::println);

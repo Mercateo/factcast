@@ -15,27 +15,21 @@
  */
 package org.factcast.client.grpc.cli.cmd;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.OptionalLong;
-import java.util.UUID;
-
 import org.factcast.client.grpc.cli.util.Command;
 import org.factcast.client.grpc.cli.util.Parser.Options;
 import org.factcast.core.FactCast;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import com.beust.jcommander.converters.CommaParameterSplitter;
 
 @Parameters(
-        commandNames = "enumerateNamespaces",
+        commandNames = "enumerateTypes",
         commandDescription = "lists all types used with a namespace in no particular order")
 public class EnumerateTypes implements Command {
 
     @Parameter(required = true, description = "namespace")
     String ns;
-    
+
     @Override
     public void runWith(FactCast fc, Options opt) {
         fc.enumerateTypes(ns).forEach(System.out::println);

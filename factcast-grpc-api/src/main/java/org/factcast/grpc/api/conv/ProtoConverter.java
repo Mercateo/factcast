@@ -205,8 +205,16 @@ public class ProtoConverter {
         return new HashSet<>(sList);
     }
 
+    public MSG_StringSet toProto(Set<String> set) {
+        return MSG_StringSet.newBuilder().addAllS(set).build();
+    }
+
     public MSG_String toProto(String ns) {
         return MSG_String.newBuilder().setS(ns).build();
+    }
+
+    public String fromProto(MSG_String request) {
+        return request.getS();
     }
 
 }

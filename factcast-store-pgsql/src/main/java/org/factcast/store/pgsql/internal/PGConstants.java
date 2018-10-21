@@ -15,8 +15,6 @@
  */
 package org.factcast.store.pgsql.internal;
 
-import org.springframework.jdbc.core.PreparedStatementCreator;
-
 import lombok.AccessLevel;
 import lombok.Generated;
 import lombok.experimental.FieldDefaults;
@@ -110,7 +108,8 @@ public class PGConstants {
 
     public static final String SELECT_DICTINCT_TYPE_IN_NAMESPACE = "SELECT DISTINCT("
             + COLUMN_HEADER + "->>'" + ALIAS_TYPE + "') "
-            + " FROM " + TABLE_FACT + " WHERE (" + COLUMN_HEADER + "->>'" + ALIAS_NS + "')=?";
+            + " FROM " + TABLE_FACT + " WHERE (" + COLUMN_HEADER + "->>'" + ALIAS_NS
+            + "')=? AND ( " + COLUMN_HEADER + "->>'" + ALIAS_TYPE + "') IS NOT NULL";
 
     public static String SELECT_SER_BY_ID = "SELECT " + COLUMN_SER + " FROM " + TABLE_FACT
             + " WHERE "
