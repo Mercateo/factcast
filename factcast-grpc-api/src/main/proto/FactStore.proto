@@ -87,10 +87,10 @@ message MSG_ServerConfig {
 }
 
 message MSG_StringSet {
-  repeated string s = 1;
+  repeated string embeddedString = 1;
 }
 message MSG_String {
-  string s = 1;
+  string embeddedString = 1;
 }
 
 

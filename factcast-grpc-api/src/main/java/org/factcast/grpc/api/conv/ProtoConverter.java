@@ -201,20 +201,20 @@ public class ProtoConverter {
     }
 
     public Set<String> fromProto(MSG_StringSet set) {
-        ProtocolStringList sList = set.getSList();
+        ProtocolStringList sList = set.getEmbeddedStringList();
         return new HashSet<>(sList);
     }
 
     public MSG_StringSet toProto(Set<String> set) {
-        return MSG_StringSet.newBuilder().addAllS(set).build();
+        return MSG_StringSet.newBuilder().addAllEmbeddedString(set).build();
     }
 
     public MSG_String toProto(String ns) {
-        return MSG_String.newBuilder().setS(ns).build();
+        return MSG_String.newBuilder().setEmbeddedString(ns).build();
     }
 
     public String fromProto(MSG_String request) {
-        return request.getS();
+        return request.getEmbeddedString();
     }
 
 }
