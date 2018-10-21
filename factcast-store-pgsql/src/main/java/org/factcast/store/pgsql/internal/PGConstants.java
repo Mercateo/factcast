@@ -15,6 +15,8 @@
  */
 package org.factcast.store.pgsql.internal;
 
+import org.springframework.jdbc.core.PreparedStatementCreator;
+
 import lombok.AccessLevel;
 import lombok.Generated;
 import lombok.experimental.FieldDefaults;
@@ -100,6 +102,15 @@ public class PGConstants {
             + " , '{meta}' , COALESCE(" + COLUMN_HEADER
             + "->'meta','{}') || concat('{\"_ser\":', " + COLUMN_SER
             + " ,'}' )::jsonb , true) WHERE header @> ?::jsonb";
+
+    public static final String SELECT_DICTINCT_NAMESPACE = "SELECT DISTINCT(" + COLUMN_HEADER
+            + "->>'" + ALIAS_NS + "') " + ALIAS_NS
+            + " FROM " + TABLE_FACT + " WHERE " + COLUMN_HEADER + "->>'" + ALIAS_NS
+            + "' IS NOT NULL";
+
+    public static final String SELECT_DICTINCT_TYPE_IN_NAMESPACE = "SELECT DISTINCT("
+            + COLUMN_HEADER + "->>'" + ALIAS_TYPE + "') "
+            + " FROM " + TABLE_FACT + " WHERE (" + COLUMN_HEADER + "->>'" + ALIAS_NS + "')=?";
 
     public static String SELECT_SER_BY_ID = "SELECT " + COLUMN_SER + " FROM " + TABLE_FACT
             + " WHERE "

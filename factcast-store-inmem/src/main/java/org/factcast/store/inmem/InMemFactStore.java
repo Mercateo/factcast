@@ -43,6 +43,7 @@ import org.factcast.core.subscription.observer.FactObserver;
 import org.springframework.beans.factory.DisposableBean;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Predicates;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -237,6 +238,24 @@ public class InMemFactStore implements FactStore, DisposableBean {
             }
         }
         return OptionalLong.empty();
+    }
+
+    @Override
+    public Set<String> enumerateNamespaces() {
+        return store.values()
+                .stream()
+                .map(Fact::ns)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<String> enumerateTypes(String ns) {
+        return store.values()
+                .stream()
+                .filter(f -> f.ns().equals(ns))
+                .map(Fact::type)
+                .filter(t -> t != null)
+                .collect(Collectors.toSet());
     }
 
 }
