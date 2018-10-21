@@ -68,147 +68,155 @@ import net.devh.springboot.autoconfigure.grpc.client.AddressChannelFactory;
 @Slf4j
 class GrpcFactStore implements FactStore, SmartInitializingSingleton {
 
-	static final String CHANNEL_NAME = "factstore";
+    static final String CHANNEL_NAME = "factstore";
 
-	static final ProtocolVersion PROTOCOL_VERSION = ProtocolVersion.of(1, 0, 0);
+    static final ProtocolVersion PROTOCOL_VERSION = ProtocolVersion.of(1, 0, 0);
 
-	private RemoteFactStoreBlockingStub blockingStub;
+    private RemoteFactStoreBlockingStub blockingStub;
 
-	private RemoteFactStoreStub stub;
+    private RemoteFactStoreStub stub;
 
-	private final ProtoConverter converter = new ProtoConverter();
+    private final ProtoConverter converter = new ProtoConverter();
 
-	private ProtocolVersion serverProtocolVersion;
+    private ProtocolVersion serverProtocolVersion;
 
-	private Map<String, String> serverProperties;
+    private Map<String, String> serverProperties;
 
-	private final AtomicBoolean initialized = new AtomicBoolean(false);
+    private final AtomicBoolean initialized = new AtomicBoolean(false);
 
-	@Autowired
-	GrpcFactStore(AddressChannelFactory channelFactory) {
-		this(channelFactory.createChannel(CHANNEL_NAME));
+    @Autowired
+    GrpcFactStore(AddressChannelFactory channelFactory) {
+        this(channelFactory.createChannel(CHANNEL_NAME));
 
-	}
+    }
 
-	@VisibleForTesting
-	GrpcFactStore(@NonNull Channel channel) {
-		this(RemoteFactStoreGrpc.newBlockingStub(channel), RemoteFactStoreGrpc.newStub(channel));
-	}
+    @VisibleForTesting
+    GrpcFactStore(@NonNull Channel channel) {
+        this(RemoteFactStoreGrpc.newBlockingStub(channel), RemoteFactStoreGrpc.newStub(channel));
+    }
 
-	@VisibleForTesting
-	GrpcFactStore(@NonNull RemoteFactStoreBlockingStub newBlockingStub, @NonNull RemoteFactStoreStub newStub) {
-		this.blockingStub = newBlockingStub;
-		this.stub = newStub;
-	}
+    @VisibleForTesting
+    GrpcFactStore(@NonNull RemoteFactStoreBlockingStub newBlockingStub,
+            @NonNull RemoteFactStoreStub newStub) {
+        this.blockingStub = newBlockingStub;
+        this.stub = newStub;
+    }
 
-	@Override
-	public Optional<Fact> fetchById(UUID id) {
-		log.trace("fetching {} from remote store", id);
-		MSG_OptionalFact fetchById = blockingStub.fetchById(converter.toProto(id));
-		if (!fetchById.getPresent()) {
-			return Optional.empty();
-		} else {
-			return converter.fromProto(fetchById);
-		}
-	}
+    @Override
+    public Optional<Fact> fetchById(UUID id) {
+        log.trace("fetching {} from remote store", id);
+        MSG_OptionalFact fetchById = blockingStub.fetchById(converter.toProto(id));
+        if (!fetchById.getPresent()) {
+            return Optional.empty();
+        } else {
+            return converter.fromProto(fetchById);
+        }
+    }
 
-	@Override
-	public void publish(@NonNull List<? extends Fact> factsToPublish) {
-		log.trace("publishing {} facts to remote store", factsToPublish.size());
-		List<MSG_Fact> mf = factsToPublish.stream().map(converter::toProto).collect(Collectors.toList());
-		MSG_Facts mfs = MSG_Facts.newBuilder().addAllFact(mf).build();
-		// blockingStub.getCallOptions().withCompression(compressor);
-		blockingStub.publish(mfs);
+    @Override
+    public void publish(@NonNull List<? extends Fact> factsToPublish) {
+        log.trace("publishing {} facts to remote store", factsToPublish.size());
+        List<MSG_Fact> mf = factsToPublish.stream().map(converter::toProto).collect(Collectors
+                .toList());
+        MSG_Facts mfs = MSG_Facts.newBuilder().addAllFact(mf).build();
+        // blockingStub.getCallOptions().withCompression(compressor);
+        blockingStub.publish(mfs);
 
-	}
+    }
 
-	@Override
-	public Subscription subscribe(@NonNull SubscriptionRequestTO req, @NonNull FactObserver observer) {
-		SubscriptionImpl<Fact> subscription = SubscriptionImpl.on(observer);
+    @Override
+    public Subscription subscribe(@NonNull SubscriptionRequestTO req,
+            @NonNull FactObserver observer) {
+        SubscriptionImpl<Fact> subscription = SubscriptionImpl.on(observer);
 
-		StreamObserver<FactStoreProto.MSG_Notification> responseObserver = new ClientStreamObserver(subscription);
+        StreamObserver<FactStoreProto.MSG_Notification> responseObserver = new ClientStreamObserver(
+                subscription);
 
-		ClientCall<MSG_SubscriptionRequest, MSG_Notification> call = stub.getChannel()
-				.newCall(RemoteFactStoreGrpc.METHOD_SUBSCRIBE, stub.getCallOptions().withWaitForReady());
+        ClientCall<MSG_SubscriptionRequest, MSG_Notification> call = stub.getChannel()
+                .newCall(RemoteFactStoreGrpc.METHOD_SUBSCRIBE, stub.getCallOptions()
+                        .withWaitForReady());
 
-		asyncServerStreamingCall(call, converter.toProto(req), responseObserver);
+        asyncServerStreamingCall(call, converter.toProto(req), responseObserver);
 
-		return subscription.onClose(() -> {
-			cancel(call);
-		});
-	}
+        return subscription.onClose(() -> {
+            cancel(call);
+        });
+    }
 
-	private void cancel(final ClientCall<MSG_SubscriptionRequest, MSG_Notification> call) {
-		call.cancel("Client is no longer interested", null);
-	}
+    private void cancel(final ClientCall<MSG_SubscriptionRequest, MSG_Notification> call) {
+        call.cancel("Client is no longer interested", null);
+    }
 
-	@Override
-	public OptionalLong serialOf(@NonNull UUID l) {
-		return converter.fromProto(blockingStub.serialOf(converter.toProto(l)));
-	}
+    @Override
+    public OptionalLong serialOf(@NonNull UUID l) {
+        return converter.fromProto(blockingStub.serialOf(converter.toProto(l)));
+    }
 
-	public synchronized void initialize() {
-		if (initialized.getAndSet(true))
-			initialize();
+    public synchronized void initialize() {
+        if (initialized.getAndSet(true))
+            initialize();
 
-		log.debug("Invoking handshake");
+        log.debug("Invoking handshake");
 
-		ServerConfig cfg = converter.fromProto(blockingStub.handshake(converter.empty()));
+        ServerConfig cfg = converter.fromProto(blockingStub.handshake(converter.empty()));
 
-		serverProtocolVersion = cfg.version();
-		serverProperties = cfg.properties();
+        serverProtocolVersion = cfg.version();
+        serverProperties = cfg.properties();
 
-		if (!PROTOCOL_VERSION.isCompatibleTo(serverProtocolVersion))
-			throw new IncompatibleProtocolVersions("Apparently, the local Protocol Version " + PROTOCOL_VERSION
-					+ " is not compatible with the Server's " + serverProtocolVersion
-					+ ". \nPlease choose a compatible GRPC Client to connect to this Server.");
+        if (!PROTOCOL_VERSION.isCompatibleTo(serverProtocolVersion))
+            throw new IncompatibleProtocolVersions("Apparently, the local Protocol Version "
+                    + PROTOCOL_VERSION
+                    + " is not compatible with the Server's " + serverProtocolVersion
+                    + ". \nPlease choose a compatible GRPC Client to connect to this Server.");
 
-		if (!PROTOCOL_VERSION.equals(serverProtocolVersion))
-			log.info("Compatible protocol version encountered client={}, server={}", PROTOCOL_VERSION,
-					serverProtocolVersion);
-		else
-			log.info("Matching protocol version encountered {}", serverProtocolVersion);
+        if (!PROTOCOL_VERSION.equals(serverProtocolVersion))
+            log.info("Compatible protocol version encountered client={}, server={}",
+                    PROTOCOL_VERSION,
+                    serverProtocolVersion);
+        else
+            log.info("Matching protocol version encountered {}", serverProtocolVersion);
 
-		configure();
-	}
+        configure();
+    }
 
-	private void configure() {
+    private void configure() {
 
-		if (!configureLZ4())
-			configureGZip();
-	}
+        if (!configureLZ4())
+            configureGZip();
+    }
 
-	private boolean configureGZip() {
-		Compressor gzip = CompressorRegistry.getDefaultInstance().lookupCompressor("gzip");
-		if (gzip != null) {
-			log.info("configuring GZip");
-			String encoding = gzip.getMessageEncoding();
-			this.blockingStub = blockingStub.withCompression(encoding);
-			this.stub = stub.withCompression(encoding);
-			return true;
-		} else
-			return false;
-	}
+    private boolean configureGZip() {
+        Compressor gzip = CompressorRegistry.getDefaultInstance().lookupCompressor("gzip");
+        if (gzip != null) {
+            log.info("configuring GZip");
+            String encoding = gzip.getMessageEncoding();
+            this.blockingStub = blockingStub.withCompression(encoding);
+            this.stub = stub.withCompression(encoding);
+            return true;
+        } else
+            return false;
+    }
 
-	private boolean configureLZ4() {
-		Compressor lz4Compressor = CompressorRegistry.getDefaultInstance().lookupCompressor("lz4");
-		boolean localLz4 = lz4Compressor != null;
-		boolean remoteLz4 = Boolean.valueOf(serverProperties.get(Capabilities.CODEC_LZ4.toString()));
+    private boolean configureLZ4() {
+        Compressor lz4Compressor = CompressorRegistry.getDefaultInstance().lookupCompressor("lz4");
+        boolean localLz4 = lz4Compressor != null;
+        boolean remoteLz4 = Boolean.valueOf(serverProperties.get(Capabilities.CODEC_LZ4
+                .toString()));
 
-		if (localLz4 && remoteLz4) {
-			log.info("LZ4 Codec available on client and server - configuring LZ4");
-			String encoding = lz4Compressor.getMessageEncoding();
-			this.blockingStub = blockingStub.withCompression(encoding);
-			this.stub = stub.withCompression(encoding);
-			return true;
-		} else
-			return false;
+        if (localLz4 && remoteLz4) {
+            log.info("LZ4 Codec available on client and server - configuring LZ4");
+            String encoding = lz4Compressor.getMessageEncoding();
+            this.blockingStub = blockingStub.withCompression(encoding);
+            this.stub = stub.withCompression(encoding);
+            return true;
+        } else
+            return false;
 
-	}
+    }
 
-	@Override
-	public synchronized void afterSingletonsInstantiated() {
-		initialize();
-	}
+    @Override
+    public synchronized void afterSingletonsInstantiated() {
+        initialize();
+    }
 
 }

@@ -30,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ClientLZ4Configuration {
     @Bean
     public LZ4Codec lz4Codec() {
+        log.info("offering LZ4 Codec");
         return new LZ4Codec();
     }
 }

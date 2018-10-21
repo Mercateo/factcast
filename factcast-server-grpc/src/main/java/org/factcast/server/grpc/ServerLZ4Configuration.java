@@ -16,7 +16,6 @@
 package org.factcast.server.grpc;
 
 import org.factcast.grpc.compression.lz4.LZ4Codec;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,9 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @ConditionalOnClass(name = "net.jpountz.lz4.LZ4Constants")
+@Slf4j
 public class ServerLZ4Configuration {
     @Bean
     public LZ4Codec lz4Codec() {
+        log.info("offering LZ4 Codec");
         return new LZ4Codec();
     }
 }
