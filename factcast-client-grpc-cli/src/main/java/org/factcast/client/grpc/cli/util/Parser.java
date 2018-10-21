@@ -86,11 +86,11 @@ public class Parser {
             }
         }
 
-        @Parameter(names = "--help", help = true, hidden = true)
+        @Parameter(names = { "--help", "-help", "-?", "--?" }, help = true, hidden = true)
         boolean help;
 
         @Getter
-        @Parameter(names = "--pretty", help = true, description = "format JSON output")
+        @Parameter(names = { "--pretty", "-p" }, help = true, description = "format JSON output")
         boolean pretty = false;
 
         @Parameter(names = "--host", description = "the hostname to connect to")
