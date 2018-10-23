@@ -20,11 +20,11 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import org.apache.tomcat.jdbc.pool.PoolConfiguration;
 import org.postgresql.jdbc.PgConnection;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -42,15 +42,15 @@ public class PgConnectionSupplier {
     @NonNull
     private final org.apache.tomcat.jdbc.pool.DataSource ds;
 
-    @Inject
+    @Autowired
     PgConnectionSupplier(@NonNull DataSource dataSource) {
 
         if (dataSource instanceof org.apache.tomcat.jdbc.pool.DataSource) {
             this.ds = (org.apache.tomcat.jdbc.pool.DataSource) dataSource;
         } else {
-            throw new IllegalStateException("expected "
-                    + org.apache.tomcat.jdbc.pool.DataSource.class.getName()
-                    + " , but got " + dataSource.getClass().getName());
+            throw new IllegalStateException(
+                    "expected " + org.apache.tomcat.jdbc.pool.DataSource.class.getName()
+                            + " , but got " + dataSource.getClass().getName());
         }
     }
 
@@ -88,15 +88,15 @@ public class PgConnectionSupplier {
                             .withKeyValueSeparator("=")
                             .split(connectionProperties);
 
-                    setProperty(dbp, "socketTimeout", singleConnectionProperties.get(
-                            "socketTimeout"));
-                    setProperty(dbp, "connectTimeout", singleConnectionProperties.get(
-                            "connectTimeout"));
-                    setProperty(dbp, "loginTimeout", singleConnectionProperties.get(
-                            "loginTimeout"));
+                    setProperty(dbp, "socketTimeout",
+                            singleConnectionProperties.get("socketTimeout"));
+                    setProperty(dbp, "connectTimeout",
+                            singleConnectionProperties.get("connectTimeout"));
+                    setProperty(dbp, "loginTimeout",
+                            singleConnectionProperties.get("loginTimeout"));
                 } catch (IllegalArgumentException e) {
-                    throw new IllegalArgumentException("illegal connectionProperties: "
-                            + connectionProperties);
+                    throw new IllegalArgumentException(
+                            "illegal connectionProperties: " + connectionProperties);
                 }
             }
         }

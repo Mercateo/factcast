@@ -57,8 +57,8 @@
   </developers>
   <properties>
     <grpc.version>1.12.0</grpc.version>
-    <spring-boot.version>1.5.9.RELEASE</spring-boot.version>
-    <spring-cloud.version>Edgware.SR1</spring-cloud.version>
+    <spring-boot.version>2.0.6.RELEASE</spring-boot.version>
+    <spring-cloud.version>Finchley.SR1</spring-cloud.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <formatter.config>${project.parent.basedir}/src/eclipse/config/</formatter.config>
@@ -78,6 +78,11 @@
         <version>${spring-cloud.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.2</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -99,6 +104,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
+      <version>26.0-jre</version>
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
@@ -114,7 +120,6 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
-      <version>1.18.2</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
@@ -174,7 +179,6 @@
       <plugin>
         <groupId>org.eluder.coveralls</groupId>
         <artifactId>coveralls-maven-plugin</artifactId>
-        <version>4.3.0</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -220,12 +224,9 @@
               <pluginExecutions>
                 <pluginExecution>
                   <pluginExecutionFilter>
-                    <groupId> org.commonjava.maven.plugins 
-										</groupId>
-                    <artifactId> directory-maven-plugin 
-										</artifactId>
-                    <versionRange> [0.3.1,) 
-										</versionRange>
+                    <groupId>org.commonjava.maven.plugins</groupId>
+                    <artifactId>directory-maven-plugin</artifactId>
+                    <versionRange>[0.3.1,)</versionRange>
                     <goals>
                       <goal>highest-basedir</goal>
                     </goals>
@@ -236,12 +237,9 @@
                 </pluginExecution>
                 <pluginExecution>
                   <pluginExecutionFilter>
-                    <groupId> org.apache.maven.plugins 
-										</groupId>
-                    <artifactId> maven-enforcer-plugin 
-										</artifactId>
-                    <versionRange> [1.0,) 
-										</versionRange>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <versionRange>[1.0,)</versionRange>
                     <goals>
                       <goal>enforce</goal>
                     </goals>

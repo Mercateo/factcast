@@ -1,7 +1,7 @@
 package org.factcast.core;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultFactCast0Test {
@@ -50,8 +50,7 @@ public class DefaultFactCast0Test {
 
         final UUID since = UUID.randomUUID();
         SubscriptionRequest r = SubscriptionRequest.follow(FactSpec.forMark())
-                .or(FactSpec.ns(
-                        "some").type("type"))
+                .or(FactSpec.ns("some").type("type"))
                 .from(since);
 
         uut.subscribeToFacts(r, f -> {
@@ -71,8 +70,7 @@ public class DefaultFactCast0Test {
         when(store.subscribe(csr.capture(), any())).thenReturn(mock(Subscription.class));
 
         SubscriptionRequest r = SubscriptionRequest.follow(FactSpec.forMark())
-                .or(FactSpec.ns(
-                        "some").type("type"))
+                .or(FactSpec.ns("some").type("type"))
                 .fromScratch();
 
         uut.subscribeToIds(r, f -> {
