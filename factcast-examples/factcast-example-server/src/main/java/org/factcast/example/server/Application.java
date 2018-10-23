@@ -16,10 +16,10 @@
 package org.factcast.example.server;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.web.ErrorMvcAutoConfiguration;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Bean;
+
+import com.codahale.metrics.MetricRegistry;
 
 /**
  * Spring boot starter for running a factcast server.
@@ -30,10 +30,16 @@ import org.springframework.context.annotation.Configuration;
  *
  */
 @SpringBootApplication
-@EnableAutoConfiguration(exclude = ErrorMvcAutoConfiguration.class)
-@Configuration
 public class Application {
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class);
     }
+
+    // FIXME drop this after switch to micrometer
+    @Bean
+    MetricRegistry metricRegistry() {
+        return new MetricRegistry();
+    }
+
 }
