@@ -36,6 +36,17 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-jdbc</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>com.zaxxer</groupId>
+          <artifactId>HikariCP</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- FIXME get rid of tomcat-jdbc -->
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-jdbc</artifactId>
     </dependency>
     <dependency>
       <groupId>io.dropwizard.metrics</groupId>
@@ -45,23 +56,10 @@
       <groupId>org.liquibase</groupId>
       <artifactId>liquibase-core</artifactId>
       <version>3.6.2</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.postgres</groupId>
-          <artifactId>postgres</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.1.1</version>
-      <!--$NO-MVN-MAN-VER$ -->
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

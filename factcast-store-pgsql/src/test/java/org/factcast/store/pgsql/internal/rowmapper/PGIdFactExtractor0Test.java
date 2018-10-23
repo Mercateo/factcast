@@ -9,7 +9,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.factcast.core.Fact;
 import org.factcast.store.pgsql.internal.PGConstants;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -21,14 +20,10 @@ public class PGIdFactExtractor0Test {
 
     private PGIdFactExtractor uut = new PGIdFactExtractor(serial);
 
-    @Before
-    public void setUp() throws Exception {
-    }
-
     @Test
     public void testMapRow() throws Exception {
+        @SuppressWarnings("resource")
         ResultSet rs = mock(ResultSet.class);
-        when(rs.next()).thenReturn(true, false);
         final UUID id = UUID.randomUUID();
         when(rs.getString(PGConstants.ALIAS_ID)).thenReturn(id.toString());
         when(rs.getLong(PGConstants.COLUMN_SER)).thenReturn(27L);
