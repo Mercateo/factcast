@@ -42,8 +42,6 @@ import org.factcast.core.subscription.SubscriptionRequestTO;
 import org.factcast.core.subscription.observer.FactObserver;
 import org.springframework.beans.factory.DisposableBean;
 
-import com.google.common.annotations.VisibleForTesting;
-
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
