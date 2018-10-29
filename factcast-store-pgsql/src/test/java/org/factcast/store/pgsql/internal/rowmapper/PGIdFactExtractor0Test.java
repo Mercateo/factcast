@@ -1,7 +1,8 @@
 package org.factcast.store.pgsql.internal.rowmapper;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
 import java.util.UUID;

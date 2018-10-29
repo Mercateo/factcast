@@ -59,6 +59,7 @@
     <grpc.version>1.12.0</grpc.version>
     <spring-boot.version>1.5.9.RELEASE</spring-boot.version>
     <spring-cloud.version>Edgware.SR1</spring-cloud.version>
+    <mockito.version>2.23.0</mockito.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <formatter.config>${project.basedir}/src/eclipse/config/</formatter.config>
@@ -100,6 +101,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
