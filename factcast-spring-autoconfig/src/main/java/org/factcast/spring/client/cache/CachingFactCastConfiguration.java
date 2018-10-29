@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.factcast.client.cache;
+package org.factcast.spring.client.cache;
 
+import org.factcast.client.cache.CachingFactCast;
+import org.factcast.client.cache.CachingFactLookup;
 import org.factcast.core.FactCast;
 import org.factcast.core.store.FactStore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,6 +35,7 @@ import lombok.NonNull;
  */
 @Configuration
 @Generated // to exclude from coverage analysis
+@ConditionalOnClass(CachingFactCast.class)
 public class CachingFactCastConfiguration {
 
     @Bean

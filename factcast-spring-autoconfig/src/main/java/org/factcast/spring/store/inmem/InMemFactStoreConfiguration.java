@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.factcast.store.inmem;
+package org.factcast.spring.store.inmem;
 
 import org.factcast.core.store.FactStore;
+import org.factcast.store.inmem.InMemFactStore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -17,7 +17,9 @@ package org.factcast.spring;
 
 import org.factcast.core.FactCast;
 import org.factcast.core.store.FactStore;
-import org.factcast.store.inmem.InMemFactStoreConfiguration;
+import org.factcast.spring.client.cache.CachingFactCastConfiguration;
+import org.factcast.spring.client.cache.infinispan.FactCastInfinispanConfiguration;
+import org.factcast.spring.store.inmem.InMemFactStoreConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -26,7 +28,8 @@ import lombok.Generated;
 
 @Configuration
 @Generated
-@Import(InMemFactStoreConfiguration.class)
+@Import({ InMemFactStoreConfiguration.class, CachingFactCastConfiguration.class,
+        FactCastInfinispanConfiguration.class })
 public class AutoConfiguration {
 
     @Bean

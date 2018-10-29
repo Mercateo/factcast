@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.factcast.store.inmem;
+package org.factcast.spring.store.inmem;
 
+import org.factcast.store.inmem.InMemFactStore;
 import org.springframework.beans.factory.DisposableBean;
 
 @SuppressWarnings("deprecation")

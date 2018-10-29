@@ -14,10 +14,9 @@
       <artifactId>factcast-core</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!-- TODO tighten -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
+      <artifactId>spring-boot-starter</artifactId>
     </dependency>
   </dependencies>
   <build>
