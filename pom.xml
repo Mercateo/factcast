@@ -20,7 +20,6 @@
   <modules>
     <module>factcast-bom</module>
     <module>factcast-site</module>
-    <module>factcast-spring-boot1-starter</module>
     <module>factcast-spring-autoconfig</module>
     <module>factcast-client-grpc</module>
     <module>factcast-client-grpc-cli</module>
@@ -60,7 +59,7 @@
   <properties>
     <grpc.version>1.12.0</grpc.version>
     <assertj.version>3.11.1</assertj.version>
-    <junit.version>4.8.2</junit.version>
+    <junit.version>4.12</junit.version>
     <mockito.version>2.23.0</mockito.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
@@ -74,6 +73,12 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.7.22</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.7.22</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
