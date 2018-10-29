@@ -20,6 +20,7 @@
   <modules>
     <module>factcast-bom</module>
     <module>factcast-site</module>
+    <module>factcast-spring</module>
     <module>factcast-client-grpc</module>
     <module>factcast-client-grpc-cli</module>
     <module>factcast-client-cache</module>
@@ -63,6 +64,7 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <formatter.config>${project.basedir}/src/eclipse/config/</formatter.config>
+    <lombok.version>1.18.2</lombok.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -84,6 +86,16 @@
   </dependencyManagement>
   <dependencies>
     <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+      <version>${lombok.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
@@ -103,12 +115,6 @@
       <artifactId>mockito-core</artifactId>
       <version>${mockito.version}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <scope>provided</scope>
-      <version>1.18.2</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.findbugs</groupId>

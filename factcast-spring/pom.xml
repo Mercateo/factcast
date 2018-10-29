@@ -7,28 +7,24 @@
     <version>0.0.26-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>factcast-server-grpc</artifactId>
+  <artifactId>factcast-spring</artifactId>
   <dependencies>
-    <dependency>
-      <groupId>net.devh</groupId>
-      <artifactId>grpc-server-spring-boot-starter</artifactId>
-      <version>1.4.1.RELEASE</version>
-    </dependency>
-    <dependency>
-      <groupId>org.factcast</groupId>
-      <artifactId>factcast-grpc-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
     <dependency>
       <groupId>org.factcast</groupId>
       <artifactId>factcast-core</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!-- TODO de-springify -->
     <dependency>
       <groupId>org.factcast</groupId>
-      <artifactId>factcast-spring</artifactId>
+      <artifactId>factcast-store-inmem</artifactId>
       <version>${project.version}</version>
+      <!-- this is just for testing, or running locally so remove it from direct dependencies -->
+      <optional>true</optional>
+    </dependency>
+    <!-- TODO tighten -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
   </dependencies>
 </project>

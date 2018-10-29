@@ -16,9 +16,12 @@
 package org.factcast.store.inmem;
 
 import org.factcast.core.store.FactStore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Configuration to include in order to use a PGFactStore
@@ -30,11 +33,25 @@ import org.springframework.context.annotation.Configuration;
  *
  */
 @Configuration
+@ConditionalOnClass(InMemFactStore.class)
+@Slf4j
 public class InMemFactStoreConfiguration {
     @SuppressWarnings("deprecation")
     @Bean
-    @ConditionalOnMissingBean(FactStore.class)
+    @Primary
     public FactStore factStore() {
-        return new InMemFactStore();
+
+        log.warn("");
+        log.warn(
+                "***********************************************************************************************************");
+        log.warn(
+                "* You are using an inmem-impl of a FactStore. This implementation is for quick testing ONLY and will fail *");
+        log.warn(
+                "*   with OOM if you load it with a significant amount of Facts.                                           *");
+        log.warn(
+                "***********************************************************************************************************");
+        log.warn("");
+
+        return new DisposableInMemFactStore();
     }
 }

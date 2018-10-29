@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.factcast.core.Fact;
-import org.factcast.core.Test0Fact;
 import org.factcast.core.spec.FactSpec;
 import org.factcast.core.store.FactStore;
 import org.factcast.core.subscription.SubscriptionRequest;
@@ -80,8 +79,8 @@ public class FactStoreGrpcService0Test {
         doNothing().when(backend).publish(acFactList.capture());
         Builder b = MSG_Facts.newBuilder();
 
-        Test0Fact f1 = new Test0Fact();
-        Test0Fact f2 = new Test0Fact();
+        Fact f1 = Fact.builder().ns("test").build("{}");
+        Fact f2 = Fact.builder().ns("test").build("{}");
         MSG_Fact msg1 = protoConverter.toProto(f1);
         MSG_Fact msg2 = protoConverter.toProto(f2);
 

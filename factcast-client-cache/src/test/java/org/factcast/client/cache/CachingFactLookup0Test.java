@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.factcast.core.Fact;
-import org.factcast.core.Test0Fact;
 import org.factcast.core.store.FactStore;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +43,7 @@ public class CachingFactLookup0Test {
 
     @Test
     public void testLookupWorks() throws Exception {
-        final Test0Fact f = new Test0Fact();
+        final Fact f = Fact.builder().ns("test").build("{}");
         when(store.fetchById(f.id())).thenReturn(Optional.of(f));
 
         Optional<Fact> lookup = uut.lookup(f.id());
