@@ -29,6 +29,11 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- TODO remove -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
