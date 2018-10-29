@@ -15,7 +15,6 @@
  */
 package org.factcast.client.grpc;
 
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -30,7 +29,6 @@ import net.devh.springboot.autoconfigure.grpc.client.AddressChannelFactory;
  */
 @Import(ClientLZ4Configuration.class)
 @Configuration
-@AutoConfigureAfter(ClientLZ4Configuration.class)
 public class GrpcFactStoreConfiguration {
 
     @Bean

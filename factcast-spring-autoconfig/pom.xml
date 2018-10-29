@@ -9,11 +9,6 @@
   </parent>
   <artifactId>factcast-spring-autoconfig</artifactId>
   <dependencies>
-    <dependency>
-      <groupId>org.factcast</groupId>
-      <artifactId>factcast-spring</artifactId>
-      <version>${project.version}</version>
-    </dependency>
     <!-- Optional dependencies -->
     <dependency>
       <groupId>org.infinispan</groupId>
@@ -36,6 +31,14 @@
       <groupId>org.infinispan</groupId>
       <artifactId>infinispan-spring4-embedded</artifactId>
       <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
     </dependency>
   </dependencies>
 </project>

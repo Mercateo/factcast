@@ -24,11 +24,13 @@
       <artifactId>factcast-core</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!-- TODO de-springify -->
     <dependency>
-      <groupId>org.factcast</groupId>
-      <artifactId>factcast-spring</artifactId>
-      <version>${project.version}</version>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
     </dependency>
   </dependencies>
 </project>
