@@ -143,8 +143,6 @@ public class PGSqlListener0Test {
 
     @Test
     public void testStopWithoutStarting() throws Exception {
-        Mockito.when(ds.get()).thenReturn(conn);
-        Mockito.when(conn.prepareStatement(anyString())).thenReturn(mock(PreparedStatement.class));
         PGListener l = new PGListener(ds, bus, tester);
         l.destroy();
 
