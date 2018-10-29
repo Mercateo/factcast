@@ -20,7 +20,6 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;
 
 import org.factcast.client.cache.CachingFactCast;
-import org.factcast.client.cache.CachingFactCastConfiguration;
 import org.factcast.client.cache.CachingFactLookup;
 import org.factcast.core.DefaultFact;
 import org.factcast.core.FactCast;
@@ -36,7 +35,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 @Configuration
-@Import({ CachingFactCastConfiguration.class })
+
 @EnableCaching
 @Slf4j
 public class FactCastInfinispanConfiguration {

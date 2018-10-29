@@ -24,19 +24,17 @@ import org.springframework.context.annotation.Primary;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Configuration to include in order to use a PGFactStore
- * 
- * just forwards to {@link PGFactStoreInternalConfiguration}, so that IDEs can
- * still complain about internal references.
+ * Configuration to include in order to use an InMemStore
  * 
  * @author uwe.schaefer@mercateo.com, joerg.adler@mercateo.com
  *
  */
+@SuppressWarnings("deprecation")
 @Configuration
 @ConditionalOnClass(InMemFactStore.class)
 @Slf4j
 public class InMemFactStoreConfiguration {
-    @SuppressWarnings("deprecation")
+
     @Bean
     @Primary
     public FactStore factStore() {

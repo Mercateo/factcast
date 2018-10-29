@@ -14,13 +14,6 @@
       <artifactId>factcast-core</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.factcast</groupId>
-      <artifactId>factcast-store-inmem</artifactId>
-      <version>${project.version}</version>
-      <!-- this is just for testing, or running locally so remove it from direct dependencies -->
-      <optional>true</optional>
-    </dependency>
     <!-- TODO tighten -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

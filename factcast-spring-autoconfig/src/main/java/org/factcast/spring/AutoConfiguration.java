@@ -13,29 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.factcast.core;
+package org.factcast.spring;
 
+import org.factcast.core.FactCast;
 import org.factcast.core.store.FactStore;
+import org.factcast.store.inmem.InMemFactStoreConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Import;
 
 import lombok.Generated;
 
-/**
- * Spring config that provides a FactCast instance from a FactStore
- * 
- * @author uwe.schaefer@mercateo.com
- *
- */
 @Configuration
-@Generated // to exclude from coverage analysis
-public class FactCastConfiguration {
+@Generated
+@Import(InMemFactStoreConfiguration.class)
+public class AutoConfiguration {
 
     @Bean
-    @Primary
     public FactCast factCast(FactStore store) {
         return FactCast.from(store);
     }
-
 }
