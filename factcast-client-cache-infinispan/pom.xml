@@ -22,14 +22,17 @@
     <dependency>
       <groupId>javax.cache</groupId>
       <artifactId>cache-api</artifactId>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.infinispan</groupId>
       <artifactId>infinispan-spring4-embedded</artifactId>
+      <version>8.2.8.Final</version>
     </dependency>
     <dependency>
       <groupId>org.infinispan</groupId>
       <artifactId>infinispan-jcache</artifactId>
+      <version>8.2.8.Final</version>
     </dependency>
   </dependencies>
 </project>

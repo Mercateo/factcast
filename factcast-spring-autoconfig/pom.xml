@@ -14,6 +14,7 @@
       <groupId>org.infinispan</groupId>
       <artifactId>infinispan-jcache</artifactId>
       <optional>true</optional>
+      <version>8.2.8.Final</version>
     </dependency>
     <dependency>
       <groupId>org.factcast</groupId>
@@ -31,14 +32,17 @@
       <groupId>org.infinispan</groupId>
       <artifactId>infinispan-spring4-embedded</artifactId>
       <optional>true</optional>
+      <version>8.2.8.Final</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
+      <version>4.3.8.RELEASE</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-autoconfigure</artifactId>
+      <version>1.5.9.RELEASE</version>
     </dependency>
   </dependencies>
 </project>
