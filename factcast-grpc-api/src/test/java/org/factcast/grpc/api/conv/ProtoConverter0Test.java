@@ -66,7 +66,7 @@ public class ProtoConverter0Test {
                 .meta(key2, value2)
                 .type(type)
                 .ns(ns)
-                .build("payload");
+                .build(payload);
 
         Fact copy = uut.fromProto(uut.toProto(probe));
 
