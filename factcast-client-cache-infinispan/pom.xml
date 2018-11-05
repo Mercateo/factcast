@@ -8,31 +8,37 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>factcast-client-cache-infinispan</artifactId>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.factcast</groupId>
+        <artifactId>factcast-dependencies-boot1</artifactId>
+        <version>${project.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>org.factcast</groupId>
       <artifactId>factcast-core</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.factcast</groupId>
       <artifactId>factcast-client-cache</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.cache</groupId>
       <artifactId>cache-api</artifactId>
-      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.infinispan</groupId>
       <artifactId>infinispan-spring4-embedded</artifactId>
-      <version>8.2.8.Final</version>
     </dependency>
     <dependency>
       <groupId>org.infinispan</groupId>
       <artifactId>infinispan-jcache</artifactId>
-      <version>8.2.8.Final</version>
     </dependency>
   </dependencies>
 </project>

@@ -8,34 +8,40 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>factcast-store-test</artifactId>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.factcast</groupId>
+        <artifactId>factcast-dependencies-boot1</artifactId>
+        <version>${project.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>org.factcast</groupId>
       <artifactId>factcast-core</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>4.3.13.RELEASE</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>${assertj.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>${mockito.version}</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

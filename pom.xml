@@ -20,6 +20,9 @@
   <modules>
     <module>factcast-bom</module>
     <module>factcast-site</module>
+    <module>factcast-dependencies</module>
+    <module>factcast-dependencies-boot1</module>
+    <module>factcast-dependencies-boot2</module>
     <module>factcast-spring-autoconfig</module>
     <module>factcast-client-grpc</module>
     <module>factcast-client-grpc-cli</module>
@@ -66,19 +69,11 @@
     <formatter.config>${project.basedir}/src/eclipse/config/</formatter.config>
     <lombok.version>1.18.2</lombok.version>
   </properties>
-  <dependencyManagement>
-	</dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.7.22</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <version>1.7.22</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

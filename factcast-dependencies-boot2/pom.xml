@@ -7,27 +7,20 @@
     <version>0.0.26-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>factcast-store-inmem</artifactId>
+  <artifactId>factcast-dependencies-boot2</artifactId>
+  <packaging>pom</packaging>
+  <properties>
+	</properties>
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.factcast</groupId>
-        <artifactId>factcast-dependencies-boot1</artifactId>
+        <artifactId>factcast-dependencies</artifactId>
         <version>${project.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <!--TODO add sb2 deps -->
     </dependencies>
   </dependencyManagement>
-  <dependencies>
-    <dependency>
-      <groupId>org.factcast</groupId>
-      <artifactId>factcast-store-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.factcast</groupId>
-      <artifactId>factcast-core</artifactId>
-    </dependency>
-  </dependencies>
 </project>

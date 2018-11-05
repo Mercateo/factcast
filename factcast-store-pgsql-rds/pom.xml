@@ -8,11 +8,21 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>factcast-store-pgsql-rds</artifactId>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.factcast</groupId>
+        <artifactId>factcast-dependencies-boot1</artifactId>
+        <version>${project.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-aws-jdbc</artifactId>
-      <version>1.2.2.RELEASE</version>
       <exclusions>
         <exclusion>
           <groupId>commons-logging</groupId>
