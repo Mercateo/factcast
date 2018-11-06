@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.factcast.spring.store.inmem;
+package org.factcast.spring.boot.autoconfigure.store.inmem;
 
 import org.factcast.store.inmem.InMemFactStore;
 import org.springframework.beans.factory.DisposableBean;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.factcast.spring.client.cache.infinispan;
+package org.factcast.spring.boot.autoconfigure.client.cache.infinispan;
 
 import java.util.concurrent.TimeUnit;
 

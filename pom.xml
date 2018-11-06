@@ -23,7 +23,7 @@
     <module>factcast-internal-dep</module>
     <module>factcast-internal-dep-boot1</module>
     <module>factcast-internal-dep-boot2</module>
-    <module>factcast-spring-autoconfig</module>
+    <module>factcast-spring-boot-autoconfigure</module>
     <module>factcast-client-grpc</module>
     <module>factcast-client-grpc-cli</module>
     <module>factcast-client-cache</module>

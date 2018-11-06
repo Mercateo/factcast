@@ -13,27 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.factcast.spring;
+package org.factcast.spring.boot.autoconfigure.client.cache;
 
+import org.factcast.client.cache.CachingFactCast;
+import org.factcast.client.cache.CachingFactLookup;
 import org.factcast.core.FactCast;
 import org.factcast.core.store.FactStore;
-import org.factcast.spring.client.cache.CachingFactCastConfiguration;
-import org.factcast.spring.client.cache.infinispan.FactCastInfinispanConfiguration;
-import org.factcast.spring.store.inmem.InMemFactStoreConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 import lombok.Generated;
+import lombok.NonNull;
 
+/**
+ * Spring configuration class that provides a CachingFactCast by wrapping a
+ * FactCast instance.
+ * 
+ * @author <uwe.schaefer@mercateo.com>
+ *
+ */
 @Configuration
-@Generated
-@Import({ InMemFactStoreConfiguration.class, CachingFactCastConfiguration.class,
-        FactCastInfinispanConfiguration.class })
-public class AutoConfiguration {
+@Generated // to exclude from coverage analysis
+@ConditionalOnClass(CachingFactCast.class)
+public class CachingFactCastConfiguration {
 
     @Bean
-    public FactCast factCast(FactStore store) {
-        return FactCast.from(store);
+    public CachingFactCast cachingFactCast(FactCast fc, CachingFactLookup fl) {
+        return new CachingFactCast(fc, fl);
+    }
+
+    @Bean
+    public CachingFactLookup cachingFactLookup(@NonNull FactStore store) {
+        return new CachingFactLookup(store);
     }
 }
