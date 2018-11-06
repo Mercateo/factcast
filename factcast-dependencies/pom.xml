@@ -10,8 +10,7 @@
   <artifactId>factcast-dependencies</artifactId>
   <packaging>pom</packaging>
   <properties>
-    <!-- TODO -->
-    <grpc.version>1.12.0</grpc.version>
+    <grpc.version>1.14.0</grpc.version>
   </properties>
   <dependencyManagement>
     <dependencies>
