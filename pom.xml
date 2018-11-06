@@ -20,9 +20,9 @@
   <modules>
     <module>factcast-bom</module>
     <module>factcast-site</module>
-    <module>factcast-dependencies</module>
-    <module>factcast-dependencies-boot1</module>
-    <module>factcast-dependencies-boot2</module>
+    <module>factcast-internal-dep</module>
+    <module>factcast-internal-dep-boot1</module>
+    <module>factcast-internal-dep-boot2</module>
     <module>factcast-spring-autoconfig</module>
     <module>factcast-client-grpc</module>
     <module>factcast-client-grpc-cli</module>
