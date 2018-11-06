@@ -7,7 +7,7 @@
     <version>0.0.26-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>factcast-dependencies-boot2</artifactId>
+  <artifactId>factcast-internal-dep-boot2</artifactId>
   <packaging>pom</packaging>
   <properties>
 	</properties>

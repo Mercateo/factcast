@@ -7,7 +7,7 @@
     <version>0.0.26-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>factcast-dependencies-boot1</artifactId>
+  <artifactId>factcast-internal-dep-boot1</artifactId>
   <packaging>pom</packaging>
   <properties>
     <spring-boot.version>1.5.9.RELEASE</spring-boot.version>

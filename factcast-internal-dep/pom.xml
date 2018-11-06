@@ -7,7 +7,7 @@
     <version>0.0.26-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>factcast-dependencies</artifactId>
+  <artifactId>factcast-internal-dep</artifactId>
   <packaging>pom</packaging>
   <properties>
     <grpc.version>1.14.0</grpc.version>
