@@ -20,34 +20,30 @@
     </dependencies>
   </dependencyManagement>
   <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+    </dependency>
     <!-- Optional dependencies -->
-    <dependency>
-      <groupId>org.infinispan</groupId>
-      <artifactId>infinispan-jcache</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.factcast</groupId>
-      <artifactId>factcast-store-inmem</artifactId>
-      <optional>true</optional>
-    </dependency>
     <dependency>
       <groupId>org.factcast</groupId>
       <artifactId>factcast-client-cache</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>org.infinispan</groupId>
-      <artifactId>infinispan-spring4-embedded</artifactId>
+      <groupId>org.factcast</groupId>
+      <artifactId>factcast-client-cache-infinispan</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
+      <groupId>org.factcast</groupId>
+      <artifactId>factcast-core</artifactId>
+      <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-autoconfigure</artifactId>
+      <groupId>org.factcast</groupId>
+      <artifactId>factcast-store-inmem</artifactId>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 </project>

@@ -36,7 +36,7 @@ import lombok.NonNull;
 @Configuration
 @Generated // to exclude from coverage analysis
 @ConditionalOnClass(CachingFactCast.class)
-public class CachingFactCastConfiguration {
+public class CachingFactCastAutoConfiguration {
 
     @Bean
     public CachingFactCast cachingFactCast(FactCast fc, CachingFactLookup fl) {

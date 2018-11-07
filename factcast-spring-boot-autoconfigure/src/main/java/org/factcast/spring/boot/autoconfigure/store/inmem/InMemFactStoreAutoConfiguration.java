@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @ConditionalOnClass(InMemFactStore.class)
 @Slf4j
-public class InMemFactStoreConfiguration {
+public class InMemFactStoreAutoConfiguration {
 
     @Bean
     @Primary

@@ -53,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 @EnableCaching
 @Slf4j
 @ConditionalOnClass(org.infinispan.Version.class)
-public class FactCastInfinispanConfiguration {
+public class FactCastInfinispanAutoConfiguration {
 
     @Bean
     InfinispanInitialization infinispanInitialization(SpringEmbeddedCacheManager cm) {
