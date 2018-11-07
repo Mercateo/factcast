@@ -44,7 +44,7 @@ jobs:
 
       - run: 
           name: Remove factcast artifacts from local repo
-          command: rm ~/.m2/repository/org/factcast
+          command: rm ~/.m2/repository/org/factcast -rf
 
       - save_cache:
           paths:
