@@ -39,8 +39,12 @@ jobs:
           - v1-dependencies-
 
       - run: 
-          name: Quick install
-          command: mvn -B -DskipTests -DskipITs install
+          name: Resolve external deps
+          command: mvn dependency:resolve
+
+      - run: 
+          name: Remove factcast artifacts from local repo
+          command: rm ~/.m2/repository/org/factcast
 
       - save_cache:
           paths:
