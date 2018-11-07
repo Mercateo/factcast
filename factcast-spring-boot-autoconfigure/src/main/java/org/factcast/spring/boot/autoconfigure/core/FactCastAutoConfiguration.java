@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.factcast.spring.boot.autoconfigure;
+package org.factcast.spring.boot.autoconfigure.core;
 
 import org.factcast.core.FactCast;
 import org.factcast.core.store.FactStore;
@@ -30,7 +30,7 @@ import lombok.Generated;
 @Generated
 @Import({ InMemFactStoreConfiguration.class, CachingFactCastConfiguration.class,
         FactCastInfinispanConfiguration.class })
-public class AutoConfiguration {
+public class FactCastAutoConfiguration {
 
     @Bean
     public FactCast factCast(FactStore store) {
