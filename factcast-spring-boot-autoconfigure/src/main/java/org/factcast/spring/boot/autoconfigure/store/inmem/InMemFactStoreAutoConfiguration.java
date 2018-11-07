@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class InMemFactStoreAutoConfiguration {
 
-    @Bean
+    @Bean(destroyMethod = "shutdown")
     @Primary
     public FactStore factStore() {
 
@@ -51,6 +51,6 @@ public class InMemFactStoreAutoConfiguration {
                 "***********************************************************************************************************");
         log.warn("");
 
-        return new DisposableInMemFactStore();
+        return new InMemFactStore();
     }
 }
