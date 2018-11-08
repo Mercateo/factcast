@@ -17,12 +17,14 @@ package org.factcast.spring.boot.autoconfigure.core;
 
 import org.factcast.core.FactCast;
 import org.factcast.core.store.FactStore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import lombok.Generated;
 
 @Configuration
+@ConditionalOnClass(FactCast.class)
 @Generated
 public class FactCastAutoConfiguration {
 
