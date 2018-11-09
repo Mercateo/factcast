@@ -18,12 +18,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.MetricRegistry;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class PGConnectionTester0Test {
     @Mock
     private MetricRegistry registry;

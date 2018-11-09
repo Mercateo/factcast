@@ -14,11 +14,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import io.grpc.stub.ServerCallStreamObserver;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class BlockingStreamObserver0Test {
     @Mock
     private ServerCallStreamObserver<Object> delegate;

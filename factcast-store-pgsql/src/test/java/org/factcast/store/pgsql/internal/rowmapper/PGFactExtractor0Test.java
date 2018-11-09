@@ -13,9 +13,8 @@ import org.factcast.store.pgsql.internal.PGConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class PGFactExtractor0Test {
 
     private AtomicLong serial = new AtomicLong(5);

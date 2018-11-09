@@ -1,13 +1,12 @@
 package org.factcast.core.subscription;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
 
-import javax.swing.event.ListSelectionEvent;
-
-import org.assertj.core.util.Lists;
 import org.factcast.core.MarkFact;
 import org.factcast.core.spec.FactSpec;
 import org.junit.Before;
