@@ -20,7 +20,6 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import org.apache.tomcat.jdbc.pool.PoolConfiguration;
