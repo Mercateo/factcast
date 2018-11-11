@@ -21,10 +21,6 @@ public class PGFactExtractor0Test {
 
     private PGFactExtractor uut = new PGFactExtractor(serial);
 
-    @Before
-    public void setUp() throws Exception {
-    }
-
     @Test
     public void testMapRow() throws Exception {
         ResultSet rs = mock(ResultSet.class);
