@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.factcast.core.Fact;
 import org.factcast.store.pgsql.internal.PGConstants;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
