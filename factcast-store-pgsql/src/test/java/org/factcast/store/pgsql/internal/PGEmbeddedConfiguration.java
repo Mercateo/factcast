@@ -22,8 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @ComponentScan(basePackageClasses = PGConfigurationProperties.class)
 @Import(PGFactStoreInternalConfiguration.class)
-@ImportAutoConfiguration({DataSourceAutoConfiguration.class, JdbcTemplateAutoConfiguration.class,
-        TransactionAutoConfiguration.class})
+@ImportAutoConfiguration({ DataSourceAutoConfiguration.class, JdbcTemplateAutoConfiguration.class,
+        TransactionAutoConfiguration.class })
 @Slf4j
 public class PGEmbeddedConfiguration {
 
