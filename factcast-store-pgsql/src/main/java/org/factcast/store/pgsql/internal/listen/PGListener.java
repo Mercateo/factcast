@@ -45,18 +45,20 @@ import lombok.extern.slf4j.Slf4j;
  * for new Facts from PG.
  *
  * @author uwe.schaefer@mercateo.com
- *
  */
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class PGListener implements InitializingBean, DisposableBean {
 
-    final @NonNull PgConnectionSupplier pgConnectionSupplier;
+    @NonNull
+    final PgConnectionSupplier pgConnectionSupplier;
 
-    final @NonNull EventBus eventBus;
+    @NonNull
+    final EventBus eventBus;
 
-    final @NonNull Predicate<Connection> pgConnectionTester;
+    @NonNull
+    final Predicate<Connection> pgConnectionTester;
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
@@ -66,31 +68,23 @@ public class PGListener implements InitializingBean, DisposableBean {
 
     private void listen() {
         log.trace("Starting instance Listener");
-
         CountDownLatch l = new CountDownLatch(1);
-
         listenerThread = new Thread(() -> {
             while (running.get()) {
                 // make sure, we did not miss anything while reconnecting
                 postEvent("scheduled-poll");
-
                 try (PgConnection pc = pgConnectionSupplier.get()) {
                     try (PreparedStatement ps = pc.prepareStatement(PGConstants.LISTEN_SQL)) {
                         log.trace("Running LISTEN command");
                         ps.execute();
                     }
-
                     while (running.get()) {
-
                         if (pgConnectionTester.test(pc)) {
-
                             log.trace("Waiting for notifications for {}ms",
                                     blockingWaitTimeInMillis);
-
                             l.countDown();
                             PGNotification[] notifications = pc.getNotifications(
                                     blockingWaitTimeInMillis);
-
                             if (notifications != null && notifications.length > 0) {
                                 final String name = notifications[0].getName();
                                 log.trace("notifying consumers for '{}'", name);
@@ -104,15 +98,11 @@ public class PGListener implements InitializingBean, DisposableBean {
                             break;
                         }
                     }
-
                 } catch (SQLException e) {
-
                     log("While waiting for Notifications", e);
                     sleepOneSecondUnlessTesting();
-
                 }
             }
-
         }, "PG Instance Listener");
         listenerThread.setDaemon(true);
         listenerThread.start();
@@ -151,6 +141,7 @@ public class PGListener implements InitializingBean, DisposableBean {
 
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FactInsertionEvent {
+
         @SuppressWarnings("unused")
         final String name;
     }
@@ -167,5 +158,4 @@ public class PGListener implements InitializingBean, DisposableBean {
             listenerThread.interrupt();
         }
     }
-
 }

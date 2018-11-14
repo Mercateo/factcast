@@ -1,5 +1,7 @@
 package org.factcast.example.grpc;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,8 +14,6 @@ import org.springframework.context.annotation.Configuration;
 public class SmokeMT {
 
     public static void main(String[] args) {
-
         SpringApplication.run(SmokeMT.class);
     }
-
 }

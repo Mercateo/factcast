@@ -47,5 +47,4 @@ public class SerialOf implements Command {
                 System.out.println("not found");
         });
     }
-
 }

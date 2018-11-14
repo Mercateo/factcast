@@ -40,13 +40,12 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Creates inifinispan cacheManager and configures cache to use for factCast.
- * 
+ *
  * Note that you can also use infinispan directly via its spring
  * integration/jcache. This package just exists for having reasonable defaults
  * without the risk of conflicting with any configuration files.
- * 
- * @author uwe.schaefer@mercateo.com
  *
+ * @author uwe.schaefer@mercateo.com
  */
 @Configuration
 @lombok.Generated
@@ -79,7 +78,6 @@ public class FactCastInfinispanAutoConfiguration {
             log.info("Infinispan initialization done.");
             log.info("Configure to persist cached objects to '{}'", folder);
             ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-
             final PersistenceConfigurationBuilder persistence = configurationBuilder.persistence()
                     .passivation(false);
             final SingleFileStoreConfigurationBuilder filestore = persistence.addSingleFileStore()
@@ -90,9 +88,7 @@ public class FactCastInfinispanAutoConfiguration {
             filestore.indexing().addIndexedEntity(DefaultFact.class);
             filestore.fetchPersistentState(true);
             filestore.preload(false);
-
             org.infinispan.configuration.cache.Configuration c = filestore.build();
-
             final String cacheName = CachingFactLookup.CACHE_NAME;
             log.info("Configuring cache " + cacheName);
             cm.getNativeCacheManager().defineConfiguration(cacheName, c);

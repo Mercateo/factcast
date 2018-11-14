@@ -20,14 +20,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * Spring boot starter for running a factcast server.
- * 
- * This should contain a pgsql backend and grpc API frontend.
- * 
- * @author uwe.schaefer@mercateo.com
  *
+ * This should contain a pgsql backend and grpc API frontend.
+ *
+ * @author uwe.schaefer@mercateo.com
  */
 @SpringBootApplication
 public class Application {
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class);
     }

@@ -29,12 +29,12 @@ import lombok.NonNull;
 /**
  * Spring configuration class that provides a CachingFactCast by wrapping a
  * FactCast instance.
- * 
- * @author <uwe.schaefer@mercateo.com>
  *
+ * @author <uwe.schaefer@mercateo.com>
  */
 @Configuration
-@Generated // to exclude from coverage analysis
+// to exclude from coverage analysis
+@Generated
 @ConditionalOnClass(CachingFactCast.class)
 public class CachingFactCastAutoConfiguration {
 

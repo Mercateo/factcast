@@ -1,5 +1,7 @@
 package org.factcast.example.grpc;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,6 +26,7 @@ import lombok.SneakyThrows;
 @Getter
 @Setter
 class SmokeTestFact implements Fact {
+
     @JsonProperty
     UUID id = UUID.randomUUID();
 

@@ -1,5 +1,7 @@
 package org.factcast.example.grpc;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.Optional;
 
 import org.factcast.core.Fact;
@@ -22,20 +24,13 @@ public class Issue72MT implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
         SmokeTestFact fact = new SmokeTestFact().type("foo").jsonPayload("{\"bla\":\"fasel\"}");
         fc.publish(fact);
         System.out.println("published " + fact);
-
         Optional<Fact> fetchById = fc.fetchById(fact.id());
         System.out.println("fetch by id returns payload:" + fetchById.get().jsonPayload());
-
         Subscription sub = fc.subscribeToIds(SubscriptionRequest.follow(FactSpec.ns("smoke"))
-                .fromScratch(),
-                System.out::println).awaitCatchup(5000);
-
+                .fromScratch(), System.out::println).awaitCatchup(5000);
         sub.close();
-
     }
-
 }
