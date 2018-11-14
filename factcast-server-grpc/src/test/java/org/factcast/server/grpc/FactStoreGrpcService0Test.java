@@ -23,6 +23,7 @@ import org.factcast.core.subscription.SubscriptionRequestTO;
 import org.factcast.grpc.api.conv.ProtoConverter;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_Fact;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_Facts;
+import org.factcast.grpc.api.gen.FactStoreProto.MSG_Facts.Builder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

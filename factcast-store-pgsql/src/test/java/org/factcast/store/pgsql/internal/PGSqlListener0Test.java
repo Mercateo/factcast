@@ -17,7 +17,6 @@ import java.util.function.Predicate;
 import org.factcast.store.pgsql.internal.listen.PGListener;
 import org.factcast.store.pgsql.internal.listen.PGListener.FactInsertionEvent;
 import org.factcast.store.pgsql.internal.listen.PgConnectionSupplier;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -51,16 +50,13 @@ public class PGSqlListener0Test {
     @Captor
     ArgumentCaptor<PGListener> captor;
 
-    @BeforeEach
-    public void setUp() throws SQLException {
-        Mockito.when(ds.get()).thenReturn(conn);
-        Mockito.when(conn.prepareStatement(anyString())).thenReturn(ps);
-        Mockito.when(ps.execute()).thenReturn(true);
-    }
-
     @SuppressWarnings("unchecked")
     @Test
-    public void testCheckFails() {
+    public void testCheckFails() throws SQLException {
+
+        Mockito.when(ds.get()).thenReturn(conn);
+        Mockito.when(conn.prepareStatement(anyString())).thenReturn(ps);
+
         tester = mock(Predicate.class);
         Mockito.when(tester.test(any())).thenReturn(false, false, true, false);
         PGListener l = new PGListener(ds, bus, tester);
@@ -71,6 +67,9 @@ public class PGSqlListener0Test {
 
     @Test
     public void testListen() throws Exception {
+        Mockito.when(ds.get()).thenReturn(conn);
+        Mockito.when(conn.prepareStatement(anyString())).thenReturn(ps);
+
         PGListener l = new PGListener(ds, bus, tester);
         l.afterPropertiesSet();
         sleep(100);
@@ -82,6 +81,10 @@ public class PGSqlListener0Test {
 
     @Test
     public void testNotify() throws Exception {
+
+        Mockito.when(ds.get()).thenReturn(conn);
+        Mockito.when(conn.prepareStatement(anyString())).thenReturn(ps);
+
         PGListener l = new PGListener(ds, bus, tester);
         when(conn.getNotifications(anyInt())).thenReturn(new PGNotification[] { //
                 new Notification(PGConstants.CHANNEL_NAME, 1), //
@@ -97,6 +100,10 @@ public class PGSqlListener0Test {
 
     @Test
     public void testNotifyScheduled() throws Exception {
+
+        Mockito.when(ds.get()).thenReturn(conn);
+        Mockito.when(conn.prepareStatement(anyString())).thenReturn(ps);
+
         PGListener l = new PGListener(ds, bus, tester);
         when(conn.getNotifications(anyInt())).thenReturn(null);
         l.afterPropertiesSet();
