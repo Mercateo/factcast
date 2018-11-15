@@ -193,7 +193,7 @@ public abstract class AbstractFactStore0Test {
 
     @DirtiesContext
     @Test
-    public void testEmptyStoreEphemeralWithCancel() throws Exception {
+    public void testEmptyStoreEphemeralWithCancel() {
         Assertions.assertTimeout(Duration.ofMillis(10000), () -> {
             TestFactObserver observer = testObserver();
             uut.publish(Fact.of("{\"id\":\"" + UUID.randomUUID()
@@ -224,7 +224,7 @@ public abstract class AbstractFactStore0Test {
 
     @DirtiesContext
     @Test
-    public void testEmptyStoreFollowWithCancel() throws Exception {
+    public void testEmptyStoreFollowWithCancel() {
         Assertions.assertTimeout(Duration.ofMillis(10000), () -> {
             TestFactObserver observer = testObserver();
             uut.publish(Fact.of("{\"id\":\"" + UUID.randomUUID()
@@ -536,7 +536,7 @@ public abstract class AbstractFactStore0Test {
 
     @DirtiesContext
     @Test
-    public void testDelayed() throws Exception {
+    public void testDelayed() {
         Assertions.assertTimeout(Duration.ofMillis(10000), () -> {
             final UUID id = UUID.randomUUID();
             TestFactObserver obs = new TestFactObserver();
