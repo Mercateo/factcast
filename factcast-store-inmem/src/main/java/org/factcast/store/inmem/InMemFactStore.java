@@ -197,7 +197,7 @@ public class InMemFactStore implements FactStore {
     }
 
     @Override
-    public OptionalLong serialOf(UUID l) {
+    public synchronized OptionalLong serialOf(UUID l) {
         // hilariously inefficient
         for (Map.Entry<Long, Fact> e : store.entrySet()) {
             if (l.equals(e.getValue().id())) {
