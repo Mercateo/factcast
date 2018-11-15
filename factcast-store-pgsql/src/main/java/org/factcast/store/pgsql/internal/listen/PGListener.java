@@ -40,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Listens (sql LISTEN command) to a channel on Postgresql and passes a trigger
  * on an EventBus.
- *
+ * <p>
  * This trigger then is supposed to "encourage" active subscriptions to query
  * for new Facts from PG.
  *
@@ -93,14 +93,12 @@ public class PGListener implements InitializingBean, DisposableBean {
                                 log.trace("No notifications yet. Looping.");
                             }
                         } else {
-                            log("Connection is failing test", null);
-                            sleepOneSecondUnlessTesting();
-                            break;
+                            throw new SQLException("Connection is failing test");
                         }
                     }
                 } catch (SQLException e) {
-                    log("While waiting for Notifications", e);
-                    sleepOneSecondUnlessTesting();
+                    log.warn("While waiting for Notifications", e);
+                    sleep();
                 }
             }
         }, "PG Instance Listener");
@@ -114,23 +112,12 @@ public class PGListener implements InitializingBean, DisposableBean {
         }
     }
 
-    private void sleepOneSecondUnlessTesting() {
+    private void sleep() {
         try {
-            Thread.sleep(inJunitTest() ? 50 : 1000);
-        } catch (InterruptedException ignored) {
+            Thread.sleep(1000);
+        } catch (InterruptedException ignore) {
         }
-    }
 
-    private void log(String msg, SQLException e) {
-        if (inJunitTest()) {
-            log.trace(msg, e);
-        } else {
-            log.warn(msg, e);
-        }
-    }
-
-    private boolean inJunitTest() {
-        return Package.getPackage("org.junit") != null;
     }
 
     private void postEvent(final String name) {
