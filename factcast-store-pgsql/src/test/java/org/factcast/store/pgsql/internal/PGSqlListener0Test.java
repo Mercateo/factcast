@@ -17,7 +17,6 @@ import java.util.function.Predicate;
 import org.factcast.store.pgsql.internal.listen.PGListener;
 import org.factcast.store.pgsql.internal.listen.PGListener.FactInsertionEvent;
 import org.factcast.store.pgsql.internal.listen.PgConnectionSupplier;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -32,7 +31,6 @@ import org.postgresql.jdbc.PgConnection;
 import com.google.common.eventbus.AsyncEventBus;
 
 @ExtendWith(MockitoExtension.class)
-@Disabled("suspected to create OOMs - investigating")
 public class PGSqlListener0Test {
 
     @Mock
@@ -65,6 +63,8 @@ public class PGSqlListener0Test {
         l.afterPropertiesSet();
         verify(bus, times(3)).post(any(FactInsertionEvent.class));
         verifyNoMoreInteractions(bus);
+
+        l.destroy();
     }
 
     @Test
@@ -79,6 +79,8 @@ public class PGSqlListener0Test {
         verifyNoMoreInteractions(bus);
         verify(conn).prepareStatement(PGConstants.LISTEN_SQL);
         verify(ps).execute();
+
+        l.destroy();
     }
 
     @Test
@@ -98,6 +100,8 @@ public class PGSqlListener0Test {
         sleep(400);
         // 4 posts: one scheduled, 3 from notifications
         verify(bus, times(4)).post(any(FactInsertionEvent.class));
+
+        l.destroy();
     }
 
     @Test
@@ -112,6 +116,8 @@ public class PGSqlListener0Test {
         sleep(200);
         // one scheduled
         verify(bus, times(1)).post(any(FactInsertionEvent.class));
+
+        l.destroy();
     }
 
     @Test
