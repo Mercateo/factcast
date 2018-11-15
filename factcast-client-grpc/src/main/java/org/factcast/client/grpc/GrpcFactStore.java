@@ -130,7 +130,7 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
         StreamObserver<FactStoreProto.MSG_Notification> responseObserver = new ClientStreamObserver(
                 subscription);
         ClientCall<MSG_SubscriptionRequest, MSG_Notification> call = stub.getChannel().newCall(
-                RemoteFactStoreGrpc.METHOD_SUBSCRIBE, stub.getCallOptions().withWaitForReady());
+                RemoteFactStoreGrpc.getSubscribeMethod(), stub.getCallOptions().withWaitForReady());
         asyncServerStreamingCall(call, converter.toProto(req), responseObserver);
         return subscription.onClose(() -> cancel(call));
     }
