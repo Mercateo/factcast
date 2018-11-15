@@ -53,6 +53,7 @@ jobs:
       - run: 
           name: FullTest
           command: |
+            mvn --version
             mvn -B clean install jacoco:report -DrepoToken=sMBbBcjrybuhdwKHFC61BvBU5y4oAjNEt -Dpg_url=$pg_url
             bash <(curl -s https://codecov.io/bash)
 
