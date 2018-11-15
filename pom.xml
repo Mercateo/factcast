@@ -204,7 +204,7 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>3.0.0-M1</version>
         <configuration>
-          <includedGroups>integration</includedGroups>
+          <excludedGroups>!integration</excludedGroups>
         </configuration>
         <executions>
           <execution>
