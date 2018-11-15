@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.UUID;
 
 import org.factcast.store.pgsql.internal.query.PGLatestSerialFetcher;
+import org.factcast.store.test.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(classes = { PGEmbeddedConfiguration.class })
 @Sql(scripts = "/test_schema.sql", config = @SqlConfig(separator = "#"))
 @ExtendWith(SpringExtension.class)
+@IntegrationTest
 public class PGLatestSerialFetcher0Test {
 
     @Autowired

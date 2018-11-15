@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.factcast.core.MarkFact;
 import org.factcast.core.store.FactStore;
 import org.factcast.store.pgsql.internal.query.PGFactIdToSerialMapper;
+import org.factcast.store.test.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(classes = { PGEmbeddedConfiguration.class })
 @Sql(scripts = "/test_schema.sql", config = @SqlConfig(separator = "#"))
 @ExtendWith(SpringExtension.class)
+@IntegrationTest
 public class PGFactIdToSerMapper3IT {
 
     @Autowired
