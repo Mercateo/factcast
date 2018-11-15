@@ -17,6 +17,7 @@ import java.util.function.Predicate;
 import org.factcast.store.pgsql.internal.listen.PGListener;
 import org.factcast.store.pgsql.internal.listen.PGListener.FactInsertionEvent;
 import org.factcast.store.pgsql.internal.listen.PgConnectionSupplier;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -31,6 +32,7 @@ import org.postgresql.jdbc.PgConnection;
 import com.google.common.eventbus.AsyncEventBus;
 
 @ExtendWith(MockitoExtension.class)
+@Disabled("suspected to create OOMs - investigating")
 public class PGSqlListener0Test {
 
     @Mock
