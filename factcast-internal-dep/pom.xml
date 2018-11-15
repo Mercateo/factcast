@@ -11,6 +11,7 @@
   <packaging>pom</packaging>
   <properties>
     <grpc.version>1.14.0</grpc.version>
+    <slf4j-api.version>1.7.2</slf4j-api.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -40,6 +41,16 @@
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>27.0-jre</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j-api.version}5</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>1.7.25</version>
       </dependency>
       <dependency>
         <groupId>org.projectlombok</groupId>
