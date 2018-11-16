@@ -22,6 +22,7 @@ import org.factcast.core.store.FactStore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import lombok.Generated;
 import lombok.NonNull;
@@ -39,6 +40,7 @@ import lombok.NonNull;
 public class CachingFactCastAutoConfiguration {
 
     @Bean
+    @Primary
     public CachingFactCast cachingFactCast(FactCast fc, CachingFactLookup fl) {
         return new CachingFactCast(fc, fl);
     }

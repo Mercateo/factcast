@@ -15,7 +15,7 @@
     <dependencies>
       <dependency>
         <groupId>org.factcast</groupId>
-        <artifactId>factcast-internal-dep-boot2</artifactId>
+        <artifactId>factcast-internal-dep-boot</artifactId>
         <version>${project.version}</version>
         <type>pom</type>
         <scope>import</scope>
@@ -39,6 +39,13 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
     </dependency>
+    <!-- you want to remove this -->
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>1.10.1</version>
+    </dependency>
+    <!-- /you want to remove this -->
   </dependencies>
   <build>
     <finalName>factcast</finalName>

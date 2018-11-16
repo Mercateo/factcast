@@ -13,22 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.factcast.example.server;
+package org.factcast.example.client.spring.boot1;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-/**
- * Spring boot starter for running a factcast server.
- *
- * This should contain a pgsql backend and grpc API frontend.
- *
- * @author uwe.schaefer@mercateo.com
- */
 @SpringBootApplication
-public class Application {
-
+public class ExampleBoot1Client {
     public static void main(String[] args) {
-        SpringApplication.run(Application.class);
+        SpringApplication.run(ExampleBoot1Client.class);
     }
 }

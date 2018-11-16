@@ -5,15 +5,24 @@
     <groupId>org.factcast</groupId>
     <artifactId>factcast</artifactId>
     <version>0.0.27-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
-  <artifactId>factcast-client-cache-infinispan</artifactId>
+  <artifactId>factcast-example-client-spring-boot2</artifactId>
   <dependencyManagement>
     <dependencies>
+      <!-- note: the order is important here! -->
+      <!-- first, get all the factcast artifact's versions pinned -->
       <dependency>
         <groupId>org.factcast</groupId>
-        <artifactId>factcast-internal-dep-boot</artifactId>
+        <artifactId>factcast-bom</artifactId>
         <version>${project.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>2.1.0.RELEASE</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -22,23 +31,15 @@
   <dependencies>
     <dependency>
       <groupId>org.factcast</groupId>
-      <artifactId>factcast-core</artifactId>
+      <artifactId>factcast-client-grpc</artifactId>
     </dependency>
     <dependency>
       <groupId>org.factcast</groupId>
-      <artifactId>factcast-client-cache</artifactId>
+      <artifactId>factcast-spring-boot-autoconfigure</artifactId>
     </dependency>
     <dependency>
-      <groupId>javax.cache</groupId>
-      <artifactId>cache-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.infinispan</groupId>
-      <artifactId>infinispan-spring4-embedded</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.infinispan</groupId>
-      <artifactId>infinispan-jcache</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
     </dependency>
   </dependencies>
 </project>
