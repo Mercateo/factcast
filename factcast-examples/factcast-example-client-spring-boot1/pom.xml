@@ -22,7 +22,7 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-      <!-- second, pick the sepring boot versions you want to use -->
+      <!-- second, pick the spring boot versions you want to use -->
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
@@ -39,15 +39,30 @@
     </dependency>
     <dependency>
       <groupId>org.factcast</groupId>
-      <artifactId>factcast-client-cache-infinispan</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.factcast</groupId>
       <artifactId>factcast-spring-boot-autoconfigure</artifactId>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
     </dependency>
+    <!--
+    only needed, if you want to use TLS
+    -->
+    <!--
+        <dependency>
+          <groupId>io.netty</groupId>
+          <artifactId>netty-tcnative-boringssl-static</artifactId>
+          <version>2.0.20.Final</version>
+        </dependency>
+    -->
+    <!--
+    if, for some reason, you want to stick to the "old" spring boot grpc lib,
+    see https://github.com/yidongnan/grpc-spring-boot-starter
+    -->
+    <!--<dependency>
+      <groupId>net.devh</groupId>
+      <artifactId>grpc-client-spring-boot-starter</artifactId>
+      <version>1.4.1.RELEASE</version>
+    </dependency>-->
   </dependencies>
 </project>
