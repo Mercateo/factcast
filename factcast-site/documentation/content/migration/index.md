@@ -14,17 +14,17 @@ weight = 1000
 
 ## Upgrading to 0.0.30
 
-#### Spring Boot2
+#### Spring Boot 2
 
-If you use Spring boot, please note, that all projects now depend on Spring Boot 2.1 artifacts. You can still use the Factcast-client in your Spring Boot 1.5 application. For an example see examples/factcast-example-client-spring-boot1/.
+If you use Spring boot, please note, that all projects now depend on Spring Boot 2.1 artifacts. You can still use the FactCast-client in your Spring Boot 1.5 application. For an example see examples/factcast-example-client-spring-boot1/.
 
 #### Plaintext vs TLS
 
 There was a dependency upgrade of https://github.com/yidongnan/grpc-spring-boot-starter in order to support TLS. Note that the default client configuratoin is now switched to TLS. That means, if you want to continue communicating in an unencrypted fashion, you need to set an application property of **'grpc.client.factstore.negotiation_type=PLAINTEXT'**. 
 
-#### TestContainers / Building and Testing
+#### Testcontainers / Building and Testing
 
-In order to run integration tests, that need a Postgres to run, factcast now uses TestContainers in order to download and run an ephemeral Postgres.
-For this to work, the machine that runs test must have docker installed and current the user needs to be able to run and stop docker conatiners.
+In order to run integration tests, that need a Postgres to run, FactCast now uses [Testcontainers](https://www.testcontainers.org/usage/database_containers.html) in order to download and run an ephemeral Postgres.
+For this to work, the machine that runs test must have docker installed and the current user needs to be able to run and stop docker containers.
 
 You can still override this behavior by supplying an Environment-Variable **'pg_url'** to use a particular postgres instead. This might be important for build agents that themselves run within docker and do not provide Docker-in-Docker. 
