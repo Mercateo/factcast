@@ -16,11 +16,13 @@ weight = 1000
 
 #### Spring Boot 2
 
-If you use Spring boot, please note, that all projects now depend on Spring Boot 2.1 artifacts. You can still use the FactCast-client in your Spring Boot 1.5 application. For an example see examples/factcast-example-client-spring-boot1/.
+If you use Spring boot, please note, that all projects now depend on Spring Boot 2.1 artifacts. You can still use the FactCast-client in your Spring Boot 1.5 application. 
+
+For an example see **examples/factcast-example-client-spring-boot1/**.
 
 #### Plaintext vs TLS
 
-There was a dependency upgrade of [grpc-spring-boot-starter](https://github.com/yidongnan/grpc-spring-boot-starter) in order to support TLS. Note that the default client configuratoin is now switched to TLS. That means, if you want to continue communicating in an unencrypted fashion, you need to set an application property of **'grpc.client.factstore.negotiation_type=PLAINTEXT'**. 
+There was a dependency upgrade of [grpc-spring-boot-starter](https://github.com/yidongnan/grpc-spring-boot-starter) in order to support TLS. Note that the default client configuration is now switched to TLS. That means, if you want to continue communicating in an unencrypted fashion, you need to set an application property of **'grpc.client.factstore.negotiation_type=PLAINTEXT'**. 
 
 #### Testcontainers / Building and Testing
 
