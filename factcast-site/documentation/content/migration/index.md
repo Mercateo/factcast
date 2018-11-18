@@ -30,3 +30,27 @@ In order to run integration tests, that need a Postgres to run, FactCast now use
 For this to work, the machine that runs test must have docker installed and the current user needs to be able to run and stop docker containers.
 
 You can still override this behavior by supplying an Environment-Variable **'pg_url'** to use a particular postgres instead. This might be important for build agents that themselves run within docker and do not provide Docker-in-Docker. 
+
+
+## Upgrading to 0.0.14
+
+* Incompatible change in GRPC API
+
+The GRPC API has changed to enable non-breaking changes later. (Version endpoint added)
+The result is, that you have to use > 0.0.14 on Client and Server consistently.
+
+## Noteworthy 0.0.12
+
+* Note that the jersey impl of the REST interface has its own <a href="https://github.com/Mercateo/factcast-rest-jersey">place on github now.</a> and got new coordinates: **org.factcast:factcast-server-rest-jersey:0.0.12.** If you use the REST Server, you'll need to change your dependencies accordingly
+
+* There is a BOM within factcast at org.factcast:factcast-bom:0.0.12 you can use to conveniently pin versions - remember that factcast-server-rest-jersey might not be available for every milestone and is not part of the BOM
+
+
+
+
+
+
+
+
+
+
