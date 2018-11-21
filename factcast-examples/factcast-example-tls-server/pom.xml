@@ -60,6 +60,17 @@
       <version>1.10.1</version>
     </dependency>
     <!-- /you want to remove this -->
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-all</artifactId>
+      <version>4.1.31.Final</version>
+    </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-handler
+      </artifactId>
+      <version>4.1.31.Final</version>
+    </dependency>
   </dependencies>
   <build>
     <finalName>factcast</finalName>
