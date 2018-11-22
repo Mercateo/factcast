@@ -10,28 +10,28 @@ import org.junit.jupiter.api.Test;
 public class SubscriptionRequestTest {
 
     @Test
-    public void testCatchupNullSpec() {
+    void testCatchupNullSpec() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             SubscriptionRequest.catchup((FactSpec) null);
         });
     }
 
     @Test
-    public void testFollowNullSpec() {
+    void testFollowNullSpec() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             SubscriptionRequest.follow((FactSpec) null);
         });
     }
 
     @Test
-    public void testFollowDelayNullSpec() {
+    void testFollowDelayNullSpec() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             SubscriptionRequest.follow(1, null);
         });
     }
 
     @Test
-    public void testCatchup() {
+    void testCatchup() {
         FactSpec s = FactSpec.ns("xx");
         final SubscriptionRequest r = SubscriptionRequest.catchup(s).fromScratch();
         assertTrue(r.specs().contains(s));
@@ -39,7 +39,7 @@ public class SubscriptionRequestTest {
     }
 
     @Test
-    public void testFollow() {
+    void testFollow() {
         FactSpec s = FactSpec.ns("xx");
         final SubscriptionRequest r = SubscriptionRequest.follow(s).fromScratch();
         assertTrue(r.specs().contains(s));
@@ -47,7 +47,7 @@ public class SubscriptionRequestTest {
     }
 
     @Test
-    public void testFollowMaxDelay() {
+    void testFollowMaxDelay() {
         FactSpec s = FactSpec.ns("xx");
         final SubscriptionRequest r = SubscriptionRequest.follow(7, s).fromScratch();
         assertTrue(r.specs().contains(s));

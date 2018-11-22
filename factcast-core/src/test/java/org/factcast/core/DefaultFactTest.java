@@ -20,61 +20,61 @@ import com.fasterxml.jackson.core.JsonParseException;
 public class DefaultFactTest {
 
     @Test
-    public void testNullHeader() {
+    void testNullHeader() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             DefaultFact.of("{}", null);
         });
     }
 
     @Test
-    public void testNullPayload() {
+    void testNullPayload() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             DefaultFact.of(null, "{}");
         });
     }
 
     @Test
-    public void testNullContracts() {
+    void testNullContracts() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             DefaultFact.of(null, null);
         });
     }
 
     @Test
-    public void testUnparsableHeader() {
+    void testUnparsableHeader() {
         Assertions.assertThrows(JsonParseException.class, () -> {
             DefaultFact.of("not json at all", "{}");
         });
     }
 
     @Test
-    public void testNoId() {
+    void testNoId() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             DefaultFact.of("{\"ns\":\"default\"}", "{}");
         });
     }
 
     @Test
-    public void testIdNotUUID() {
+    void testIdNotUUID() {
         Assertions.assertThrows(IOException.class, () -> {
             DefaultFact.of("{\"id\":\"buh\",\"ns\":\"default\"}", "{}");
         });
     }
 
     @Test
-    public void testValidFact() {
+    void testValidFact() {
         DefaultFact.of("{\"id\":\"" + UUID.randomUUID() + "\",\"ns\":\"default\"}", "{}");
     }
 
     @Test
-    public void testMetaDeser() {
+    void testMetaDeser() {
         Fact f = DefaultFact.of("{\"id\":\"" + UUID.randomUUID()
                 + "\",\"ns\":\"default\",\"meta\":{\"foo\":7}}", "{}");
         assertEquals("7", f.meta("foo"));
     }
 
     @Test
-    public void testExternalization() throws Exception {
+    void testExternalization() throws Exception {
         Fact f = DefaultFact.of("{\"id\":\"" + UUID.randomUUID()
                 + "\",\"ns\":\"default\",\"meta\":{\"foo\":7}}", "{}");
         Fact copy = copyBySerialization(f);
@@ -93,7 +93,7 @@ public class DefaultFactTest {
     }
 
     @Test
-    public void testJsonHeader() {
+    void testJsonHeader() {
         final UUID id = UUID.randomUUID();
         final UUID aid = UUID.randomUUID();
         final String header = "{\"id\":\"" + id
@@ -104,7 +104,7 @@ public class DefaultFactTest {
     }
 
     @Test
-    public void testEqualityBasedOnId() {
+    void testEqualityBasedOnId() {
         final UUID id = UUID.randomUUID();
         final UUID aid = UUID.randomUUID();
         final String header = "{\"id\":\"" + id
@@ -119,7 +119,7 @@ public class DefaultFactTest {
     }
 
     @Test
-    public void testCopyAttributes() throws Exception {
+    void testCopyAttributes() throws Exception {
         final UUID id = UUID.randomUUID();
         final UUID aid = UUID.randomUUID();
         Fact f = DefaultFact.of("{\"id\":\"" + id
@@ -140,7 +140,7 @@ public class DefaultFactTest {
     }
 
     @Test
-    public void testEqualityMustBeBasedOnIDOnly() {
+    void testEqualityMustBeBasedOnIDOnly() {
         UUID id = UUID.randomUUID();
         Fact f1 = DefaultFact.of("{\"id\":\"" + id
                 + "\",\"ns\":\"narf\",\"type\":\"foo\",\"aggIds\":[\"" + UUID.randomUUID()
@@ -152,21 +152,21 @@ public class DefaultFactTest {
     }
 
     @Test
-    public void testOfNoId() {
+    void testOfNoId() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Fact.of("{\"ns\":\"narf\"}", "{}");
         });
     }
 
     @Test
-    public void testOfNoNs() {
+    void testOfNoNs() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Fact.of("{\"id\":\"" + UUID.randomUUID() + "\"}", "{}");
         });
     }
 
     @Test
-    public void testOfEmptyNs() {
+    void testOfEmptyNs() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Fact.of("{\"id\":\"" + UUID.randomUUID() + "\",\"ns\":\"\"}", "{}");
         });

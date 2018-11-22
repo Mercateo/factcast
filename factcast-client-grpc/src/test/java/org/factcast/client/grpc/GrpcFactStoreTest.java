@@ -60,7 +60,7 @@ public class GrpcFactStoreTest {
     private ArgumentCaptor<MSG_Facts> factsCap;
 
     @Test
-    public void testFetchByIdNotFound() {
+    void testFetchByIdNotFound() {
         UUID id = UUID.randomUUID();
         when(blockingStub.fetchById(eq(conv.toProto(id)))).thenReturn(conv.toProto(Optional
                 .empty()));
@@ -69,7 +69,7 @@ public class GrpcFactStoreTest {
     }
 
     @Test
-    public void testFetchByIdFound() {
+    void testFetchByIdFound() {
         UUID id = UUID.randomUUID();
         when(blockingStub.fetchById(eq(conv.toProto(id)))).thenReturn(conv.toProto(Optional.of(Fact
                 .builder()
@@ -80,7 +80,7 @@ public class GrpcFactStoreTest {
     }
 
     @Test
-    public void testPublish() {
+    void testPublish() {
         when(blockingStub.publish(factsCap.capture())).thenReturn(MSG_Empty.newBuilder().build());
         final TestFact fact = new TestFact();
         uut.publish(Collections.singletonList(fact));
@@ -96,7 +96,7 @@ public class GrpcFactStoreTest {
     }
 
     @Test
-    public void testPublishPropagatesException() {
+    void testPublishPropagatesException() {
         Assertions.assertThrows(SomeException.class, () -> {
             when(blockingStub.publish(any())).thenThrow(new SomeException());
             uut.publish(Collections.singletonList(Fact.builder().build("{}")));
@@ -104,7 +104,7 @@ public class GrpcFactStoreTest {
     }
 
     @Test
-    public void testConstruction() {
+    void testConstruction() {
         expectNPE(() -> new GrpcFactStore((AddressChannelFactory) null));
         expectNPE(() -> new GrpcFactStore((Channel) null));
         expectNPE(() -> new GrpcFactStore(mock(RemoteFactStoreBlockingStub.class), null));
@@ -113,28 +113,28 @@ public class GrpcFactStoreTest {
     }
 
     @Test
-    public void testSubscribeNull() {
+    void testSubscribeNull() {
         expectNPE(() -> uut.subscribe(null, mock(FactObserver.class)));
         expectNPE(() -> uut.subscribe(null, null));
         expectNPE(() -> uut.subscribe(mock(SubscriptionRequestTO.class), null));
     }
 
     @Test
-    public void testMatchingProtocolVersion() {
+    void testMatchingProtocolVersion() {
         when(blockingStub.handshake(any())).thenReturn(conv.toProto(ServerConfig.of(ProtocolVersion
                 .of(1, 0, 0), new HashMap<>())));
         uut.initialize();
     }
 
     @Test
-    public void testCompatibleProtocolVersion() {
+    void testCompatibleProtocolVersion() {
         when(blockingStub.handshake(any())).thenReturn(conv.toProto(ServerConfig.of(ProtocolVersion
                 .of(1, 1, 0), new HashMap<>())));
         uut.initialize();
     }
 
     @Test
-    public void testIncompatibleProtocolVersion() {
+    void testIncompatibleProtocolVersion() {
         Assertions.assertThrows(IncompatibleProtocolVersions.class, () -> {
             when(blockingStub.handshake(any())).thenReturn(conv.toProto(ServerConfig.of(
                     ProtocolVersion.of(2, 0, 0), new HashMap<>())));

@@ -22,7 +22,7 @@ public class PGIdFactExtractorTest {
     private PGIdFactExtractor uut = new PGIdFactExtractor(serial);
 
     @Test
-    public void testMapRow() throws Exception {
+    void testMapRow() throws Exception {
         ResultSet rs = mock(ResultSet.class);
         final UUID id = UUID.randomUUID();
         when(rs.getString(PGConstants.ALIAS_ID)).thenReturn(id.toString());

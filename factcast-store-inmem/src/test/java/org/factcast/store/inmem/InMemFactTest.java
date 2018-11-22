@@ -10,14 +10,14 @@ import org.junit.jupiter.api.Test;
 public class InMemFactTest {
 
     @Test
-    public void testAddMeta() {
+    void testAddMeta() {
         Fact f1 = Fact.of("{\"ns\":\"someNs\",\"id\":\"" + UUID.randomUUID() + "\"}", "{}");
         InMemFact uut = new InMemFact(21, f1);
         assertEquals(21, uut.serial());
     }
 
     @Test
-    public void testAddToExistingMeta() {
+    void testAddToExistingMeta() {
         Fact f1 = Fact.of("{\"ns\":\"someNs\",\"id\":\"" + UUID.randomUUID()
                 + "\", \"meta\":{\"foo\":\"bar\"}}", "{}");
         InMemFact uut = new InMemFact(12, f1);
@@ -26,7 +26,7 @@ public class InMemFactTest {
     }
 
     @Test
-    public void testReplaceFraudulentSer() {
+    void testReplaceFraudulentSer() {
         Fact f1 = Fact.of("{\"ns\":\"someNs\",\"id\":\"" + UUID.randomUUID()
                 + "\", \"meta\":{\"_ser\":99999}}", "{}");
         assertEquals(99999, f1.serial());

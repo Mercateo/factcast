@@ -54,19 +54,19 @@ public class FactStoreGrpcServiceTest {
     private ArgumentCaptor<SubscriptionRequestTO> reqCaptor;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         uut = new FactStoreGrpcService(backend);
     }
 
     @Test
-    public void testPublishNull() {
+    void testPublishNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.publish(null, mock(StreamObserver.class));
         });
     }
 
     @Test
-    public void testPublishNone() {
+    void testPublishNone() {
         doNothing().when(backend).publish(acFactList.capture());
         MSG_Facts r = MSG_Facts.newBuilder().build();
         uut.publish(r, mock(StreamObserver.class));
@@ -75,7 +75,7 @@ public class FactStoreGrpcServiceTest {
     }
 
     @Test
-    public void testPublishSome() {
+    void testPublishSome() {
         doNothing().when(backend).publish(acFactList.capture());
         Builder b = MSG_Facts.newBuilder();
         Fact f1 = Fact.builder().ns("test").build("{}");
@@ -94,21 +94,21 @@ public class FactStoreGrpcServiceTest {
     }
 
     @Test
-    public void testFetchByIdNull() {
+    void testFetchByIdNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.fetchById(null, mock(StreamObserver.class));
         });
     }
 
     @Test
-    public void testFetchById() {
+    void testFetchById() {
         UUID id = UUID.randomUUID();
         uut.fetchById(protoConverter.toProto(id), mock(ServerCallStreamObserver.class));
         verify(backend).fetchById(eq(id));
     }
 
     @Test
-    public void testSubscribeFacts() {
+    void testSubscribeFacts() {
         SubscriptionRequest req = SubscriptionRequest.catchup(FactSpec.forMark()).fromNowOn();
         when(backend.subscribe(this.reqCaptor.capture(), any())).thenReturn(null);
         uut.subscribe(new ProtoConverter().toProto(SubscriptionRequestTO.forFacts(req)), mock(
@@ -118,7 +118,7 @@ public class FactStoreGrpcServiceTest {
     }
 
     @Test
-    public void testSubscribeIds() {
+    void testSubscribeIds() {
         SubscriptionRequest req = SubscriptionRequest.catchup(FactSpec.forMark()).fromNowOn();
         when(backend.subscribe(this.reqCaptor.capture(), any())).thenReturn(null);
         uut.subscribe(new ProtoConverter().toProto(SubscriptionRequestTO.forIds(req)), mock(

@@ -52,7 +52,7 @@ public class PGSqlListenerTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testCheckFails() throws SQLException {
+    void testCheckFails() throws SQLException {
 
         Mockito.when(ds.get()).thenReturn(conn);
         Mockito.when(conn.prepareStatement(anyString())).thenReturn(ps);
@@ -68,7 +68,7 @@ public class PGSqlListenerTest {
     }
 
     @Test
-    public void testListen() throws Exception {
+    void testListen() throws Exception {
         Mockito.when(ds.get()).thenReturn(conn);
         Mockito.when(conn.prepareStatement(anyString())).thenReturn(ps);
 
@@ -84,7 +84,7 @@ public class PGSqlListenerTest {
     }
 
     @Test
-    public void testNotify() throws Exception {
+    void testNotify() throws Exception {
 
         Mockito.when(ds.get()).thenReturn(conn);
         Mockito.when(conn.prepareStatement(anyString())).thenReturn(ps);
@@ -105,7 +105,7 @@ public class PGSqlListenerTest {
     }
 
     @Test
-    public void testNotifyScheduled() throws Exception {
+    void testNotifyScheduled() throws Exception {
 
         Mockito.when(ds.get()).thenReturn(conn);
         Mockito.when(conn.prepareStatement(anyString())).thenReturn(ps);
@@ -121,7 +121,7 @@ public class PGSqlListenerTest {
     }
 
     @Test
-    public void testStop() throws Exception {
+    void testStop() throws Exception {
         Mockito.when(ds.get()).thenReturn(conn);
         Mockito.when(conn.prepareStatement(anyString())).thenReturn(mock(PreparedStatement.class));
         PGListener l = new PGListener(ds, bus, tester);
@@ -139,7 +139,7 @@ public class PGSqlListenerTest {
     }
 
     @Test
-    public void testStopWithoutStarting() {
+    void testStopWithoutStarting() {
         PGListener l = new PGListener(ds, bus, tester);
         l.destroy();
         verifyNoMoreInteractions(conn);

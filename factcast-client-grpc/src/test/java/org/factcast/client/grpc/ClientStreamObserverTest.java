@@ -22,7 +22,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class ClientStreamObserverTest {
+class ClientStreamObserverTest {
 
     @Mock
     FactObserver factObserver;
@@ -34,20 +34,20 @@ public class ClientStreamObserverTest {
     private SubscriptionImpl<Fact> subscription;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         subscription = spy(new SubscriptionImpl<>(factObserver));
         uut = new ClientStreamObserver(subscription);
     }
 
     @Test
-    public void testConstructorNull() {
+    void testConstructorNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             new ClientStreamObserver(null);
         });
     }
 
     @Test
-    public void testOnNext() {
+    void testOnNext() {
         Fact f = Fact.of("{\"ns\":\"ns\",\"id\":\"" + UUID.randomUUID() + "\"}", "{}");
         MSG_Notification n = converter.createNotificationFor(f);
         uut.onNext(n);
@@ -55,32 +55,32 @@ public class ClientStreamObserverTest {
     }
 
     @Test
-    public void testOnNextId() {
+    void testOnNextId() {
         MSG_Notification n = converter.createNotificationFor(UUID.randomUUID());
         uut.onNext(n);
         verify(factObserver).onNext(any(IdOnlyFact.class));
     }
 
     @Test
-    public void testOnCatchup() {
+    void testOnCatchup() {
         uut.onNext(converter.createCatchupNotification());
         verify(factObserver).onCatchup();
     }
 
     @Test
-    public void testOnComplete() {
+    void testOnComplete() {
         uut.onNext(converter.createCompleteNotification());
         verify(factObserver).onComplete();
     }
 
     @Test
-    public void testOnTransportComplete() {
+    void testOnTransportComplete() {
         uut.onCompleted();
         verify(factObserver).onComplete();
     }
 
     @Test
-    public void testOnError() {
+    void testOnError() {
         uut.onError(new IOException());
         verify(factObserver).onError(any());
     }

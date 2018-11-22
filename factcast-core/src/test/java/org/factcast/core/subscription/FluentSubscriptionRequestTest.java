@@ -11,47 +11,47 @@ import org.junit.jupiter.api.Test;
 public class FluentSubscriptionRequestTest {
 
     @Test
-    public void testFromSubscription() {
+    void testFromSubscription() {
         SubscriptionRequest r = SubscriptionRequest.catchup(FactSpec.ns("foo")).fromNowOn();
         assertTrue(r.ephemeral());
     }
 
     @Test
-    public void testFromNull() {
+    void testFromNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             SubscriptionRequest.catchup(FactSpec.ns("foo")).from(null);
         });
     }
 
     @Test
-    public void testFollowNull() {
+    void testFollowNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             SubscriptionRequest.follow((FactSpec) null);
         });
     }
 
     @Test
-    public void testCatchupNull() {
+    void testCatchupNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             SubscriptionRequest.catchup((FactSpec) null);
         });
     }
 
     @Test
-    public void testOrNull() {
+    void testOrNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             SubscriptionRequest.catchup(FactSpec.forMark()).or(null);
         });
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         SubscriptionRequest r = SubscriptionRequest.catchup(FactSpec.forMark()).fromScratch();
         assertSame(r.debugInfo(), r.toString());
     }
 
     @Test
-    public void testDebugInfo() {
+    void testDebugInfo() {
         String debugInfo = SubscriptionRequest.catchup(FactSpec.forMark())
                 .fromScratch()
                 .debugInfo();

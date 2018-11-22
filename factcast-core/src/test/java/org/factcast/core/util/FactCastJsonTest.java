@@ -23,14 +23,14 @@ import lombok.NoArgsConstructor;
 public class FactCastJsonTest {
 
     @Test
-    public void testCopyNull() {
+    void testCopyNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             FactCastJson.copy(null);
         });
     }
 
     @Test
-    public void testCopy() {
+    void testCopy() {
         final Foo foo = new Foo("bar", "baz");
         Foo copy = FactCastJson.copy(foo);
         assertNotSame(foo, copy);
@@ -52,32 +52,32 @@ public class FactCastJsonTest {
     }
 
     @Test
-    public void testReadValueNull() {
+    void testReadValueNull() {
         expectNPE(() -> FactCastJson.readValue(null, ""));
         expectNPE(() -> FactCastJson.readValue(null, null));
         expectNPE(() -> FactCastJson.readValue(FactCastJson.class, null));
     }
 
     @Test
-    public void testWriteValueNull() {
+    void testWriteValueNull() {
         expectNPE(() -> FactCastJson.writeValueAsString(null));
     }
 
     @Test
-    public void testNewObjectNode() {
+    void testNewObjectNode() {
         assertNotNull(FactCastJson.newObjectNode());
         assertTrue(FactCastJson.newObjectNode() instanceof ObjectNode);
     }
 
     @Test
-    public void testToObjectNodeNonJson() {
+    void testToObjectNodeNonJson() {
         Assertions.assertThrows(RuntimeException.class, () -> {
             FactCastJson.toObjectNode("no-json");
         });
     }
 
     @Test
-    public void testToObjectNode() {
+    void testToObjectNode() {
         ObjectNode objectNode = FactCastJson.toObjectNode("{\"x\":1}");
         JsonNode jsonNode = objectNode.get("x");
         assertEquals(1, jsonNode.asInt());
@@ -85,7 +85,7 @@ public class FactCastJsonTest {
     }
 
     @Test
-    public void testWriteValueAsPrettyString() {
+    void testWriteValueAsPrettyString() {
         String json = "{\"a\":1}";
         String pretty = FactCastJson.writeValueAsPrettyString(FactCastJson.toObjectNode(json));
         assertTrue(pretty.contains("\n"));

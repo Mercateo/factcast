@@ -49,7 +49,7 @@ public class DefaultFactCastTest {
     private ArgumentCaptor<List<Fact>> cfacts;
 
     @Test
-    public void testSubscribeToFacts() {
+    void testSubscribeToFacts() {
         when(store.subscribe(csr.capture(), any())).thenReturn(mock(Subscription.class));
         final UUID since = UUID.randomUUID();
         SubscriptionRequest r = SubscriptionRequest.follow(FactSpec.forMark())
@@ -66,7 +66,7 @@ public class DefaultFactCastTest {
     }
 
     @Test
-    public void testSubscribeToIds() {
+    void testSubscribeToIds() {
         when(store.subscribe(csr.capture(), any())).thenReturn(mock(Subscription.class));
         SubscriptionRequest r = SubscriptionRequest.follow(FactSpec.forMark())
                 .or(FactSpec.ns("some").type("type"))
@@ -81,7 +81,7 @@ public class DefaultFactCastTest {
     }
 
     @Test
-    public void testFetchById() {
+    void testFetchById() {
         when(store.fetchById(cuuid.capture())).thenReturn(Optional.empty());
         final UUID id = UUID.randomUUID();
         uut.fetchById(id);
@@ -89,7 +89,7 @@ public class DefaultFactCastTest {
     }
 
     @Test
-    public void testPublish() {
+    void testPublish() {
         doNothing().when(store).publish(cfacts.capture());
         final TestFact f = new TestFact();
         uut.publish(f);
@@ -99,56 +99,56 @@ public class DefaultFactCastTest {
     }
 
     @Test
-    public void testNoId() {
+    void testNoId() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             uut.publish(new TestFact().id(null));
         });
     }
 
     @Test
-    public void testNoNamespace() {
+    void testNoNamespace() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             uut.publish(new TestFact().ns(null));
         });
     }
 
     @Test
-    public void testPublishOneNull() {
+    void testPublishOneNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.publish((Fact) null);
         });
     }
 
     @Test
-    public void testPublishManyNull() {
+    void testPublishManyNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.publish((List<Fact>) null);
         });
     }
 
     @Test
-    public void testFetchByIdNull() {
+    void testFetchByIdNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.fetchById(null);
         });
     }
 
     @Test
-    public void testSubscribeIdsNull() {
+    void testSubscribeIdsNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.subscribeToIds(null, null);
         });
     }
 
     @Test
-    public void testSubscribeFactsNull() {
+    void testSubscribeFactsNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.subscribeToFacts(null, null);
         });
     }
 
     @Test
-    public void testSubscribeIds1stArgNull() {
+    void testSubscribeIds1stArgNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.subscribeToIds(null, f -> {
             });
@@ -156,7 +156,7 @@ public class DefaultFactCastTest {
     }
 
     @Test
-    public void testSubscribeFacts1stArgNull() {
+    void testSubscribeFacts1stArgNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.subscribeToFacts(null, f -> {
             });
@@ -164,14 +164,14 @@ public class DefaultFactCastTest {
     }
 
     @Test
-    public void testSubscribeIds2ndArgNull() {
+    void testSubscribeIds2ndArgNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.subscribeToIds(SubscriptionRequest.follow(FactSpec.forMark()).fromScratch(), null);
         });
     }
 
     @Test
-    public void testSubscribeFacts2ndArgNull() {
+    void testSubscribeFacts2ndArgNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.subscribeToFacts(SubscriptionRequest.follow(FactSpec.forMark()).fromScratch(),
                     null);
@@ -179,28 +179,28 @@ public class DefaultFactCastTest {
     }
 
     @Test
-    public void testDefaultFactCast() {
+    void testDefaultFactCast() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             new DefaultFactCast(null);
         });
     }
 
     @Test
-    public void testpublishWithMarkOneNull() {
+    void testpublishWithMarkOneNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.publishWithMark((Fact) null);
         });
     }
 
     @Test
-    public void testpublishWithMarkManyNull() {
+    void testpublishWithMarkManyNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.publishWithMark((List<Fact>) null);
         });
     }
 
     @Test
-    public void testSerialOf() {
+    void testSerialOf() {
         when(store.serialOf(any(UUID.class))).thenReturn(OptionalLong.empty());
         UUID id = UUID.randomUUID();
         uut.serialOf(id);
@@ -208,7 +208,7 @@ public class DefaultFactCastTest {
     }
 
     @Test
-    public void testSerialOfNull() {
+    void testSerialOfNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.serialOf(null);
         });

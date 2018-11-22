@@ -15,33 +15,33 @@ import org.junit.jupiter.api.Test;
 public class FactSpecTest {
 
     @Test
-    public void testMarkMatcher() {
+    void testMarkMatcher() {
         assertTrue(new FactSpecMatcher(FactSpec.forMark()).test(new MarkFact()));
     }
 
     @Test
-    public void testMetaBothNull() {
+    void testMetaBothNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             FactSpec.ns("foo").meta(null, null);
         });
     }
 
     @Test
-    public void testMetaKeyNull() {
+    void testMetaKeyNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             FactSpec.ns("foo").meta(null, "");
         });
     }
 
     @Test
-    public void testMetaValueNull() {
+    void testMetaValueNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             FactSpec.ns("foo").meta("", null);
         });
     }
 
     @Test
-    public void testFactSpecConstructorNull() {
+    void testFactSpecConstructorNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             new FactSpec(null);
         });
@@ -49,28 +49,28 @@ public class FactSpecTest {
 
     @SuppressWarnings("static-access")
     @Test
-    public void testFactSpecNs() {
+    void testFactSpecNs() {
         assertEquals("y", FactSpec.ns("x").ns("y").ns());
     }
 
     @Test
-    public void testFactSpecType() {
+    void testFactSpecType() {
         assertEquals("y", FactSpec.ns("x").type("y").type());
     }
 
     @Test
-    public void testFactSpecAggId() {
+    void testFactSpecAggId() {
         UUID id = UUID.randomUUID();
         assertEquals(id, FactSpec.ns("x").aggId(id).aggId());
     }
 
     @Test
-    public void testFactSpecJsFilter() {
+    void testFactSpecJsFilter() {
         assertEquals("foo", FactSpec.ns("x").jsFilterScript("foo").jsFilterScript());
     }
 
     @Test
-    public void testFactSpecEquality() {
+    void testFactSpecEquality() {
         FactSpec f1 = FactSpec.ns("x");
         FactSpec f2 = FactSpec.ns("x");
         // do not compare FactSpecs!

@@ -11,56 +11,56 @@ import org.junit.jupiter.api.Test;
 public class IdOnlyFactTest {
 
     @Test
-    public void testIdNonNull() {
+    void testIdNonNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             new IdOnlyFact(null);
         });
     }
 
     @Test
-    public void testNsUnsupported() {
+    void testNsUnsupported() {
         Assertions.assertThrows(UnsupportedOperationException.class, () -> {
             new IdOnlyFact(UUID.randomUUID()).ns();
         });
     }
 
     @Test
-    public void testaggIdUnsupported() {
+    void testaggIdUnsupported() {
         Assertions.assertThrows(UnsupportedOperationException.class, () -> {
             new IdOnlyFact(UUID.randomUUID()).aggIds();
         });
     }
 
     @Test
-    public void testtypeUnsupported() {
+    void testtypeUnsupported() {
         Assertions.assertThrows(UnsupportedOperationException.class, () -> {
             new IdOnlyFact(UUID.randomUUID()).type();
         });
     }
 
     @Test
-    public void testHeaderUnsupported() {
+    void testHeaderUnsupported() {
         Assertions.assertThrows(UnsupportedOperationException.class, () -> {
             new IdOnlyFact(UUID.randomUUID()).jsonHeader();
         });
     }
 
     @Test
-    public void testPayloadUnsupported() {
+    void testPayloadUnsupported() {
         Assertions.assertThrows(UnsupportedOperationException.class, () -> {
             new IdOnlyFact(UUID.randomUUID()).jsonPayload();
         });
     }
 
     @Test
-    public void testMetaUnsupported() {
+    void testMetaUnsupported() {
         Assertions.assertThrows(UnsupportedOperationException.class, () -> {
             new IdOnlyFact(UUID.randomUUID()).meta("foo");
         });
     }
 
     @Test
-    public void testId() {
+    void testId() {
         UUID id = UUID.randomUUID();
         assertSame(id, new IdOnlyFact(id).id());
     }

@@ -32,7 +32,7 @@ public class PGFactIdToSerMapperTest {
     FactStore store;
 
     @Test
-    public void testRetrieve() {
+    void testRetrieve() {
         MarkFact m = new MarkFact();
         store.publish(Collections.singletonList(m));
         long retrieve = new PGFactIdToSerialMapper(tpl).retrieve(m.id());
@@ -40,7 +40,7 @@ public class PGFactIdToSerMapperTest {
     }
 
     @Test
-    public void testRetrieveNonExistant() {
+    void testRetrieveNonExistant() {
         try {
             new PGFactIdToSerialMapper(tpl).retrieve(UUID.fromString(
                     "2b86d90e-2755-4f82-b86d-fd092b25ccc8"));

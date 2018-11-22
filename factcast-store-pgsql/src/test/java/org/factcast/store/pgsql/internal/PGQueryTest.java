@@ -73,7 +73,7 @@ public class PGQueryTest {
 
     @DirtiesContext
     @Test
-    public void testRoundtrip() {
+    void testRoundtrip() {
         SubscriptionRequestTO req = SubscriptionRequestTO.forFacts(SubscriptionRequest.catchup(
                 DEFAULT_SPEC).fromScratch());
         FactObserver c = mock(FactObserver.class);
@@ -85,7 +85,7 @@ public class PGQueryTest {
 
     @DirtiesContext
     @Test
-    public void testRoundtripInsertBefore() {
+    void testRoundtripInsertBefore() {
         insertTestFact(TestHeader.create());
         insertTestFact(TestHeader.create());
         insertTestFact(TestHeader.create().ns("other-ns"));
@@ -106,7 +106,7 @@ public class PGQueryTest {
 
     @DirtiesContext()
     @Test
-    public void testRoundtripInsertAfter() throws Exception {
+    void testRoundtripInsertAfter() throws Exception {
         SubscriptionRequestTO req = SubscriptionRequestTO.forFacts(SubscriptionRequest.follow(
                 DEFAULT_SPEC).fromScratch());
         FactObserver c = mock(FactObserver.class);
@@ -124,7 +124,7 @@ public class PGQueryTest {
 
     @DirtiesContext()
     @Test
-    public void testRoundtripCatchupEventsInsertedAfterStart() throws Exception {
+    void testRoundtripCatchupEventsInsertedAfterStart() throws Exception {
         SubscriptionRequestTO req = SubscriptionRequestTO.forFacts(SubscriptionRequest.follow(
                 DEFAULT_SPEC).fromScratch());
         FactObserver c = mock(FactObserver.class);
@@ -156,7 +156,7 @@ public class PGQueryTest {
 
     @DirtiesContext()
     @Test
-    public void testRoundtripCompletion() throws Exception {
+    void testRoundtripCompletion() throws Exception {
         SubscriptionRequestTO req = SubscriptionRequestTO.forFacts(SubscriptionRequest.catchup(
                 DEFAULT_SPEC).fromScratch());
         FactObserver c = mock(FactObserver.class);
@@ -178,7 +178,7 @@ public class PGQueryTest {
 
     @DirtiesContext()
     @Test
-    public void testCancel() throws Exception {
+    void testCancel() throws Exception {
         SubscriptionRequestTO req = SubscriptionRequestTO.forFacts(SubscriptionRequest.follow(
                 DEFAULT_SPEC).fromScratch());
         FactObserver c = mock(FactObserver.class);

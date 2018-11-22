@@ -20,20 +20,20 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class CachingFactLookupTest {
+class CachingFactLookupTest {
 
     private CachingFactLookup uut;
 
     private FactStore store;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         store = mock(FactStore.class);
         uut = new CachingFactLookup(store);
     }
 
     @Test
-    public void testLookupFails() {
+    void testLookupFails() {
         when(store.fetchById(any())).thenReturn(Optional.empty());
         final UUID id = UUID.randomUUID();
         Optional<Fact> lookup = uut.lookup(id);
@@ -42,7 +42,7 @@ public class CachingFactLookupTest {
     }
 
     @Test
-    public void testLookupWorks() {
+    void testLookupWorks() {
         final Fact f = Fact.builder().ns("test").build("{}");
         when(store.fetchById(f.id())).thenReturn(Optional.of(f));
         Optional<Fact> lookup = uut.lookup(f.id());
@@ -52,7 +52,7 @@ public class CachingFactLookupTest {
     }
 
     @Test
-    public void testConstructorNullParam() {
+    void testConstructorNullParam() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             new CachingFactLookup(null);
         });

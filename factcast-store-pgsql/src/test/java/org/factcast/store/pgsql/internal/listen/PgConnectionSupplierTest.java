@@ -26,7 +26,7 @@ public class PgConnectionSupplierTest {
     private org.apache.tomcat.jdbc.pool.DataSource ds;
 
     @BeforeEach
-    public void prepare() {
+    void setUp() {
         initMocks(this);
         uut = new PgConnectionSupplier(ds);
     }
@@ -38,7 +38,7 @@ public class PgConnectionSupplierTest {
     }
 
     @Test
-    public void test_wrongDataSourceImplementation() {
+    void test_wrongDataSourceImplementation() {
         Assertions.assertThrows(IllegalStateException.class, () -> {
             DataSource ds = mock(DataSource.class);
             new PgConnectionSupplier(ds);
@@ -47,7 +47,7 @@ public class PgConnectionSupplierTest {
     }
 
     @Test
-    public void test_buildCredentials() {
+    void test_buildCredentials() {
         // given
         PoolConfiguration poolConf = mock(PoolConfiguration.class);
         when(poolConf.getPassword()).thenReturn("testPassword");
@@ -61,7 +61,7 @@ public class PgConnectionSupplierTest {
     }
 
     @Test
-    public void test_socketTimeout() {
+    void test_socketTimeout() {
         // given
         setupConnectionProperties("socketTimeout=30;connectTimeout=20;loginTimeout=10;");
         // when
@@ -71,7 +71,7 @@ public class PgConnectionSupplierTest {
     }
 
     @Test
-    public void test_connectionTimeout() {
+    void test_connectionTimeout() {
         // given
         setupConnectionProperties("socketTimeout=30;connectTimeout=20;loginTimeout=10;");
         // when
@@ -81,7 +81,7 @@ public class PgConnectionSupplierTest {
     }
 
     @Test
-    public void test_loginTimeout() {
+    void test_loginTimeout() {
         // given
         setupConnectionProperties("socketTimeout=30;connectTimeout=20;loginTimeout=10;");
         // when
@@ -91,13 +91,13 @@ public class PgConnectionSupplierTest {
     }
 
     @Test
-    public void test_noRelevantPropertySet() {
+    void test_noRelevantPropertySet() {
         setupConnectionProperties("sockettimeout=30");
         uut.buildPgConnectionProperties(ds);
     }
 
     @Test
-    public void test_propertySyntaxBroken() {
+    void test_propertySyntaxBroken() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             setupConnectionProperties("sockettimeout:30");
             uut.buildPgConnectionProperties(ds);
@@ -105,13 +105,13 @@ public class PgConnectionSupplierTest {
     }
 
     @Test
-    public void test_nullProperties() {
+    void test_nullProperties() {
         setupConnectionProperties(null);
         uut.buildPgConnectionProperties(ds);
     }
 
     @Test
-    public void test_invalidConnectionProperties() {
+    void test_invalidConnectionProperties() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             // given
             setupConnectionProperties("socketTimeout=30;connectTimeout=20,loginTimeout=10;");
@@ -122,7 +122,7 @@ public class PgConnectionSupplierTest {
     }
 
     @Test
-    public void test_constructor() {
+    void test_constructor() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             new PgConnectionSupplier(null);
             failBecauseExceptionWasNotThrown(NullPointerException.class);
@@ -130,7 +130,7 @@ public class PgConnectionSupplierTest {
     }
 
     @Test
-    public void testExceptionOnDriverManager_getConnection() {
+    void testExceptionOnDriverManager_getConnection() {
         String url = "jdbc:xyz:foo";
         org.apache.tomcat.jdbc.pool.DataSource ds = new org.apache.tomcat.jdbc.pool.DataSource();
         ds.setUrl(url);

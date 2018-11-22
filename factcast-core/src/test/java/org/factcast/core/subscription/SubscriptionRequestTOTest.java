@@ -14,21 +14,21 @@ import org.junit.jupiter.api.Test;
 public class SubscriptionRequestTOTest {
 
     @Test
-    public void testDebugInfo() {
+    void testDebugInfo() {
         SubscriptionRequest r = SubscriptionRequest.catchup(FactSpec.forMark()).fromScratch();
         SubscriptionRequestTO uut = SubscriptionRequestTO.forFacts(r);
         assertEquals(r.debugInfo(), uut.debugInfo());
     }
 
     @Test
-    public void testDumpContainsDebugInfo() {
+    void testDumpContainsDebugInfo() {
         SubscriptionRequest r = SubscriptionRequest.catchup(FactSpec.forMark()).fromScratch();
         SubscriptionRequestTO uut = SubscriptionRequestTO.forFacts(r);
         assertTrue(uut.dump().contains(r.debugInfo()));
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         SubscriptionRequest r = SubscriptionRequest.catchup(FactSpec.forMark()).fromScratch();
         String debugInfo = r.debugInfo();
         SubscriptionRequestTO uut = SubscriptionRequestTO.forFacts(r);
@@ -36,7 +36,7 @@ public class SubscriptionRequestTOTest {
     }
 
     @Test
-    public void testSpecsContainMarkSpec() {
+    void testSpecsContainMarkSpec() {
         final FactSpec s = FactSpec.ns("foo");
         SubscriptionRequest r = SubscriptionRequest.catchup(s).fromScratch();
         SubscriptionRequestTO uut = SubscriptionRequestTO.forFacts(r);
@@ -46,7 +46,7 @@ public class SubscriptionRequestTOTest {
     }
 
     @Test
-    public void testHasAnyScriptFilters() {
+    void testHasAnyScriptFilters() {
         final FactSpec s = FactSpec.ns("foo");
         SubscriptionRequest r = SubscriptionRequest.catchup(s).fromScratch();
         SubscriptionRequestTO uut = SubscriptionRequestTO.forFacts(r);
@@ -57,7 +57,7 @@ public class SubscriptionRequestTOTest {
     }
 
     @Test
-    public void testAddSpecsNull() {
+    void testAddSpecsNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             final FactSpec s = FactSpec.ns("foo");
             SubscriptionRequest r = SubscriptionRequest.catchup(s).fromScratch();
@@ -67,7 +67,7 @@ public class SubscriptionRequestTOTest {
     }
 
     @Test
-    public void testAddSpecsEmpty() {
+    void testAddSpecsEmpty() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             final FactSpec s = FactSpec.ns("foo");
             SubscriptionRequest r = SubscriptionRequest.catchup(s).fromScratch();
@@ -77,7 +77,7 @@ public class SubscriptionRequestTOTest {
     }
 
     @Test
-    public void testMaxDelay() {
+    void testMaxDelay() {
         final FactSpec s = FactSpec.ns("foo");
         SubscriptionRequest r = SubscriptionRequest.catchup(s).fromScratch();
         SubscriptionRequestTO uut = SubscriptionRequestTO.forFacts(r);
@@ -87,7 +87,7 @@ public class SubscriptionRequestTOTest {
     }
 
     @Test
-    public void testAddSpecs() {
+    void testAddSpecs() {
         final FactSpec s = FactSpec.ns("foo");
         SubscriptionRequest r = SubscriptionRequest.catchup(s).fromScratch();
         SubscriptionRequestTO uut = SubscriptionRequestTO.forFacts(r);
@@ -101,7 +101,7 @@ public class SubscriptionRequestTOTest {
     }
 
     @Test
-    public void testSkipMarks() {
+    void testSkipMarks() {
         SubscriptionRequest r = SubscriptionRequest.catchup(FactSpec.ns("foo"))
                 .skipMarks()
                 .fromScratch();
@@ -110,7 +110,7 @@ public class SubscriptionRequestTOTest {
     }
 
     @Test
-    public void testDontSkipMarks() {
+    void testDontSkipMarks() {
         SubscriptionRequest r = SubscriptionRequest.catchup(FactSpec.ns("foo")).fromScratch();
         SubscriptionRequestTO uut = SubscriptionRequestTO.forFacts(r);
         assertTrue(uut.marks());

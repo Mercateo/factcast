@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 public class GenericObserverTest {
 
     @Test
-    public void testMap() {
+    void testMap() {
         GenericObserver<Integer> i = spy(new GenericObserver<Integer>() {
 
             @Override
@@ -43,7 +43,7 @@ public class GenericObserverTest {
     }
 
     @Test
-    public void testMapNull() {
+    void testMapNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             GenericObserver<Integer> i = element -> {
             };

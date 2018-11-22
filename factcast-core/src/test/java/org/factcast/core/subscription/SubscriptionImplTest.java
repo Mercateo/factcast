@@ -32,12 +32,12 @@ public class SubscriptionImplTest {
 
     @SuppressWarnings("unchecked")
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         obs = mock(GenericObserver.class);
     }
 
     @Test
-    public void testClose() throws Exception {
+    void testClose() throws Exception {
         expect(TimeoutException.class, () -> uut.awaitCatchup(10));
         expect(TimeoutException.class, () -> uut.awaitComplete(10));
         uut.close();
@@ -46,7 +46,7 @@ public class SubscriptionImplTest {
     }
 
     @Test
-    public void testAwaitCatchup() {
+    void testAwaitCatchup() {
         expect(TimeoutException.class, () -> uut.awaitCatchup(10));
         expect(TimeoutException.class, () -> uut.awaitComplete(10));
         uut.notifyCatchup();
@@ -55,7 +55,7 @@ public class SubscriptionImplTest {
     }
 
     @Test
-    public void testAwaitComplete() {
+    void testAwaitComplete() {
         expect(TimeoutException.class, () -> uut.awaitCatchup(10));
         expect(TimeoutException.class, () -> uut.awaitComplete(10));
         uut.notifyComplete();
@@ -65,28 +65,28 @@ public class SubscriptionImplTest {
 
     @SuppressWarnings("resource")
     @Test
-    public void testNullConst() {
+    void testNullConst() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             new SubscriptionImpl<>(null);
         });
     }
 
     @Test
-    public void testNotifyElementNull() {
+    void testNotifyElementNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.notifyElement(null);
         });
     }
 
     @Test
-    public void testNotifyErrorNull() {
+    void testNotifyErrorNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.notifyError(null);
         });
     }
 
     @Test
-    public void testOnClose() throws Exception {
+    void testOnClose() throws Exception {
         CountDownLatch l = new CountDownLatch(1);
         uut.onClose(l::countDown);
         uut.close();
@@ -96,14 +96,14 @@ public class SubscriptionImplTest {
     private GenericObserver<Integer> obs;
 
     @Test
-    public void testOnNull() {
+    void testOnNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             SubscriptionImpl.on(null);
         });
     }
 
     @Test
-    public void testOn() {
+    void testOn() {
         SubscriptionImpl<Integer> on = SubscriptionImpl.on(obs);
         verify(obs, never()).onNext(any());
         on.notifyElement(1);
@@ -119,7 +119,7 @@ public class SubscriptionImplTest {
     }
 
     @Test
-    public void testOnError() {
+    void testOnError() {
         SubscriptionImpl<Integer> on = SubscriptionImpl.on(obs);
         verify(obs, never()).onError(any());
         on.notifyError(new Throwable("ignore me"));
@@ -127,7 +127,7 @@ public class SubscriptionImplTest {
     }
 
     @Test
-    public void testOnErrorCloses() {
+    void testOnErrorCloses() {
         SubscriptionImpl<Integer> on = SubscriptionImpl.on(obs);
         on.notifyError(new Throwable("ignore me"));
         on.notifyElement(1);
@@ -139,7 +139,7 @@ public class SubscriptionImplTest {
     }
 
     @Test
-    public void testOnCompleteCloses() {
+    void testOnCompleteCloses() {
         SubscriptionImpl<Integer> on = SubscriptionImpl.on(obs);
         on.notifyComplete();
         on.notifyElement(1);
@@ -151,7 +151,7 @@ public class SubscriptionImplTest {
     }
 
     @Test
-    public void testOnCatchupDoesNotClose() {
+    void testOnCatchupDoesNotClose() {
         SubscriptionImpl<Integer> on = SubscriptionImpl.on(obs);
         on.notifyCatchup();
         on.notifyElement(1);
@@ -162,7 +162,7 @@ public class SubscriptionImplTest {
     }
 
     @Test
-    public void testOnErrorCompletesFutureCatchup() {
+    void testOnErrorCompletesFutureCatchup() {
         Assertions.assertThrows(SubscriptionCancelledException.class, () -> {
             SubscriptionImpl<Integer> on = SubscriptionImpl.on(obs);
             verify(obs, never()).onError(any());
@@ -173,7 +173,7 @@ public class SubscriptionImplTest {
     }
 
     @Test
-    public void testOnErrorCompletesFutureComplete() {
+    void testOnErrorCompletesFutureComplete() {
         Assertions.assertThrows(SubscriptionCancelledException.class, () -> {
             SubscriptionImpl<Integer> on = SubscriptionImpl.on(obs);
             verify(obs, never()).onError(any());
@@ -184,7 +184,7 @@ public class SubscriptionImplTest {
     }
 
     @Test
-    public void testAwaitCatchupLong() throws Exception {
+    void testAwaitCatchupLong() throws Exception {
         Assertions.assertTimeout(Duration.ofMillis(100), () -> {
             uut.notifyCatchup();
             uut.awaitCatchup(100000);
@@ -192,7 +192,7 @@ public class SubscriptionImplTest {
     }
 
     @Test
-    public void testAwaitCompleteLong() throws Exception {
+    void testAwaitCompleteLong() throws Exception {
         Assertions.assertTimeout(Duration.ofMillis(100), () -> {
             uut.notifyComplete();
             uut.awaitComplete(100000);

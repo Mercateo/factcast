@@ -49,14 +49,14 @@ public class PGQueueCatchupTest {
     private PGQueueCatchup uut;
 
     @Test
-    public void testDoFetchFacts() {
+    void testDoFetchFacts() {
         final PGCatchUpFetchPage page = mock(PGCatchUpFetchPage.class);
         uut.doFetch(page);
         verify(page).fetchFacts(any(AtomicLong.class));
     }
 
     @Test
-    public void testDoFetchIds() {
+    void testDoFetchIds() {
         final PGCatchUpFetchPage page = mock(PGCatchUpFetchPage.class);
         when(request.idOnly()).thenReturn(true);
         when(postQueryMatcher.canBeSkipped()).thenReturn(true);

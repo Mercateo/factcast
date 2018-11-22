@@ -12,12 +12,12 @@ public class MarkFactTest {
     final MarkFact uut = new MarkFact();
 
     @Test
-    public void testJsonPayload() {
+    void testJsonPayload() {
         assertEquals("{}", new MarkFact().jsonPayload());
     }
 
     @Test
-    public void testJsonHeader() {
+    void testJsonHeader() {
         assertNotNull(uut.jsonHeader());
         // intentionally not using the constants here. i am sure you see why :)
         assertEquals("_", uut.ns());
@@ -27,7 +27,7 @@ public class MarkFactTest {
     }
 
     @Test
-    public void testMeta() {
+    void testMeta() {
         assertNull(new MarkFact().meta("any"));
     }
 }

@@ -19,7 +19,7 @@ public class PGFactExtractorTest {
     private PGFactExtractor uut = new PGFactExtractor(serial);
 
     @Test
-    public void testMapRow() throws Exception {
+    void testMapRow() throws Exception {
 
         ResultSet rs = mock(ResultSet.class);
         final UUID id = UUID.randomUUID();

@@ -27,33 +27,33 @@ public class BlockingStreamObserverTest {
     private BlockingStreamObserver<Object> uut;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         uut = new BlockingStreamObserver<>("foo", delegate);
     }
 
     @Test
-    public void testOnCompleted() {
+    void testOnCompleted() {
         verify(delegate, never()).onCompleted();
         uut.onCompleted();
         verify(delegate).onCompleted();
     }
 
     @Test
-    public void testOnError() {
+    void testOnError() {
         verify(delegate, never()).onError(any());
         uut.onError(new Exception());
         verify(delegate).onError(any());
     }
 
     @Test
-    public void testOnNextWhenReady() {
+    void testOnNextWhenReady() {
         when(delegate.isReady()).thenReturn(true);
         uut.onNext(new Object());
         verify(delegate).onNext(any());
     }
 
     @Test
-    public void testOnNextNotYetReady() throws Exception {
+    void testOnNextNotYetReady() throws Exception {
         AtomicBoolean ready = new AtomicBoolean(false);
         when(delegate.isReady()).thenAnswer(i -> ready.get());
         CompletableFuture<Void> onNextCall = CompletableFuture.runAsync(() -> uut.onNext(
@@ -68,7 +68,7 @@ public class BlockingStreamObserverTest {
     }
 
     @Test
-    public void testOnNextNotReadyThenCancelled() throws Exception {
+    void testOnNextNotReadyThenCancelled() throws Exception {
         AtomicBoolean ready = new AtomicBoolean(false);
         AtomicBoolean cancelled = new AtomicBoolean(false);
         when(delegate.isReady()).thenAnswer(i -> ready.get());

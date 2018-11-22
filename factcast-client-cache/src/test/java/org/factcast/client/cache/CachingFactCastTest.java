@@ -32,7 +32,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class CachingFactCastTest {
+class CachingFactCastTest {
 
     @Mock
     CachingFactLookup l;
@@ -48,12 +48,12 @@ public class CachingFactCastTest {
     CachingFactCast uut;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         uut = new CachingFactCast(fc, l);
     }
 
     @Test
-    public void testFetchById() {
+    void testFetchById() {
         CachingFactCast uut = new CachingFactCast(fc, l);
         when(l.lookup(any())).thenReturn(Optional.of(f));
         Optional<Fact> of = uut.fetchById(UUID.randomUUID());
@@ -63,28 +63,28 @@ public class CachingFactCastTest {
     }
 
     @Test
-    public void testPublish() {
+    void testPublish() {
         List<Fact> facts = Collections.singletonList(f);
         uut.publish(facts);
         verify(fc).publish(same(facts));
     }
 
     @Test
-    public void testPublishNull() {
+    void testPublishNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.publish((Fact) null);
         });
     }
 
     @Test
-    public void testPublishNullArgs() {
+    void testPublishNullArgs() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.publish((List<Fact>) null);
         });
     }
 
     @Test
-    public void testSubscribeToIds() {
+    void testSubscribeToIds() {
         SubscriptionRequest rs = SubscriptionRequest.follow(FactSpec.forMark()).fromScratch();
         final IdObserver observer = id -> {
         };
@@ -93,7 +93,7 @@ public class CachingFactCastTest {
     }
 
     @Test
-    public void testSubscribeToIdsNullParam() {
+    void testSubscribeToIdsNullParam() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.subscribeToIds(null, f -> {
             });
@@ -101,21 +101,21 @@ public class CachingFactCastTest {
     }
 
     @Test
-    public void testSubscribeToIdsNullParams() {
+    void testSubscribeToIdsNullParams() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.subscribeToIds(null, null);
         });
     }
 
     @Test
-    public void testSubscribeToIdsNullObserverParam() {
+    void testSubscribeToIdsNullObserverParam() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.subscribeToIds(mock(SubscriptionRequest.class), null);
         });
     }
 
     @Test
-    public void testSubscribeToFactsNullParam() {
+    void testSubscribeToFactsNullParam() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.subscribeToFacts(null, f -> {
             });
@@ -123,21 +123,21 @@ public class CachingFactCastTest {
     }
 
     @Test
-    public void testSubscribeToFactsNullParams() {
+    void testSubscribeToFactsNullParams() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.subscribeToFacts(null, null);
         });
     }
 
     @Test
-    public void testSubscribeToFactsNullObserverParam() {
+    void testSubscribeToFactsNullObserverParam() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.subscribeToFacts(mock(SubscriptionRequest.class), null);
         });
     }
 
     @Test
-    public void testSubscribeToFacts() {
+    void testSubscribeToFacts() {
         SubscriptionRequest rs = SubscriptionRequest.follow(FactSpec.forMark()).fromScratch();
         when(l.lookup(any())).thenReturn(Optional.of(f));
         when(fc.subscribeToIds(same(rs), obsCap.capture())).thenReturn(null);
@@ -163,14 +163,14 @@ public class CachingFactCastTest {
     }
 
     @Test
-    public void testSerialOf() {
+    void testSerialOf() {
         UUID id = UUID.randomUUID();
         uut.serialOf(id);
         verify(fc).serialOf(same(id));
     }
 
     @Test
-    public void testSerialOfNull() {
+    void testSerialOfNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             uut.serialOf(null);
         });

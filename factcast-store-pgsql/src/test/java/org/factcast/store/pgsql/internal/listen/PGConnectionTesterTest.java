@@ -42,14 +42,14 @@ public class PGConnectionTesterTest {
     private Counter counter;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         final String fail = new PGMetricNames().connectionFailure();
         when(registry.counter(fail)).thenReturn(counter);
         uut = new PGConnectionTester(registry);
     }
 
     @Test
-    public void testTestPositive() throws Exception {
+    void testTestPositive() throws Exception {
         Connection c = mock(Connection.class);
         when(c.prepareStatement(anyString())).thenReturn(st);
         when(st.executeQuery()).thenReturn(rs);
@@ -61,7 +61,7 @@ public class PGConnectionTesterTest {
     }
 
     @Test
-    public void testTestFailure() throws Exception {
+    void testTestFailure() throws Exception {
         Connection c = mock(Connection.class);
         when(c.prepareStatement(anyString())).thenReturn(st);
         when(st.executeQuery()).thenReturn(rs);
@@ -73,7 +73,7 @@ public class PGConnectionTesterTest {
     }
 
     @Test
-    public void testTestException1() throws Exception {
+    void testTestException1() throws Exception {
         Connection c = mock(Connection.class);
         when(c.prepareStatement(anyString())).thenReturn(st);
         when(st.executeQuery()).thenReturn(rs);
@@ -85,7 +85,7 @@ public class PGConnectionTesterTest {
     }
 
     @Test
-    public void testTestException2() throws Exception {
+    void testTestException2() throws Exception {
         Connection c = mock(Connection.class);
         when(c.prepareStatement(anyString())).thenReturn(st);
         when(st.executeQuery()).thenReturn(rs);
@@ -96,7 +96,7 @@ public class PGConnectionTesterTest {
     }
 
     @Test
-    public void testTestException3() throws Exception {
+    void testTestException3() throws Exception {
         Connection c = mock(Connection.class);
         when(c.prepareStatement(anyString())).thenReturn(st);
         when(st.executeQuery()).thenThrow(new SQLException("BAM"));
@@ -106,7 +106,7 @@ public class PGConnectionTesterTest {
     }
 
     @Test
-    public void testTestException4() throws Exception {
+    void testTestException4() throws Exception {
         Connection c = mock(Connection.class);
         when(c.prepareStatement(anyString())).thenThrow(new SQLException("BAM"));
         boolean test = uut.test(c);
@@ -115,7 +115,7 @@ public class PGConnectionTesterTest {
     }
 
     @Test
-    public void testPGConnectionTester() {
+    void testPGConnectionTester() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             new PGConnectionTester(null);
         });

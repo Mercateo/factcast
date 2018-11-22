@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 public class PGFactTest {
 
     @Test
-    public void testFrom() throws Exception {
+    void testFrom() throws Exception {
         ResultSet rs = mock(ResultSet.class);
         when(rs.next()).thenReturn(true);
         String ns = "ns";
@@ -44,19 +44,19 @@ public class PGFactTest {
     }
 
     @Test
-    public void testToUUIDArrayNull() {
+    void testToUUIDArrayNull() {
         Set<UUID> res = PGFact.toUUIDArray(null);
         assertTrue(res.isEmpty());
     }
 
     @Test
-    public void testToUUIDArrayEmpty() {
+    void testToUUIDArrayEmpty() {
         Set<UUID> res = PGFact.toUUIDArray("[]");
         assertTrue(res.isEmpty());
     }
 
     @Test
-    public void testToUUIDArraySingle() {
+    void testToUUIDArraySingle() {
         UUID aggId1 = UUID.randomUUID();
         Set<UUID> res = PGFact.toUUIDArray("[\"" + aggId1 + "\"]");
         assertEquals(1, res.size());
@@ -64,7 +64,7 @@ public class PGFactTest {
     }
 
     @Test
-    public void testToUUIDArrayMutli() {
+    void testToUUIDArrayMutli() {
         UUID aggId1 = UUID.randomUUID();
         UUID aggId2 = UUID.randomUUID();
         Set<UUID> res = PGFact.toUUIDArray("[\"" + aggId1 + "\",\"" + aggId2 + "\"]");

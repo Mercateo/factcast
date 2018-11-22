@@ -17,35 +17,35 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class FactTest {
 
     @Test
-    public void testOfNull1() {
+    void testOfNull1() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             Fact.of(null, "");
         });
     }
 
     @Test
-    public void testOfNull2() {
+    void testOfNull2() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             Fact.of("", null);
         });
     }
 
     @Test
-    public void testOfNull() {
+    void testOfNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             Fact.of((String) null, null);
         });
     }
 
     @Test
-    public void testOf() {
+    void testOf() {
         TestFact f = new TestFact();
         Fact f2 = Fact.of(f.jsonHeader(), f.jsonPayload());
         assertEquals(f.id(), f2.id());
     }
 
     @Test
-    public void testBefore() {
+    void testBefore() {
         Fact one = Fact.of("{" + "\"ns\":\"ns\"," + "\"id\":\"" + UUID.randomUUID() + "\","
                 + "\"meta\":{ \"_ser\":1 }" + "}", "{}");
         Fact two = Fact.of("{" + "\"ns\":\"ns\"," + "\"id\":\"" + UUID.randomUUID() + "\","
@@ -62,14 +62,14 @@ public class FactTest {
     }
 
     @Test
-    public void testSerialUnset() {
+    void testSerialUnset() {
         Assertions.assertThrows(IllegalStateException.class, () -> {
             Fact.of("{" + "\"ns\":\"ns\"," + "\"id\":\"" + UUID.randomUUID() + "\"" + "}", "{}")
                     .serial();
         });
     }
 
-    public void testBuilderDefaults() {
+    void testBuilderDefaults() {
         Fact f = Fact.builder().build("{\"a\":1}");
         assertEquals("default", f.ns());
         assertNotNull(f.id());
@@ -77,7 +77,7 @@ public class FactTest {
     }
 
     @Test
-    public void testBuilder() {
+    void testBuilder() {
         UUID aggId1 = UUID.randomUUID();
         UUID aggId2 = UUID.randomUUID();
         UUID aggId3 = UUID.randomUUID();
@@ -104,28 +104,28 @@ public class FactTest {
     }
 
     @Test
-    public void testOfJsonNodeJsonNodeNull1() {
+    void testOfJsonNodeJsonNodeNull1() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             Fact.of(null, Mockito.mock(JsonNode.class));
         });
     }
 
     @Test
-    public void testOfJsonNodeJsonNodeNull2() {
+    void testOfJsonNodeJsonNodeNull2() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             Fact.of(Mockito.mock(JsonNode.class), null);
         });
     }
 
     @Test
-    public void testOfJsonNodeJsonNodeNull() {
+    void testOfJsonNodeJsonNodeNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             Fact.of((JsonNode) null, null);
         });
     }
 
     @Test
-    public void testOfJsonNode() {
+    void testOfJsonNode() {
         JsonNode payload = FactCastJson.newObjectNode();
         String headerString = "{\"id\":\"" + UUID.randomUUID() + "\",\"ns\":\"ns\"}";
         JsonNode header = FactCastJson.toObjectNode(headerString);

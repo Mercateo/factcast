@@ -26,35 +26,35 @@ public class FactCastTest {
     ArgumentCaptor<List<Fact>> facts;
 
     @Test
-    public void testFrom() {
+    void testFrom() {
         FactStore store = mock(FactStore.class);
         FactCast fc = FactCast.from(store);
         assertTrue(fc instanceof DefaultFactCast);
     }
 
     @Test
-    public void testFromNull() {
+    void testFromNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             FactCast.from(null);
         });
     }
 
     @Test
-    public void testFromReadOnlyNull() {
+    void testFromReadOnlyNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             FactCast.fromReadOnly(null);
         });
     }
 
     @Test
-    public void testFromReadOnly() {
+    void testFromReadOnly() {
         FactStore store = mock(FactStore.class);
         ReadFactCast fc = FactCast.fromReadOnly(store);
         assertTrue(fc instanceof DefaultFactCast);
     }
 
     @Test
-    public void testPublishWithMarkOne() {
+    void testPublishWithMarkOne() {
         FactStore store = mock(FactStore.class);
         doNothing().when(store).publish(facts.capture());
         final TestFact f = new TestFact();
@@ -66,7 +66,7 @@ public class FactCastTest {
     }
 
     @Test
-    public void testPublishWithMarkMany() {
+    void testPublishWithMarkMany() {
         FactStore store = mock(FactStore.class);
         doNothing().when(store).publish(facts.capture());
         final TestFact f = new TestFact();

@@ -31,7 +31,7 @@ public class PGLatestSerialFetcherTest {
     private PGLatestSerialFetcher uut;
 
     @Test
-    public void testRetrieveLatestSer() {
+    void testRetrieveLatestSer() {
         uut = new PGLatestSerialFetcher(jdbcTemplate);
         assertEquals(0, uut.retrieveLatestSer());
         assertEquals(0, uut.retrieveLatestSer());
@@ -49,7 +49,7 @@ public class PGLatestSerialFetcherTest {
     }
 
     @Test
-    public void testRetrieveLatestSerWithException() {
+    void testRetrieveLatestSerWithException() {
         JdbcTemplate jdbcMock = mock(JdbcTemplate.class);
         when(jdbcMock.queryForRowSet(anyString())).thenThrow(new EmptyResultDataAccessException(1));
         uut = new PGLatestSerialFetcher(jdbcMock);

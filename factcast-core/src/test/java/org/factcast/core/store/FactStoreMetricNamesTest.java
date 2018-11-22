@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 public class FactStoreMetricNamesTest {
 
     @Test
-    public void testFactStoreMetricNames() {
+    void testFactStoreMetricNames() {
         final String type = "something";
         FactStoreMetricNames n = new FactStoreMetricNames(type);
         final String typedPrefix = "factstore." + type + ".";
@@ -24,7 +24,7 @@ public class FactStoreMetricNamesTest {
     }
 
     @Test
-    public void testFactStoreMetricNamesNull() {
+    void testFactStoreMetricNamesNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             new FactStoreMetricNames(null);
         });

@@ -8,49 +8,49 @@ import org.junit.jupiter.api.Test;
 public class IdOnlyFactTest {
 
     @Test
-    public void testNs() {
+    void testNs() {
         Assertions.assertThrows(UnsupportedOperationException.class, () -> {
             new IdOnlyFact(UUID.randomUUID()).ns();
         });
     }
 
     @Test
-    public void testType() {
+    void testType() {
         Assertions.assertThrows(UnsupportedOperationException.class, () -> {
             new IdOnlyFact(UUID.randomUUID()).type();
         });
     }
 
     @Test
-    public void testAggIds() {
+    void testAggIds() {
         Assertions.assertThrows(UnsupportedOperationException.class, () -> {
             new IdOnlyFact(UUID.randomUUID()).aggIds();
         });
     }
 
     @Test
-    public void testJsonHeader() {
+    void testJsonHeader() {
         Assertions.assertThrows(UnsupportedOperationException.class, () -> {
             new IdOnlyFact(UUID.randomUUID()).jsonHeader();
         });
     }
 
     @Test
-    public void testJsonPayload() {
+    void testJsonPayload() {
         Assertions.assertThrows(UnsupportedOperationException.class, () -> {
             new IdOnlyFact(UUID.randomUUID()).jsonPayload();
         });
     }
 
     @Test
-    public void testMeta() {
+    void testMeta() {
         Assertions.assertThrows(UnsupportedOperationException.class, () -> {
             new IdOnlyFact(UUID.randomUUID()).meta("");
         });
     }
 
     @Test
-    public void testNullId() {
+    void testNullId() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             new IdOnlyFact(null);
         });

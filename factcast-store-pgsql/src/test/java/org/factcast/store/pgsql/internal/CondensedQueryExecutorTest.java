@@ -34,12 +34,12 @@ public class CondensedQueryExecutorTest {
     ArgumentCaptor<TimerTask> task;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         doNothing().when(mockTimer).schedule(task.capture(), anyLong());
     }
 
     @Test
-    public void testDelayedExecution() {
+    void testDelayedExecution() {
         CondensedQueryExecutor uut = new CondensedQueryExecutor(1, callback, () -> true, mockTimer);
         uut.trigger();
         verify(mockTimer).schedule(any(), eq(1L));
@@ -48,7 +48,7 @@ public class CondensedQueryExecutorTest {
     }
 
     @Test
-    public void testDelayedMultipleExecution() {
+    void testDelayedMultipleExecution() {
         CondensedQueryExecutor uut = new CondensedQueryExecutor(22, callback, () -> true,
                 mockTimer);
         verify(mockTimer, never()).schedule(any(), anyLong());
@@ -60,7 +60,7 @@ public class CondensedQueryExecutorTest {
     }
 
     @Test
-    public void testDelayedCondensedExecution() {
+    void testDelayedCondensedExecution() {
         CondensedQueryExecutor uut = new CondensedQueryExecutor(104, callback, () -> true,
                 mockTimer);
         // not yet scheduled anything
