@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.*;
 
 import org.factcast.core.Fact;
-import org.factcast.core.Test0Fact;
+import org.factcast.core.TestFact;
 import org.factcast.core.spec.FactSpec;
 import org.factcast.core.subscription.SubscriptionRequestTO;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_Empty;
@@ -86,7 +86,7 @@ public class ProtoConverter0Test {
 
     @Test
     public void testToOptionalProtoFact() {
-        Optional<Fact> probe = Optional.of(new Test0Fact().ns("oink"));
+        Optional<Fact> probe = Optional.of(new TestFact().ns("oink"));
         Optional<Fact> copy = uut.fromProto(uut.toProto(probe));
         assertTrue(copy.isPresent());
         assertEquals(probe.get().ns(), copy.get().ns());
@@ -122,7 +122,7 @@ public class ProtoConverter0Test {
 
     @Test
     public void testCreateNotificationForFact() {
-        final Test0Fact probe = new Test0Fact().ns("123");
+        final TestFact probe = new TestFact().ns("123");
         MSG_Notification n = uut.createNotificationFor(probe);
         assertNotNull(n);
         assertEquals(MSG_Notification.Type.Fact, n.getType());
