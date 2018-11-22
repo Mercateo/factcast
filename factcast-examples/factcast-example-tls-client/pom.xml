@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.factcast</groupId>
     <artifactId>factcast</artifactId>
-    <version>0.0.32-SNAPSHOT</version>
+    <version>0.0.33-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>factcast-example-tls-client</artifactId>
@@ -45,5 +45,6 @@
       <groupId>io.netty</groupId>
       <artifactId>netty-tcnative-boringssl-static</artifactId>
     </dependency>
+    <!-- This is important for java <11 to not run into problems with using TLS1.3 -->
   </dependencies>
 </project>
