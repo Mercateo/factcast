@@ -352,7 +352,7 @@ public abstract class AbstractFactStoreTest {
             uut.publish(Fact.of("{\"id\":\"" + UUID.randomUUID()
                     + "\",\"ns\":\"default\",\"type\":\"noone_knows\"}", "{}"));
             uut.publish(Fact.of("{\"id\":\"" + UUID.randomUUID()
-                            + "\",\"ns\":\"default\",\"type\":\"noone_knows\",\"meta\":{\"foo\":\"bar\"}}",
+                    + "\",\"ns\":\"default\",\"type\":\"noone_knows\",\"meta\":{\"foo\":\"bar\"}}",
                     "{}"));
             FactSpec REQ_FOO_BAR = FactSpec.ns("default").meta("foo", "bar");
             uut.subscribeToFacts(SubscriptionRequest.catchup(REQ_FOO_BAR).fromScratch(), observer)
@@ -372,7 +372,7 @@ public abstract class AbstractFactStoreTest {
             uut.publish(Fact.of("{\"id\":\"" + UUID.randomUUID()
                     + "\",\"ns\":\"default\",\"type\":\"noone_knows\",\"hit\":\"me\"}", "{}"));
             uut.publish(Fact.of("{\"id\":\"" + UUID.randomUUID()
-                            + "\",\"ns\":\"default\",\"type\":\"noone_knows\",\"meta\":{\"foo\":\"bar\"}}",
+                    + "\",\"ns\":\"default\",\"type\":\"noone_knows\",\"meta\":{\"foo\":\"bar\"}}",
                     "{}"));
             FactSpec SCRIPTED = FactSpec.ns("default").jsFilterScript(
                     "function (h,e){ return (h.hit=='me')}");
@@ -393,7 +393,7 @@ public abstract class AbstractFactStoreTest {
             uut.publish(Fact.of("{\"id\":\"" + UUID.randomUUID()
                     + "\",\"ns\":\"default\",\"type\":\"noone_knows\",\"hit\":\"me\"}", "{}"));
             uut.publish(Fact.of("{\"id\":\"" + UUID.randomUUID()
-                            + "\",\"ns\":\"default\",\"type\":\"noone_knows\",\"meta\":{\"foo\":\"bar\"}}",
+                    + "\",\"ns\":\"default\",\"type\":\"noone_knows\",\"meta\":{\"foo\":\"bar\"}}",
                     "{}"));
             FactSpec SCRIPTED = FactSpec.ns("default").jsFilterScript(
                     "function (h){ return (h.hit=='me')}");
@@ -414,7 +414,7 @@ public abstract class AbstractFactStoreTest {
             uut.publish(Fact.of("{\"id\":\"" + UUID.randomUUID()
                     + "\",\"ns\":\"default\",\"type\":\"noone_knows\",\"hit\":\"me\"}", "{}"));
             uut.publish(Fact.of("{\"id\":\"" + UUID.randomUUID()
-                            + "\",\"ns\":\"default\",\"type\":\"noone_knows\",\"meta\":{\"foo\":\"bar\"}}",
+                    + "\",\"ns\":\"default\",\"type\":\"noone_knows\",\"meta\":{\"foo\":\"bar\"}}",
                     "{}"));
             FactSpec SCRIPTED = FactSpec.ns("default").jsFilterScript(
                     "function (h){ return true }");
@@ -435,7 +435,7 @@ public abstract class AbstractFactStoreTest {
             uut.publish(Fact.of("{\"id\":\"" + UUID.randomUUID()
                     + "\",\"ns\":\"default\",\"type\":\"noone_knows\",\"hit\":\"me\"}", "{}"));
             uut.publish(Fact.of("{\"id\":\"" + UUID.randomUUID()
-                            + "\",\"ns\":\"default\",\"type\":\"noone_knows\",\"meta\":{\"foo\":\"bar\"}}",
+                    + "\",\"ns\":\"default\",\"type\":\"noone_knows\",\"meta\":{\"foo\":\"bar\"}}",
                     "{}"));
             FactSpec SCRIPTED = FactSpec.ns("default").jsFilterScript(
                     "function (h){ return false }");
@@ -558,7 +558,7 @@ public abstract class AbstractFactStoreTest {
             final UUID id = UUID.randomUUID();
             assertFalse(uut.serialOf(id).isPresent());
             UUID mark1 = uut.publishWithMark(Fact.of("{\"id\":\"" + id
-                            + "\",\"type\":\"someType\",\"ns\":\"default\",\"aggIds\":[\"" + id + "\"]}",
+                    + "\",\"type\":\"someType\",\"ns\":\"default\",\"aggIds\":[\"" + id + "\"]}",
                     "{}"));
             assertTrue(uut.serialOf(mark1).isPresent());
             assertTrue(uut.serialOf(id).isPresent());
@@ -574,7 +574,7 @@ public abstract class AbstractFactStoreTest {
         Assertions.assertTimeout(Duration.ofMillis(10000), () -> {
             UUID id = UUID.randomUUID();
             uut.publish(Fact.of("{\"id\":\"" + id
-                            + "\",\"type\":\"someType\",\"ns\":\"default\",\"aggIds\":[\"" + id + "\"]}",
+                    + "\",\"type\":\"someType\",\"ns\":\"default\",\"aggIds\":[\"" + id + "\"]}",
                     "{}"));
             UUID id2 = UUID.randomUUID();
             uut.publish(Fact.of("{\"id\":\"" + id2
