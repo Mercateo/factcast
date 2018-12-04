@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,7 +49,7 @@ public interface ReadFactCast {
 
     Set<String> enumerateTypes(@NonNull String ns);
 
-    // default ReadFactCast retryable(int retryCount) {
-    //
-    // }
+    default ReadFactCast retry(int n) {
+        return Retry.wrap(true, this, n);
+    }
 }

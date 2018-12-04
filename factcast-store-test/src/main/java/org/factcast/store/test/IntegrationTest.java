@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,4 +26,5 @@ import org.junit.jupiter.api.Tag;
 @Target(ElementType.TYPE)
 @Tag("integration")
 public @interface IntegrationTest {
+
 }

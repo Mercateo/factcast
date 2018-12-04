@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -53,8 +53,6 @@ import com.google.common.annotations.VisibleForTesting;
 
 import io.grpc.Channel;
 import io.grpc.ClientCall;
-import io.grpc.Compressor;
-import io.grpc.CompressorRegistry;
 import io.grpc.stub.StreamObserver;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -181,30 +179,34 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
 
     @SuppressWarnings("UnusedReturnValue")
     private boolean configureGZip() {
-        Compressor gzip = CompressorRegistry.getDefaultInstance().lookupCompressor("gzip");
-        if (gzip != null) {
-            log.info("configuring GZip");
-            String encoding = gzip.getMessageEncoding();
-            this.blockingStub = blockingStub.withCompression(encoding);
-            this.stub = stub.withCompression(encoding);
-            return true;
-        } else
-            return false;
+        // TODO this was temporarily disabled, due to
+        // https://github.com/Mercateo/factcast/issues/234
+        /*
+         * Compressor gzip =
+         * CompressorRegistry.getDefaultInstance().lookupCompressor("gzip"); if (gzip !=
+         * null) { log.info("configuring GZip"); String encoding =
+         * gzip.getMessageEncoding(); this.blockingStub =
+         * blockingStub.withCompression(encoding); this.stub =
+         * stub.withCompression(encoding); return true; } else
+         */
+        return false;
     }
 
     private boolean configureLZ4() {
-        Compressor lz4Compressor = CompressorRegistry.getDefaultInstance().lookupCompressor("lz4");
-        boolean localLz4 = lz4Compressor != null;
-        boolean remoteLz4 = Boolean.valueOf(serverProperties.get(Capabilities.CODEC_LZ4
-                .toString()));
-        if (localLz4 && remoteLz4) {
-            log.info("LZ4 Codec available on client and server - configuring LZ4");
-            String encoding = lz4Compressor.getMessageEncoding();
-            this.blockingStub = blockingStub.withCompression(encoding);
-            this.stub = stub.withCompression(encoding);
-            return true;
-        } else
-            return false;
+        // TODO this was temporarily disabled, due to
+        // https://github.com/Mercateo/factcast/issues/234
+        /*
+         * Compressor lz4Compressor =
+         * CompressorRegistry.getDefaultInstance().lookupCompressor("lz4"); boolean
+         * localLz4 = lz4Compressor != null; boolean remoteLz4 =
+         * Boolean.valueOf(serverProperties.get(Capabilities.CODEC_LZ4 .toString())); if
+         * (localLz4 && remoteLz4) {
+         * log.info("LZ4 Codec available on client and server - configuring LZ4");
+         * String encoding = lz4Compressor.getMessageEncoding(); // this.blockingStub =
+         * blockingStub.withCompression(encoding); // this.stub =
+         * stub.withCompression(encoding); return true; } else
+         */
+        return false;
     }
 
     @Override

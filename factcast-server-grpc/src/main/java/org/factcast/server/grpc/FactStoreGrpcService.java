@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,6 @@
  */
 package org.factcast.server.grpc;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
@@ -59,7 +58,7 @@ import net.devh.springboot.autoconfigure.grpc.server.GrpcService;
 
 /**
  * Service that provides access to an injected FactStore via GRPC.
- *
+ * <p>
  * Configure port using {@link GRpcServerProperties}
  *
  * @author uwe.schaefer@mercateo.com
@@ -157,7 +156,9 @@ public class FactStoreGrpcService extends RemoteFactStoreImplBase {
                     if (v != null)
                         implVersion = v;
                 }
-            } catch (IOException e) {
+            } catch (Exception ignore) {
+                // whatever fails when reading the version implies, that the impl Version is
+                // "UNKNOWN"
             }
         properties.put(Capabilities.FACTCAST_IMPL_VERSION.toString(), implVersion);
     }
@@ -171,7 +172,9 @@ public class FactStoreGrpcService extends RemoteFactStoreImplBase {
         try {
             Class<?> forName = Class.forName(string);
             return forName != null;
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException ignore) {
+            // unfortunately, this is expected bahavior, when the class is not in the
+            // classpath
         }
         return false;
     }
