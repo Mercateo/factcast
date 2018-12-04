@@ -27,7 +27,6 @@ import lombok.Generated;
 @Configuration
 @ConditionalOnClass(FactCast.class)
 @Generated
-@EnableAspectJAutoProxy
 public class FactCastAutoConfiguration {
 
     @Bean
