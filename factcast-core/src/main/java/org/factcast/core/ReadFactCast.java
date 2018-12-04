@@ -48,4 +48,8 @@ public interface ReadFactCast {
     Set<String> enumerateNamespaces();
 
     Set<String> enumerateTypes(@NonNull String ns);
+
+    // default ReadFactCast retryable(int retryCount) {
+    //
+    // }
 }

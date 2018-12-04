@@ -20,12 +20,14 @@ import org.factcast.core.store.FactStore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 import lombok.Generated;
 
 @Configuration
 @ConditionalOnClass(FactCast.class)
 @Generated
+@EnableAspectJAutoProxy
 public class FactCastAutoConfiguration {
 
     @Bean
