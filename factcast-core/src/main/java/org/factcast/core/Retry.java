@@ -57,7 +57,7 @@ class Retry {
 
             String description = toString(method);
 
-            int retryAttempt = 1;
+            int retryAttempt = 0;
             do {
                 try {
                     return method.invoke(delegateObject, args);
@@ -66,7 +66,7 @@ class Retry {
                     if (cause instanceof RetryableException) {
                         RetryableException e = (RetryableException) cause;
                         log.warn("{} failed: ", description, e.getCause());
-                        if (retryAttempt <= maxRetries) {
+                        if (retryAttempt++ < maxRetries) {
                             sleep(e.minimumWaitTimeMillis());
                             log.warn("Retrying attempt {}/{}", retryAttempt, maxRetries);
                         }
@@ -74,7 +74,7 @@ class Retry {
                         throw cause;
                     }
                 }
-            } while (retryAttempt++ < maxRetries);
+            } while (retryAttempt <= maxRetries);
             throw new MaxRetryAttemptsExceededException(
                     "Exceeded max retry attempts of '" + description + "', giving up.");
         }
@@ -85,7 +85,6 @@ class Retry {
                     .collect(Collectors.joining(", "));
             return method.getDeclaringClass().getSimpleName() + "::" + method.getName() + "(" + args
                     + ")";
-
         }
 
         private void sleep(long millis) {
@@ -95,6 +94,5 @@ class Retry {
                 //
             }
         }
-
     }
 }
