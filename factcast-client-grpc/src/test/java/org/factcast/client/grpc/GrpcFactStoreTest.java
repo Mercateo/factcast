@@ -17,6 +17,7 @@ import java.util.UUID;
 
 import org.factcast.core.Fact;
 import org.factcast.core.TestFact;
+import org.factcast.core.store.RetryableException;
 import org.factcast.core.subscription.SubscriptionRequestTO;
 import org.factcast.core.subscription.observer.FactObserver;
 import org.factcast.grpc.api.conv.ProtoConverter;
@@ -37,6 +38,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.grpc.Channel;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import net.devh.springboot.autoconfigure.grpc.client.AddressChannelFactory;
 
 @ExtendWith(MockitoExtension.class)
@@ -100,6 +103,24 @@ public class GrpcFactStoreTest {
         Assertions.assertThrows(SomeException.class, () -> {
             when(blockingStub.publish(any())).thenThrow(new SomeException());
             uut.publish(Collections.singletonList(Fact.builder().build("{}")));
+        });
+    }
+
+    @Test
+    void testPublishPropagatesRetryableExceptionOnUnavailableStatus() {
+        Assertions.assertThrows(RetryableException.class, () -> {
+            when(blockingStub.publish(any())).thenThrow(new StatusRuntimeException(
+                    Status.UNAVAILABLE));
+            uut.publish(Collections.singletonList(Fact.builder().build("{}")));
+        });
+    }
+
+    @Test
+    void testFetchByIdPropagatesRetryableExceptionOnUnavailableStatus() {
+        Assertions.assertThrows(RetryableException.class, () -> {
+            when(blockingStub.fetchById(any())).thenThrow(new StatusRuntimeException(
+                    Status.UNAVAILABLE));
+            uut.fetchById(UUID.randomUUID());
         });
     }
 

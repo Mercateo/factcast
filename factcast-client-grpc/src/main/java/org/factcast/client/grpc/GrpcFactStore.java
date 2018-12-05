@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 import org.factcast.core.Fact;
 import org.factcast.core.store.FactStore;
+import org.factcast.core.store.RetryableException;
 import org.factcast.core.subscription.Subscription;
 import org.factcast.core.subscription.SubscriptionImpl;
 import org.factcast.core.subscription.SubscriptionRequestTO;
@@ -53,6 +54,8 @@ import com.google.common.annotations.VisibleForTesting;
 
 import io.grpc.Channel;
 import io.grpc.ClientCall;
+import io.grpc.Status.Code;
+import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -103,8 +106,14 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
     @Override
     public Optional<Fact> fetchById(UUID id) {
         log.trace("fetching {} from remote store", id);
-        MSG_OptionalFact fetchById = blockingStub.fetchById(converter.toProto(id));
-        if (!fetchById.getPresent()) {
+
+        MSG_OptionalFact fetchById = null;
+        try {
+            fetchById = blockingStub.fetchById(converter.toProto(id));
+        } catch (StatusRuntimeException e) {
+            handleStatusRuntimeException(e);
+        }
+        if (fetchById == null || !fetchById.getPresent()) {
             return Optional.empty();
         } else {
             return converter.fromProto(fetchById);
@@ -118,7 +127,11 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
                 .toList());
         MSG_Facts mfs = MSG_Facts.newBuilder().addAllFact(mf).build();
         // blockingStub.getCallOptions().withCompression(compressor);
-        blockingStub.publish(mfs);
+        try {
+            blockingStub.publish(mfs);
+        } catch (StatusRuntimeException e) {
+            handleStatusRuntimeException(e);
+        }
     }
 
     @Override
@@ -129,12 +142,22 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
                 subscription);
         ClientCall<MSG_SubscriptionRequest, MSG_Notification> call = stub.getChannel().newCall(
                 RemoteFactStoreGrpc.getSubscribeMethod(), stub.getCallOptions().withWaitForReady());
-        asyncServerStreamingCall(call, converter.toProto(req), responseObserver);
+        try {
+            asyncServerStreamingCall(call, converter.toProto(req), responseObserver);
+        } catch (StatusRuntimeException e) {
+            handleStatusRuntimeException(e);
+        }
         return subscription.onClose(() -> cancel(call));
     }
 
     private void cancel(final ClientCall<MSG_SubscriptionRequest, MSG_Notification> call) {
         call.cancel("Client is no longer interested", null);
+    }
+
+    private void handleStatusRuntimeException(StatusRuntimeException e) {
+        if (e.getStatus().getCode() == Code.UNAVAILABLE) {
+            throw new RetryableException(e);
+        }
     }
 
     @Override
