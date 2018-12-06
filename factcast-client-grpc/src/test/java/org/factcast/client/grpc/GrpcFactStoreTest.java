@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -161,5 +162,14 @@ public class GrpcFactStoreTest {
                     ProtocolVersion.of(2, 0, 0), new HashMap<>())));
             uut.initialize();
         });
+    }
+
+    @Test
+    void testInitializationExecutesOnlyOnce() {
+        when(blockingStub.handshake(any())).thenReturn(conv.toProto(ServerConfig.of(ProtocolVersion
+                .of(1, 1, 0), new HashMap<>())));
+        uut.initialize();
+        uut.initialize();
+        verify(blockingStub, times(1)).handshake(any());
     }
 }

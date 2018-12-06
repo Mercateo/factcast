@@ -166,15 +166,15 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
     }
 
     public synchronized void initialize() {
-        if (initialized.getAndSet(true))
-            initialize();
-        log.debug("Invoking handshake");
-        ServerConfig cfg = converter.fromProto(blockingStub.handshake(converter.empty()));
-        serverProtocolVersion = cfg.version();
-        serverProperties = cfg.properties();
-        logProtocolVersion(serverProtocolVersion);
-        logServerVersion(serverProperties);
-        configure();
+        if (!initialized.getAndSet(true)) {
+            log.debug("Invoking handshake");
+            ServerConfig cfg = converter.fromProto(blockingStub.handshake(converter.empty()));
+            serverProtocolVersion = cfg.version();
+            serverProperties = cfg.properties();
+            logProtocolVersion(serverProtocolVersion);
+            logServerVersion(serverProperties);
+            configure();
+        }
     }
 
     private static void logServerVersion(Map<String, String> serverProperties) {
