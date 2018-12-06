@@ -65,7 +65,10 @@ public interface FactCast extends ReadFactCast {
         return new DefaultFactCast(store);
     }
 
-    default FactCast retry(int n) {
-        return Retry.wrap(false, this, n);
+    default FactCast retry(int maxAttempts) {
+        if (maxAttempts <= 0) {
+            throw new IllegalArgumentException("maxAttempts must be > 0");
+        }
+        return Retry.wrap(false, this, maxAttempts);
     }
 }

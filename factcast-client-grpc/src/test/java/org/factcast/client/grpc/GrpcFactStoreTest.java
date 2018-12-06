@@ -3,9 +3,12 @@ package org.factcast.client.grpc;
 import static org.factcast.core.TestHelper.expectNPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -26,9 +29,12 @@ import org.factcast.grpc.api.conv.ProtocolVersion;
 import org.factcast.grpc.api.conv.ServerConfig;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_Empty;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_Facts;
+import org.factcast.grpc.api.gen.FactStoreProto.MSG_Notification;
+import org.factcast.grpc.api.gen.FactStoreProto.MSG_SubscriptionRequest;
 import org.factcast.grpc.api.gen.RemoteFactStoreGrpc.RemoteFactStoreBlockingStub;
 import org.factcast.grpc.api.gen.RemoteFactStoreGrpc.RemoteFactStoreStub;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
@@ -39,6 +45,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.grpc.Channel;
+import io.grpc.ClientCall;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import net.devh.springboot.autoconfigure.grpc.client.AddressChannelFactory;
@@ -101,27 +108,85 @@ public class GrpcFactStoreTest {
 
     @Test
     void testPublishPropagatesException() {
-        Assertions.assertThrows(SomeException.class, () -> {
+        assertThrows(SomeException.class, () -> {
             when(blockingStub.publish(any())).thenThrow(new SomeException());
             uut.publish(Collections.singletonList(Fact.builder().build("{}")));
         });
     }
 
     @Test
+    void testFetchByIdPropagatesRetryableExceptionOnUnavailableStatus() {
+        assertThrows(RetryableException.class, () -> {
+            when(blockingStub.fetchById(any())).thenThrow(new StatusRuntimeException(
+                    Status.UNAVAILABLE));
+            uut.fetchById(UUID.randomUUID());
+        });
+    }
+
+    @Test
     void testPublishPropagatesRetryableExceptionOnUnavailableStatus() {
-        Assertions.assertThrows(RetryableException.class, () -> {
+        assertThrows(RetryableException.class, () -> {
             when(blockingStub.publish(any())).thenThrow(new StatusRuntimeException(
                     Status.UNAVAILABLE));
             uut.publish(Collections.singletonList(Fact.builder().build("{}")));
         });
     }
 
+    @SuppressWarnings("unchecked")
     @Test
-    void testFetchByIdPropagatesRetryableExceptionOnUnavailableStatus() {
-        Assertions.assertThrows(RetryableException.class, () -> {
-            when(blockingStub.fetchById(any())).thenThrow(new StatusRuntimeException(
+    void testCancelPropagatesRetryableExceptionOnUnavailableStatus() {
+        assertThrows(RetryableException.class, () -> {
+            ClientCall<MSG_SubscriptionRequest, MSG_Notification> call = mock(ClientCall.class);
+            doThrow(new StatusRuntimeException(Status.UNAVAILABLE)).when(call).cancel(any(), any());
+            uut.cancel(call);
+        });
+    }
+
+    @Test
+    void testSerialOfPropagatesRetryableExceptionOnUnavailableStatus() {
+        assertThrows(RetryableException.class, () -> {
+            when(blockingStub.serialOf(any())).thenThrow(new StatusRuntimeException(
                     Status.UNAVAILABLE));
-            uut.fetchById(UUID.randomUUID());
+            uut.serialOf(mock(UUID.class));
+        });
+    }
+
+    @Test
+    void testInitializePropagatesRetryableExceptionOnUnavailableStatus() {
+        assertThrows(RetryableException.class, () -> {
+            when(blockingStub.handshake(any())).thenThrow(new StatusRuntimeException(
+                    Status.UNAVAILABLE));
+            uut.initialize();
+        });
+    }
+
+    @Disabled
+    @Test
+    void testConfigureGZipPropagatesRetryableExceptionOnUnavailableStatus() {
+        fail("unimplemented");
+    }
+
+    @Disabled
+    @Test
+    void testConfigureLZ4PropagatesRetryableExceptionOnUnavailableStatus() {
+        fail("unimplemented");
+    }
+
+    @Test
+    void testEnumerateNamespacesPropagatesRetryableExceptionOnUnavailableStatus() {
+        assertThrows(RetryableException.class, () -> {
+            when(blockingStub.enumerateNamespaces(any())).thenThrow(new StatusRuntimeException(
+                    Status.UNAVAILABLE));
+            uut.enumerateNamespaces();
+        });
+    }
+
+    @Test
+    void testEnumerateTypesPropagatesRetryableExceptionOnUnavailableStatus() {
+        assertThrows(RetryableException.class, () -> {
+            when(blockingStub.enumerateTypes(any())).thenThrow(new StatusRuntimeException(
+                    Status.UNAVAILABLE));
+            uut.enumerateTypes("ns");
         });
     }
 

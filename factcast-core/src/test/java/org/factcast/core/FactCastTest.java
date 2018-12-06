@@ -2,6 +2,7 @@ package org.factcast.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -75,5 +76,11 @@ public class FactCastTest {
         assertEquals(2, published.size());
         assertSame(f, published.get(0));
         assertTrue(FactSpecMatcher.matches(FactSpec.forMark()).test(published.get(1)));
+    }
+
+    @Test
+    void testRetryValidatesMaxAttempts() {
+        FactStore store = mock(FactStore.class);
+        assertThrows(IllegalArgumentException.class, () -> FactCast.from(store).retry(-42));
     }
 }

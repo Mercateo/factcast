@@ -33,11 +33,11 @@ class Retry {
     private static final ClassLoader classLoader = Retry.class.getClassLoader();
 
     @SuppressWarnings("unchecked")
-    public static <T extends ReadFactCast> T wrap(boolean readOnly, T toWrap, int retryCount) {
+    public static <T extends ReadFactCast> T wrap(boolean readOnly, T toWrap, int maxRetries) {
 
         Class<?> interfaceToProxy = readOnly ? ReadFactCast.class : FactCast.class;
         return (T) Proxy.newProxyInstance(classLoader, new Class[] { interfaceToProxy },
-                new RetryProxyInvocationHandler(toWrap, retryCount));
+                new RetryProxyInvocationHandler(toWrap, maxRetries));
     }
 
     @RequiredArgsConstructor

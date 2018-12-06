@@ -49,7 +49,10 @@ public interface ReadFactCast {
 
     Set<String> enumerateTypes(@NonNull String ns);
 
-    default ReadFactCast retry(int n) {
-        return Retry.wrap(true, this, n);
+    default ReadFactCast retry(int maxAttempts) {
+        if (maxAttempts <= 0) {
+            throw new IllegalArgumentException("maxAttempts must be > 0");
+        }
+        return Retry.wrap(true, this, maxAttempts);
     }
 }

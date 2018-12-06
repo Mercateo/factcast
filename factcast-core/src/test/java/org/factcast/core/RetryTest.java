@@ -1,6 +1,6 @@
 package org.factcast.core;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyListOf;
 import static org.mockito.Mockito.doThrow;
@@ -45,15 +45,14 @@ public class RetryTest {
 
     @Test
     void testWrapsOnlyOnce() throws Exception {
-
         FactCast uut = FactCast.from(fs).retry(3);
+        FactCast doubleWrapped = uut.retry(5);
 
-        assertThat(uut).isEqualToComparingFieldByField(uut.retry(5));
+        assertSame(doubleWrapped, uut);
     }
 
     @Test
     void testMaxRetries() throws Exception {
-
         int maxRetries = 3;
         // as we literally "re"-try, we expect the original attempt plus maxRetries:
         int expectedPublishAttempts = maxRetries + 1;

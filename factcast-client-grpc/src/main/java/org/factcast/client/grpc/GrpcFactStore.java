@@ -111,7 +111,7 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
         try {
             fetchById = blockingStub.fetchById(converter.toProto(id));
         } catch (StatusRuntimeException e) {
-            handleStatusRuntimeException(e);
+            throw wrapRetryable(e);
         }
         if (fetchById == null || !fetchById.getPresent()) {
             return Optional.empty();
@@ -130,7 +130,7 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
         try {
             blockingStub.publish(mfs);
         } catch (StatusRuntimeException e) {
-            handleStatusRuntimeException(e);
+            throw wrapRetryable(e);
         }
     }
 
@@ -145,32 +145,39 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
         try {
             asyncServerStreamingCall(call, converter.toProto(req), responseObserver);
         } catch (StatusRuntimeException e) {
-            handleStatusRuntimeException(e);
+            throw wrapRetryable(e);
         }
         return subscription.onClose(() -> cancel(call));
     }
 
-    private void cancel(final ClientCall<MSG_SubscriptionRequest, MSG_Notification> call) {
-        call.cancel("Client is no longer interested", null);
-    }
-
-    private void handleStatusRuntimeException(StatusRuntimeException e) {
-        if (e.getStatus().getCode() == Code.UNAVAILABLE) {
-            throw new RetryableException(e);
+    @VisibleForTesting
+    void cancel(final ClientCall<MSG_SubscriptionRequest, MSG_Notification> call) {
+        try {
+            call.cancel("Client is no longer interested", null);
+        } catch (StatusRuntimeException e) {
+            throw wrapRetryable(e);
         }
     }
 
     @Override
     public OptionalLong serialOf(@NonNull UUID l) {
-        return converter.fromProto(blockingStub.serialOf(converter.toProto(l)));
+        try {
+            return converter.fromProto(blockingStub.serialOf(converter.toProto(l)));
+        } catch (StatusRuntimeException e) {
+            throw wrapRetryable(e);
+        }
     }
 
     public synchronized void initialize() {
         if (!initialized.getAndSet(true)) {
             log.debug("Invoking handshake");
-            ServerConfig cfg = converter.fromProto(blockingStub.handshake(converter.empty()));
-            serverProtocolVersion = cfg.version();
-            serverProperties = cfg.properties();
+            try {
+                ServerConfig cfg = converter.fromProto(blockingStub.handshake(converter.empty()));
+                serverProtocolVersion = cfg.version();
+                serverProperties = cfg.properties();
+            } catch (StatusRuntimeException e) {
+                throw wrapRetryable(e);
+            }
             logProtocolVersion(serverProtocolVersion);
             logServerVersion(serverProperties);
             configure();
@@ -204,10 +211,14 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
     private boolean configureGZip() {
         // TODO this was temporarily disabled, due to
         // https://github.com/Mercateo/factcast/issues/234
+        //
+        // TODO when reenabling this code, make sure to throw
+        // RetryableException on caught RuntimeStatusException around remote
+        // call
         /*
          * Compressor gzip =
-         * CompressorRegistry.getDefaultInstance().lookupCompressor("gzip"); if (gzip !=
-         * null) { log.info("configuring GZip"); String encoding =
+         * CompressorRegistry.getDefaultInstance().lookupCompressor("gzip"); if
+         * (gzip != null) { log.info("configuring GZip"); String encoding =
          * gzip.getMessageEncoding(); this.blockingStub =
          * blockingStub.withCompression(encoding); this.stub =
          * stub.withCompression(encoding); return true; } else
@@ -218,16 +229,20 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
     private boolean configureLZ4() {
         // TODO this was temporarily disabled, due to
         // https://github.com/Mercateo/factcast/issues/234
+        //
+        // TODO when reenabling this code, make sure to throw
+        // RetryableException on caught RuntimeStatusException around remote
+        // call
         /*
          * Compressor lz4Compressor =
-         * CompressorRegistry.getDefaultInstance().lookupCompressor("lz4"); boolean
-         * localLz4 = lz4Compressor != null; boolean remoteLz4 =
-         * Boolean.valueOf(serverProperties.get(Capabilities.CODEC_LZ4 .toString())); if
-         * (localLz4 && remoteLz4) {
-         * log.info("LZ4 Codec available on client and server - configuring LZ4");
-         * String encoding = lz4Compressor.getMessageEncoding(); // this.blockingStub =
-         * blockingStub.withCompression(encoding); // this.stub =
-         * stub.withCompression(encoding); return true; } else
+         * CompressorRegistry.getDefaultInstance().lookupCompressor("lz4");
+         * boolean localLz4 = lz4Compressor != null; boolean remoteLz4 =
+         * Boolean.valueOf(serverProperties.get(Capabilities.CODEC_LZ4
+         * .toString())); if (localLz4 && remoteLz4) {
+         * log.info("LZ4 Codec available on client and server - configuring LZ4"
+         * ); String encoding = lz4Compressor.getMessageEncoding(); //
+         * this.blockingStub = blockingStub.withCompression(encoding); //
+         * this.stub = stub.withCompression(encoding); return true; } else
          */
         return false;
     }
@@ -239,13 +254,29 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
 
     @Override
     public Set<String> enumerateNamespaces() {
-        MSG_StringSet set = blockingStub.enumerateNamespaces(converter.empty());
-        return converter.fromProto(set);
+        try {
+            MSG_StringSet set = blockingStub.enumerateNamespaces(converter.empty());
+            return converter.fromProto(set);
+        } catch (StatusRuntimeException e) {
+            throw wrapRetryable(e);
+        }
     }
 
     @Override
     public Set<String> enumerateTypes(String ns) {
-        MSG_StringSet set = blockingStub.enumerateTypes(converter.toProto(ns));
-        return converter.fromProto(set);
+        try {
+            MSG_StringSet set = blockingStub.enumerateTypes(converter.toProto(ns));
+            return converter.fromProto(set);
+        } catch (StatusRuntimeException e) {
+            throw wrapRetryable(e);
+        }
+    }
+
+    private static RuntimeException wrapRetryable(StatusRuntimeException e) {
+        if (e.getStatus().getCode() == Code.UNAVAILABLE) {
+            return new RetryableException(e);
+        } else {
+            return e;
+        }
     }
 }

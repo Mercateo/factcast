@@ -15,15 +15,13 @@
  */
 package org.factcast.core;
 
+import lombok.NonNull;
+
 public class MaxRetryAttemptsExceededException extends RuntimeException {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
-    public MaxRetryAttemptsExceededException(String string) {
-        super(string);
+    public MaxRetryAttemptsExceededException(@NonNull String msg) {
+        super(msg);
     }
-
 }

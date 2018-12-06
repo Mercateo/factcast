@@ -16,6 +16,7 @@
 package org.factcast.core.store;
 
 import lombok.Getter;
+import lombok.NonNull;
 
 public class RetryableException extends RuntimeException {
 
@@ -26,12 +27,15 @@ public class RetryableException extends RuntimeException {
     @Getter
     private final long minimumWaitTimeMillis;
 
-    public RetryableException(RuntimeException cause, long minimumWaitTimeMillis) {
+    public RetryableException(@NonNull RuntimeException cause, long minimumWaitTimeMillis) {
         super(cause);
+        if (minimumWaitTimeMillis < 0) {
+            throw new IllegalArgumentException("minimumWaitTimeMillis must be >= 0");
+        }
         this.minimumWaitTimeMillis = minimumWaitTimeMillis;
     }
 
-    public RetryableException(RuntimeException cause) {
+    public RetryableException(@NonNull RuntimeException cause) {
         this(cause, DEFAULT_WAIT_TIME_MILLIS);
 
     }
