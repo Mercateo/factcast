@@ -140,8 +140,9 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
         SubscriptionImpl<Fact> subscription = SubscriptionImpl.on(observer);
         StreamObserver<FactStoreProto.MSG_Notification> responseObserver = new ClientStreamObserver(
                 subscription);
-        ClientCall<MSG_SubscriptionRequest, MSG_Notification> call = stub.getChannel().newCall(
-                RemoteFactStoreGrpc.getSubscribeMethod(), stub.getCallOptions().withWaitForReady());
+        ClientCall<MSG_SubscriptionRequest, MSG_Notification> call = stub.getChannel()
+                .newCall(RemoteFactStoreGrpc.getSubscribeMethod(), stub.getCallOptions()
+                        .withWaitForReady());
         try {
             asyncServerStreamingCall(call, converter.toProto(req), responseObserver);
         } catch (StatusRuntimeException e) {
@@ -192,12 +193,13 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
     private static void logProtocolVersion(ProtocolVersion serverProtocolVersion) {
         if (!PROTOCOL_VERSION.isCompatibleTo(serverProtocolVersion))
             throw new IncompatibleProtocolVersions("Apparently, the local Protocol Version "
-                    + PROTOCOL_VERSION + " is not compatible with the Server's "
-                    + serverProtocolVersion
+                    + PROTOCOL_VERSION
+                    + " is not compatible with the Server's " + serverProtocolVersion
                     + ". \nPlease choose a compatible GRPC Client to connect to this Server.");
         if (!PROTOCOL_VERSION.equals(serverProtocolVersion))
             log.info("Compatible protocol version encountered client={}, server={}",
-                    PROTOCOL_VERSION, serverProtocolVersion);
+                    PROTOCOL_VERSION,
+                    serverProtocolVersion);
         else
             log.info("Matching protocol version encountered {}", serverProtocolVersion);
     }
@@ -272,7 +274,8 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
         }
     }
 
-    private static RuntimeException wrapRetryable(StatusRuntimeException e) {
+    @VisibleForTesting
+    static RuntimeException wrapRetryable(StatusRuntimeException e) {
         if (e.getStatus().getCode() == Code.UNAVAILABLE) {
             return new RetryableException(e);
         } else {

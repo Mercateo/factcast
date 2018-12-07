@@ -1,18 +1,9 @@
 package org.factcast.client.grpc;
 
-import static org.factcast.core.TestHelper.expectNPE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.factcast.core.TestHelper.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -236,5 +227,21 @@ public class GrpcFactStoreTest {
         uut.initialize();
         uut.initialize();
         verify(blockingStub, times(1)).handshake(any());
+    }
+
+    @Test
+    public void testWrapRetryable_nonRetryable() throws Exception {
+        StatusRuntimeException cause = new StatusRuntimeException(Status.DEADLINE_EXCEEDED);
+        RuntimeException e = GrpcFactStore.wrapRetryable(cause);
+        assertTrue(e instanceof StatusRuntimeException);
+        assertSame(e, cause);
+    }
+
+    @Test
+    public void testWrapRetryable() throws Exception {
+        StatusRuntimeException cause = new StatusRuntimeException(Status.UNAVAILABLE);
+        RuntimeException e = GrpcFactStore.wrapRetryable(cause);
+        assertTrue(e instanceof RetryableException);
+        assertSame(e.getCause(), cause);
     }
 }
