@@ -217,8 +217,8 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
         // call
         /*
          * Compressor gzip =
-         * CompressorRegistry.getDefaultInstance().lookupCompressor("gzip"); if
-         * (gzip != null) { log.info("configuring GZip"); String encoding =
+         * CompressorRegistry.getDefaultInstance().lookupCompressor("gzip"); if (gzip !=
+         * null) { log.info("configuring GZip"); String encoding =
          * gzip.getMessageEncoding(); this.blockingStub =
          * blockingStub.withCompression(encoding); this.stub =
          * stub.withCompression(encoding); return true; } else
@@ -235,14 +235,14 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
         // call
         /*
          * Compressor lz4Compressor =
-         * CompressorRegistry.getDefaultInstance().lookupCompressor("lz4");
-         * boolean localLz4 = lz4Compressor != null; boolean remoteLz4 =
-         * Boolean.valueOf(serverProperties.get(Capabilities.CODEC_LZ4
-         * .toString())); if (localLz4 && remoteLz4) {
-         * log.info("LZ4 Codec available on client and server - configuring LZ4"
-         * ); String encoding = lz4Compressor.getMessageEncoding(); //
-         * this.blockingStub = blockingStub.withCompression(encoding); //
-         * this.stub = stub.withCompression(encoding); return true; } else
+         * CompressorRegistry.getDefaultInstance().lookupCompressor("lz4"); boolean
+         * localLz4 = lz4Compressor != null; boolean remoteLz4 =
+         * Boolean.valueOf(serverProperties.get(Capabilities.CODEC_LZ4 .toString())); if
+         * (localLz4 && remoteLz4) {
+         * log.info("LZ4 Codec available on client and server - configuring LZ4" );
+         * String encoding = lz4Compressor.getMessageEncoding(); // this.blockingStub =
+         * blockingStub.withCompression(encoding); // this.stub =
+         * stub.withCompression(encoding); return true; } else
          */
         return false;
     }
