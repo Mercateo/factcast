@@ -7,8 +7,10 @@ import static org.mockito.Mockito.*;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.OptionalLong;
+import java.util.Set;
 import java.util.UUID;
 
 import org.factcast.core.Fact;
@@ -35,6 +37,8 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.google.common.collect.Sets;
 
 import io.grpc.Channel;
 import io.grpc.ClientCall;
@@ -183,12 +187,32 @@ public class GrpcFactStoreTest {
     }
 
     @Test
+    void testEnumerateNamespaces() {
+        HashSet<String> ns = Sets.newHashSet("foo", "bar");
+        when(blockingStub.enumerateNamespaces(conv.empty())).thenReturn(conv.toProto(ns));
+        Set<String> enumerateNamespaces = uut.enumerateNamespaces();
+        assertEquals(ns, enumerateNamespaces);
+        assertNotSame(ns, enumerateNamespaces);
+
+    }
+
+    @Test
     void testEnumerateTypesPropagatesRetryableExceptionOnUnavailableStatus() {
         when(blockingStub.enumerateTypes(any())).thenThrow(new StatusRuntimeException(
                 Status.UNAVAILABLE));
         assertThrows(RetryableException.class, () -> {
             uut.enumerateTypes("ns");
         });
+    }
+
+    @Test
+    void testEnumerateTypes() {
+        HashSet<String> types = Sets.newHashSet("foo", "bar");
+        when(blockingStub.enumerateTypes(any())).thenReturn(conv.toProto(types));
+        Set<String> enumerateTypes = uut.enumerateTypes("ns");
+        assertEquals(types, enumerateTypes);
+        assertNotSame(types, enumerateTypes);
+
     }
 
     @Test
@@ -284,9 +308,9 @@ public class GrpcFactStoreTest {
     @Test
     public void testAfterSingletonsInstantiatedCallsInit() throws Exception {
         uut = spy(uut);
-        when(blockingStub.handshake(any())).thenReturn(
-                conv.toProto(
-                        ServerConfig.of(ProtocolVersion.of(1, 999, 0), new HashMap<>())));
+        when(blockingStub.handshake(any()))
+                .thenReturn(conv.toProto(ServerConfig.of(ProtocolVersion.of(1, 999, 0),
+                        new HashMap<>())));
 
         uut.afterSingletonsInstantiated();
         verify(uut).initialize();
