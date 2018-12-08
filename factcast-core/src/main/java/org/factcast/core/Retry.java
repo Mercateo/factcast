@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.security.ProtectionDomain;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -32,12 +33,19 @@ import lombok.extern.slf4j.Slf4j;
 class Retry {
     private static final ClassLoader classLoader = Retry.class.getClassLoader();
 
+    static final long DEFAULT_WAIT_TIME_MILLIS = 10;
+
     @SuppressWarnings("unchecked")
-    public static <T extends ReadFactCast> T wrap(boolean readOnly, T toWrap, int maxRetries) {
+    public static <T extends ReadFactCast> T wrap(boolean readOnly, T toWrap, int maxRetries,
+            long minimumWaitTimeMillis) {
+
+        if (minimumWaitTimeMillis < 0) {
+            throw new IllegalArgumentException("minimumWaitTimeMillis must be >= 0");
+        }
 
         Class<?> interfaceToProxy = readOnly ? ReadFactCast.class : FactCast.class;
         return (T) Proxy.newProxyInstance(classLoader, new Class[] { interfaceToProxy },
-                new RetryProxyInvocationHandler(toWrap, maxRetries));
+                new RetryProxyInvocationHandler(toWrap, maxRetries, minimumWaitTimeMillis));
     }
 
     @RequiredArgsConstructor
@@ -46,6 +54,8 @@ class Retry {
         final Object delegateObject;
 
         final int maxRetries;
+
+        final long minimumWaitTimeMillis;
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -67,7 +77,7 @@ class Retry {
                         RetryableException e = (RetryableException) cause;
                         log.warn("{} failed: ", description, e.getCause());
                         if (retryAttempt++ < maxRetries) {
-                            sleep(e.minimumWaitTimeMillis());
+                            sleep(minimumWaitTimeMillis);
                             log.warn("Retrying attempt {}/{}", retryAttempt, maxRetries);
                         }
                     } else {
