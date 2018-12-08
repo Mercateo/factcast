@@ -38,12 +38,16 @@ import org.factcast.grpc.api.conv.ProtoConverter;
 import org.factcast.grpc.api.conv.ProtocolVersion;
 import org.factcast.grpc.api.conv.ServerConfig;
 import org.factcast.grpc.api.gen.FactStoreProto;
+import org.factcast.grpc.api.gen.FactStoreProto.MSG_Empty;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_Fact;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_Facts;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_Notification;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_OptionalFact;
+import org.factcast.grpc.api.gen.FactStoreProto.MSG_OptionalSerial;
+import org.factcast.grpc.api.gen.FactStoreProto.MSG_String;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_StringSet;
 import org.factcast.grpc.api.gen.FactStoreProto.MSG_SubscriptionRequest;
+import org.factcast.grpc.api.gen.FactStoreProto.MSG_UUID;
 import org.factcast.grpc.api.gen.RemoteFactStoreGrpc;
 import org.factcast.grpc.api.gen.RemoteFactStoreGrpc.RemoteFactStoreBlockingStub;
 import org.factcast.grpc.api.gen.RemoteFactStoreGrpc.RemoteFactStoreStub;
@@ -153,20 +157,20 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
 
     @VisibleForTesting
     void cancel(final ClientCall<MSG_SubscriptionRequest, MSG_Notification> call) {
-        try {
-            call.cancel("Client is no longer interested", null);
-        } catch (StatusRuntimeException e) {
-            throw wrapRetryable(e);
-        }
+        // cancel does not need to be retried.
+        call.cancel("Client is no longer interested", null);
     }
 
     @Override
     public OptionalLong serialOf(@NonNull UUID l) {
+        MSG_UUID protoMessage = converter.toProto(l);
+        MSG_OptionalSerial responseMessage;
         try {
-            return converter.fromProto(blockingStub.serialOf(converter.toProto(l)));
+            responseMessage = blockingStub.serialOf(protoMessage);
         } catch (StatusRuntimeException e) {
             throw wrapRetryable(e);
         }
+        return converter.fromProto(responseMessage);
     }
 
     public synchronized void initialize() {
@@ -256,22 +260,26 @@ class GrpcFactStore implements FactStore, SmartInitializingSingleton {
 
     @Override
     public Set<String> enumerateNamespaces() {
+        MSG_Empty empty = converter.empty();
+        MSG_StringSet resp;
         try {
-            MSG_StringSet set = blockingStub.enumerateNamespaces(converter.empty());
-            return converter.fromProto(set);
+            resp = blockingStub.enumerateNamespaces(empty);
         } catch (StatusRuntimeException e) {
             throw wrapRetryable(e);
         }
+        return converter.fromProto(resp);
     }
 
     @Override
     public Set<String> enumerateTypes(String ns) {
+        MSG_String ns_message = converter.toProto(ns);
+        MSG_StringSet resp;
         try {
-            MSG_StringSet set = blockingStub.enumerateTypes(converter.toProto(ns));
-            return converter.fromProto(set);
+            resp = blockingStub.enumerateTypes(ns_message);
         } catch (StatusRuntimeException e) {
             throw wrapRetryable(e);
         }
+        return converter.fromProto(resp);
     }
 
     @VisibleForTesting

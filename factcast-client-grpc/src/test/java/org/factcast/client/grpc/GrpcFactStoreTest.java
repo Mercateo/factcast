@@ -8,6 +8,7 @@ import static org.mockito.Mockito.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.OptionalLong;
 import java.util.UUID;
 
 import org.factcast.core.Fact;
@@ -73,10 +74,8 @@ public class GrpcFactStoreTest {
     @Test
     void testFetchByIdFound() {
         UUID id = UUID.randomUUID();
-        when(blockingStub.fetchById(eq(conv.toProto(id)))).thenReturn(conv.toProto(Optional.of(Fact
-                .builder()
-                .ns("test")
-                .build("{}"))));
+        when(blockingStub.fetchById(eq(conv.toProto(id))))
+                .thenReturn(conv.toProto(Optional.of(Fact.builder().ns("test").build("{}"))));
         Optional<Fact> fetchById = uut.fetchById(id);
         assertTrue(fetchById.isPresent());
     }
@@ -99,54 +98,65 @@ public class GrpcFactStoreTest {
 
     @Test
     void testPublishPropagatesException() {
+        when(blockingStub.publish(any())).thenThrow(new SomeException());
         assertThrows(SomeException.class, () -> {
-            when(blockingStub.publish(any())).thenThrow(new SomeException());
             uut.publish(Collections.singletonList(Fact.builder().build("{}")));
         });
     }
 
     @Test
     void testFetchByIdPropagatesRetryableExceptionOnUnavailableStatus() {
+        when(blockingStub.fetchById(any())).thenThrow(new StatusRuntimeException(
+                Status.UNAVAILABLE));
         assertThrows(RetryableException.class, () -> {
-            when(blockingStub.fetchById(any())).thenThrow(new StatusRuntimeException(
-                    Status.UNAVAILABLE));
             uut.fetchById(UUID.randomUUID());
         });
     }
 
     @Test
     void testPublishPropagatesRetryableExceptionOnUnavailableStatus() {
+        when(blockingStub.publish(any())).thenThrow(new StatusRuntimeException(Status.UNAVAILABLE));
         assertThrows(RetryableException.class, () -> {
-            when(blockingStub.publish(any())).thenThrow(new StatusRuntimeException(
-                    Status.UNAVAILABLE));
             uut.publish(Collections.singletonList(Fact.builder().build("{}")));
         });
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    void testCancelPropagatesRetryableExceptionOnUnavailableStatus() {
-        assertThrows(RetryableException.class, () -> {
-            ClientCall<MSG_SubscriptionRequest, MSG_Notification> call = mock(ClientCall.class);
-            doThrow(new StatusRuntimeException(Status.UNAVAILABLE)).when(call).cancel(any(), any());
+    void testCancelNotRetryableExceptionOnUnavailableStatus() {
+        ClientCall<MSG_SubscriptionRequest, MSG_Notification> call = mock(ClientCall.class);
+        doThrow(new StatusRuntimeException(Status.UNAVAILABLE)).when(call).cancel(any(), any());
+        assertThrows(StatusRuntimeException.class, () -> {
             uut.cancel(call);
         });
     }
 
     @Test
     void testSerialOfPropagatesRetryableExceptionOnUnavailableStatus() {
+        when(blockingStub.serialOf(any())).thenThrow(new StatusRuntimeException(
+                Status.UNAVAILABLE));
         assertThrows(RetryableException.class, () -> {
-            when(blockingStub.serialOf(any())).thenThrow(new StatusRuntimeException(
-                    Status.UNAVAILABLE));
             uut.serialOf(mock(UUID.class));
         });
     }
 
     @Test
+    void testSerialOf() {
+        OptionalLong seven = OptionalLong.of(7);
+        when(blockingStub.serialOf(any())).thenReturn(conv.toProto(seven));
+
+        OptionalLong response = uut.serialOf(mock(UUID.class));
+
+        assertEquals(seven, response);
+        assertNotSame(seven, response);
+
+    }
+
+    @Test
     void testInitializePropagatesRetryableExceptionOnUnavailableStatus() {
+        when(blockingStub.handshake(any())).thenThrow(new StatusRuntimeException(
+                Status.UNAVAILABLE));
         assertThrows(RetryableException.class, () -> {
-            when(blockingStub.handshake(any())).thenThrow(new StatusRuntimeException(
-                    Status.UNAVAILABLE));
             uut.initialize();
         });
     }
@@ -165,18 +175,18 @@ public class GrpcFactStoreTest {
 
     @Test
     void testEnumerateNamespacesPropagatesRetryableExceptionOnUnavailableStatus() {
+        when(blockingStub.enumerateNamespaces(any())).thenThrow(new StatusRuntimeException(
+                Status.UNAVAILABLE));
         assertThrows(RetryableException.class, () -> {
-            when(blockingStub.enumerateNamespaces(any())).thenThrow(new StatusRuntimeException(
-                    Status.UNAVAILABLE));
             uut.enumerateNamespaces();
         });
     }
 
     @Test
     void testEnumerateTypesPropagatesRetryableExceptionOnUnavailableStatus() {
+        when(blockingStub.enumerateTypes(any())).thenThrow(new StatusRuntimeException(
+                Status.UNAVAILABLE));
         assertThrows(RetryableException.class, () -> {
-            when(blockingStub.enumerateTypes(any())).thenThrow(new StatusRuntimeException(
-                    Status.UNAVAILABLE));
             uut.enumerateTypes("ns");
         });
     }
@@ -199,31 +209,35 @@ public class GrpcFactStoreTest {
 
     @Test
     void testMatchingProtocolVersion() {
-        when(blockingStub.handshake(any())).thenReturn(conv.toProto(ServerConfig.of(ProtocolVersion
-                .of(1, 0, 0), new HashMap<>())));
+        when(blockingStub.handshake(any()))
+                .thenReturn(conv.toProto(ServerConfig.of(ProtocolVersion.of(1, 0, 0),
+                        new HashMap<>())));
         uut.initialize();
     }
 
     @Test
     void testCompatibleProtocolVersion() {
-        when(blockingStub.handshake(any())).thenReturn(conv.toProto(ServerConfig.of(ProtocolVersion
-                .of(1, 1, 0), new HashMap<>())));
+        when(blockingStub.handshake(any()))
+                .thenReturn(conv.toProto(ServerConfig.of(ProtocolVersion.of(1, 1, 0),
+                        new HashMap<>())));
         uut.initialize();
     }
 
     @Test
     void testIncompatibleProtocolVersion() {
+        when(blockingStub.handshake(any()))
+                .thenReturn(conv.toProto(ServerConfig.of(ProtocolVersion.of(2, 0, 0),
+                        new HashMap<>())));
         Assertions.assertThrows(IncompatibleProtocolVersions.class, () -> {
-            when(blockingStub.handshake(any())).thenReturn(conv.toProto(ServerConfig.of(
-                    ProtocolVersion.of(2, 0, 0), new HashMap<>())));
             uut.initialize();
         });
     }
 
     @Test
     void testInitializationExecutesOnlyOnce() {
-        when(blockingStub.handshake(any())).thenReturn(conv.toProto(ServerConfig.of(ProtocolVersion
-                .of(1, 1, 0), new HashMap<>())));
+        when(blockingStub.handshake(any()))
+                .thenReturn(conv.toProto(ServerConfig.of(ProtocolVersion.of(1, 1, 0),
+                        new HashMap<>())));
         uut.initialize();
         uut.initialize();
         verify(blockingStub, times(1)).handshake(any());
@@ -244,4 +258,38 @@ public class GrpcFactStoreTest {
         assertTrue(e instanceof RetryableException);
         assertSame(e.getCause(), cause);
     }
+
+    @Test
+    public void testCancelIsPropagated() throws Exception {
+        ClientCall call = mock(ClientCall.class);
+        uut.cancel(call);
+        verify(call).cancel(any(), any());
+    }
+
+    @Test
+    public void testCancelIsNotRetryable() throws Exception {
+        ClientCall call = mock(ClientCall.class);
+        doThrow(StatusRuntimeException.class).when(call).cancel(any(), any());
+
+        try {
+            uut.cancel(call);
+
+            fail();
+        } catch (Throwable e) {
+            assertTrue(e instanceof StatusRuntimeException);
+            assertFalse(e instanceof RetryableException);
+        }
+    }
+
+    @Test
+    public void testAfterSingletonsInstantiatedCallsInit() throws Exception {
+        uut = spy(uut);
+        when(blockingStub.handshake(any())).thenReturn(
+                conv.toProto(
+                        ServerConfig.of(ProtocolVersion.of(1, 999, 0), new HashMap<>())));
+
+        uut.afterSingletonsInstantiated();
+        verify(uut).initialize();
+    }
+
 }
