@@ -33,7 +33,7 @@ public class Parser {
 
     private static final String PORT_SYSPROP_NAME = "grpc.client.factstore.port";
 
-    private static final String NEGOTIATION_SYSPROP_NAME = "grpc.client.factstore.negotiationType";;
+    private static final String NEGOTIATION_SYSPROP_NAME = "grpc.client.factstore.negotiationType";
 
     final JCommander jc;
 
