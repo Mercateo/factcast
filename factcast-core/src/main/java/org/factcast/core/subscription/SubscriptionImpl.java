@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,17 +29,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 
  * Implements a subscription and offers notifyX methods for the Fact Supplier to
  * write to.
- * 
+ *
  * @author <uwe.schaefer@mercateo.com>
  *
  * @param <T>
  */
 @RequiredArgsConstructor
 @Slf4j
-// TODO usr hide the impl an provide an interface for notify*
 public class SubscriptionImpl<T> implements Subscription {
 
     @NonNull
@@ -49,20 +47,21 @@ public class SubscriptionImpl<T> implements Subscription {
     Runnable onClose = () -> {
     };
 
-    AtomicBoolean closed = new AtomicBoolean(false);
+    final AtomicBoolean closed = new AtomicBoolean(false);
 
-    final CompletableFuture<Void> catchup = new CompletableFuture<Void>();
+    final CompletableFuture<Void> catchup = new CompletableFuture<>();
 
-    final CompletableFuture<Void> complete = new CompletableFuture<Void>();
+    final CompletableFuture<Void> complete = new CompletableFuture<>();
 
     @Override
-    public void close() throws Exception {
-        closed.set(true);
-        SubscriptionCancelledException closedException = new SubscriptionCancelledException(
-                "Client closed the subscription");
-        catchup.completeExceptionally(closedException);
-        complete.completeExceptionally(closedException);
-        onClose.run();
+    public void close() {
+        if (!closed.getAndSet(true)) {
+            SubscriptionCancelledException closedException = new SubscriptionCancelledException(
+                    "Client closed the subscription");
+            catchup.completeExceptionally(closedException);
+            complete.completeExceptionally(closedException);
+            onClose.run();
+        }
     }
 
     @Override
@@ -73,7 +72,6 @@ public class SubscriptionImpl<T> implements Subscription {
             throw new SubscriptionCancelledException(e);
         }
         return this;
-
     }
 
     public Subscription awaitCatchup(long waitTimeInMillis) throws SubscriptionCancelledException,
@@ -84,7 +82,6 @@ public class SubscriptionImpl<T> implements Subscription {
             throw new SubscriptionCancelledException(e);
         }
         return this;
-
     }
 
     @Override
@@ -124,7 +121,6 @@ public class SubscriptionImpl<T> implements Subscription {
             if (!catchup.isDone()) {
                 catchup.complete(null);
             }
-
             if (!complete.isDone()) {
                 complete.complete(null);
             }
@@ -135,7 +131,6 @@ public class SubscriptionImpl<T> implements Subscription {
     public void notifyError(Throwable e) {
         if (!closed.get()) {
             observer.onError(e);
-
             if (!catchup.isDone()) {
                 catchup.completeExceptionally(e);
             }
@@ -144,14 +139,13 @@ public class SubscriptionImpl<T> implements Subscription {
             }
             tryClose();
         }
-
     }
 
     private void tryClose() {
         try {
             close();
         } catch (Exception e) {
-            log.trace("Irrelevant Excption during close: ", e);
+            log.trace("Irrelevant Exception during close: ", e);
         }
     }
 

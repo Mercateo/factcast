@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,14 +25,13 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * StreamObserver impl that blocks if the Stream to the consumer is not in
  * writeable state to provide a basic backpressure alike property.
- * 
+ * <p>
  * Note it the consumer stream is not writeable, the
  * {@link BlockingStreamObserver} will retry RETRY_COUNT (default 60) times
  * after WAIT_TIME (default 1000) millis
- * 
- * @author <uwe.schaefer@mercateo.com>
  *
  * @param <T>
+ * @author <uwe.schaefer@mercateo.com>
  */
 @Slf4j
 class BlockingStreamObserver<T> implements StreamObserver<T> {
@@ -52,14 +51,13 @@ class BlockingStreamObserver<T> implements StreamObserver<T> {
         this.delegate = delegate;
         this.delegate.setOnReadyHandler(this::wakeup);
         this.delegate.setOnCancelHandler(this::wakeup);
-        delegate.setCompression("gzip");
-        delegate.setMessageCompression(true);
     }
 
     @VisibleForTesting
     void wakeup() {
         synchronized (lock) {
-            lock.notifyAll(); // wake up our thread
+            // wake up our thread
+            lock.notifyAll();
         }
     }
 
@@ -67,9 +65,7 @@ class BlockingStreamObserver<T> implements StreamObserver<T> {
     public void onNext(T value) {
         if (!delegate.isCancelled()) {
             synchronized (lock) {
-
                 if (!delegate.isReady()) {
-
                     for (int i = 1; i <= RETRY_COUNT; i++) {
                         log.debug("{} channel not ready. Slow client? Attempt: {}/{}", id, i,
                                 RETRY_COUNT);
@@ -90,13 +86,10 @@ class BlockingStreamObserver<T> implements StreamObserver<T> {
                         throw new TransportLayerException("channel not coming back.");
                     }
                 }
-
                 if (!delegate.isCancelled())
                     delegate.onNext(value);
             }
-
         }
-
     }
 
     @Override

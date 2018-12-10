@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,23 +18,13 @@ package org.factcast.core.subscription;
 import java.util.concurrent.TimeoutException;
 
 /**
- * A handle that is returned from Subscribe Methods in order to be able to
- * signal, that a client lost its interest in the stream.
- * 
- * This might be used for resource-efficiency.
- * 
- * @author uwe.schaefer@mercateo.com
- *
- */
-/**
  * @author <uwe.schaefer@mercateo.com>
- *
  */
 public interface Subscription extends AutoCloseable {
 
     /**
      * blocks until Catchup or Cancelled event received
-     * 
+     *
      * @return this
      * @throws SubscriptionCancelledException
      */
@@ -42,7 +32,7 @@ public interface Subscription extends AutoCloseable {
 
     /**
      * blocks until Catchup or Cancelled event received
-     * 
+     *
      * @param waitTimeInMillis
      * @return this
      * @throws SubscriptionCancelledException
@@ -54,7 +44,7 @@ public interface Subscription extends AutoCloseable {
 
     /**
      * blocks until Complete or Cancelled event received
-     * 
+     *
      * @return
      * @throws SubscriptionCancelledException
      */
@@ -62,7 +52,7 @@ public interface Subscription extends AutoCloseable {
 
     /**
      * blocks until Complete or Cancelled event received
-     * 
+     *
      * @param waitTimeInMillis
      * @return this
      * @throws SubscriptionCancelledException
@@ -71,5 +61,4 @@ public interface Subscription extends AutoCloseable {
      */
     Subscription awaitComplete(long waitTimeInMillis) throws SubscriptionCancelledException,
             TimeoutException;
-
 }

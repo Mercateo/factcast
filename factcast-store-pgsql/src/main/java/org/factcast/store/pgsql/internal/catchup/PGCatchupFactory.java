@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,5 +29,4 @@ public interface PGCatchupFactory {
     PGCatchup create(@NonNull SubscriptionRequestTO request,
             @NonNull PGPostQueryMatcher postQueryMatcher,
             @NonNull SubscriptionImpl<Fact> subscription, @NonNull AtomicLong serial);
-
 }

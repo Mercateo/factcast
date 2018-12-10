@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@ import lombok.SneakyThrows;
 
 public class ConsoleFactObserver implements FactObserver {
 
-    private FactRenderer factRenderer;
+    private final FactRenderer factRenderer;
 
     public ConsoleFactObserver(Options opt) {
         this.factRenderer = new FactRenderer(opt);
@@ -56,5 +56,4 @@ public class ConsoleFactObserver implements FactObserver {
         exception.printStackTrace();
         notify();
     }
-
 }

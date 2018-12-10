@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,23 +26,20 @@ public class Converters {
 
     public static IStringConverterInstanceFactory factory() {
         return (param, clazz, name) -> {
-
             if (clazz == UUID.class)
                 return new SimpleConverter<>(param.description(), UUID.class, UUID::fromString);
-
             if (clazz == ExistingJsonFile.class)
                 return new SimpleConverter<>(param.description(), ExistingJsonFile.class,
                         ExistingJsonFile::new);
-
             return null;
         };
     }
 
     static class SimpleConverter<T> extends BaseConverter<T> {
 
-        private Function<String, T> l;
+        private final Function<String, T> l;
 
-        private Class<T> clazz;
+        private final Class<T> clazz;
 
         public SimpleConverter(String optionName, Class<T> clazz, Function<String, T> l) {
             super(optionName);
@@ -56,12 +53,8 @@ public class Converters {
                 return l.apply(value);
             } catch (Exception e) {
                 throw new ParameterException(getErrorString(value, clazz.getCanonicalName()) + " : "
-                        + e
-                                .getMessage());
+                        + e.getMessage());
             }
-
         }
-
     }
-
 }

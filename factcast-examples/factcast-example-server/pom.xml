@@ -4,20 +4,27 @@
   <parent>
     <groupId>org.factcast</groupId>
     <artifactId>factcast</artifactId>
-    <version>0.0.26</version>
+    <version>0.0.35-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>factcast-example-server</artifactId>
   <properties>
+    <!-- Pin your own Spring Boot version. -->
+    <spring-boot.version>2.1.1.RELEASE</spring-boot.version>
     <docker.image.prefix>factcast</docker.image.prefix>
-    <spring-boot.version>1.5.9.RELEASE</spring-boot.version>
-    <spring-cloud.version>Edgware.SR1</spring-cloud.version>
   </properties>
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
         <groupId>org.factcast</groupId>
-        <artifactId>factcast-internal-dep-boot1</artifactId>
+        <artifactId>factcast-bom</artifactId>
         <version>${project.version}</version>
         <type>pom</type>
         <scope>import</scope>
@@ -26,21 +33,28 @@
   </dependencyManagement>
   <dependencies>
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.factcast</groupId>
-      <artifactId>factcast-store-pgsql</artifactId>
+      <artifactId>factcast-spring-boot-autoconfigure</artifactId>
     </dependency>
     <dependency>
       <groupId>org.factcast</groupId>
       <artifactId>factcast-server-grpc</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
+      <groupId>org.factcast</groupId>
+      <artifactId>factcast-store-pgsql</artifactId>
     </dependency>
+    <!-- you want to remove this -->
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter</artifactId>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>1.10.2</version>
     </dependency>
+    <!-- /you want to remove this -->
   </dependencies>
   <build>
     <finalName>factcast</finalName>
@@ -48,11 +62,6 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>1.5.9.RELEASE</version>
-        <configuration>
-          <mainClass>org.factcast.example.server.Application</mainClass>
-          <layout>ZIP</layout>
-        </configuration>
         <executions>
           <execution>
             <goals>
@@ -67,7 +76,7 @@
       <plugin>
         <groupId>com.spotify</groupId>
         <artifactId>docker-maven-plugin</artifactId>
-        <version>0.4.9</version>
+        <version>1.2.0</version>
         <configuration>
           <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
           <dockerDirectory>src/main/docker</dockerDirectory>

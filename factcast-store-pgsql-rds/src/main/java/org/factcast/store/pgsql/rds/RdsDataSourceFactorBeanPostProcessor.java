@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,13 +21,12 @@ import org.springframework.cloud.aws.jdbc.datasource.TomcatJdbcDataSourceFactory
 import org.springframework.cloud.aws.jdbc.rds.AmazonRdsDataSourceFactoryBean;
 import org.springframework.core.env.Environment;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
  * exchange the given TomcatJdbcDataSourceFactory with a customized factory so
  * we can configure the datasource connection pool
- * 
- *
  */
 @RequiredArgsConstructor
 public class RdsDataSourceFactorBeanPostProcessor implements BeanPostProcessor {
@@ -35,31 +34,28 @@ public class RdsDataSourceFactorBeanPostProcessor implements BeanPostProcessor {
     private final Environment env;
 
     @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName)
+    @NonNull
+    public Object postProcessBeforeInitialization(@NonNull Object bean, @NonNull String beanName)
             throws BeansException {
-
         if (bean instanceof AmazonRdsDataSourceFactoryBean) {
             ((AmazonRdsDataSourceFactoryBean) bean).setDataSourceFactory(
                     tomcatJdbcDataSourceFactory());
         }
-
         return bean;
     }
 
     TomcatJdbcDataSourceFactory tomcatJdbcDataSourceFactory() {
-
         TomcatJdbcDataSourceFactory fac = new TomcatJdbcDataSourceFactory();
-
         fac.setTestOnBorrow(env.getProperty("spring.datasource.tomcat.testOnBorrow", Boolean.class,
                 true));
         fac.setConnectionProperties(env.getProperty("spring.datasource.tomcat.connectionProperties",
-                String.class,
-                "socketTimeout=20;connectTimeout=10;loginTimeout=10"));
+                String.class, "socketTimeout=20;connectTimeout=10;loginTimeout=10"));
         return fac;
     }
 
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName)
+    @NonNull
+    public Object postProcessAfterInitialization(@NonNull Object bean, @NonNull String beanName)
             throws BeansException {
         return bean;
     }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@ import java.util.Map;
 
 @lombok.Value(staticConstructor = "of")
 public class ServerConfig {
+
     ProtocolVersion version;
 
     Map<String, String> properties;

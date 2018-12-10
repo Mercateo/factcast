@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,9 +17,8 @@ package org.factcast.core.subscription;
 
 /**
  * Signals, that a Subscription.wait* method cannot terminate normally.
- * 
- * @author <uwe.schaefer@mercateo.com>
  *
+ * @author <uwe.schaefer@mercateo.com>
  */
 public class SubscriptionCancelledException extends RuntimeException {
 

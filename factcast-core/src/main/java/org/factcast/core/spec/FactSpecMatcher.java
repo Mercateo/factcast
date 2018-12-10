@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,9 +17,9 @@ package org.factcast.core.spec;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.script.ScriptEngine;
@@ -29,18 +29,18 @@ import org.factcast.core.Fact;
 
 import com.fasterxml.jackson.databind.util.LRUMap;
 
+import lombok.Generated;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Matches facts against specifications.
- * 
- * @author uwe.schaefer@mercateo.com
  *
+ * @author uwe.schaefer@mercateo.com
  */
+@Slf4j
 public final class FactSpecMatcher implements Predicate<Fact> {
-
-    static final ScriptEngineManager engineManager = new ScriptEngineManager();
 
     static final LRUMap<String, ScriptEngine> scriptEngineCache = new LRUMap<>(10, 200);
 
@@ -57,8 +57,9 @@ public final class FactSpecMatcher implements Predicate<Fact> {
 
     final ScriptEngine scriptEngine;
 
-    public FactSpecMatcher(@NonNull FactSpec spec) {
+    private static final Supplier<ScriptEngine> scriptEngineSupplier = new JavaScriptEngineSupplier();
 
+    public FactSpecMatcher(@NonNull FactSpec spec) {
         // opt: prevent method calls by prefetching to final fields.
         // yes, they might be inlined at some point, but making decisions based
         // on final fields should help.
@@ -67,34 +68,30 @@ public final class FactSpecMatcher implements Predicate<Fact> {
         ns = spec.ns();
         type = spec.type();
         aggId = spec.aggId();
-        meta = spec.meta().isEmpty() ? null : spec.meta();
+        meta = spec.meta();
         script = spec.jsFilterScript();
-
         scriptEngine = getEngine(script);
     }
 
     public boolean test(Fact t) {
-
         boolean match = nsMatch(t);
         match = match && typeMatch(t);
         match = match && aggIdMatch(t);
         match = match && metaMatch(t);
         match = match && scriptMatch(t);
-
         return match;
     }
 
     protected boolean metaMatch(Fact t) {
-        if ((meta == null) || meta.isEmpty()) {
+        if ((meta.isEmpty())) {
             return true;
         }
-        return !meta.entrySet().parallelStream().anyMatch(e -> !e.getValue().equals(t.meta(e
+        return meta.entrySet().stream().allMatch(e -> e.getValue().equals(t.meta(e
                 .getKey())));
     }
 
     protected boolean nsMatch(Fact t) {
-        String otherNs = t.ns();
-        return (ns.hashCode() == otherNs.hashCode()) && ns.equals(otherNs);
+        return ns.equals(t.ns());
     }
 
     protected boolean typeMatch(Fact t) {
@@ -109,37 +106,33 @@ public final class FactSpecMatcher implements Predicate<Fact> {
         if (aggId == null) {
             return true;
         }
-        Set<UUID> otherAggId = t.aggIds();
-        return otherAggId != null && otherAggId.contains(aggId);
+        return t.aggIds().contains(aggId);
     }
 
     @SneakyThrows
+    @Generated
     protected boolean scriptMatch(Fact t) {
         if (script == null) {
             return true;
         }
-
-        Boolean jsEval = (Boolean) scriptEngine.eval("test(" + t.jsonHeader() + "," + t
-                .jsonPayload() + ")");
-        return jsEval;
+        return (Boolean) scriptEngine.eval("test(" + t.jsonHeader() + "," + t.jsonPayload() + ")");
     }
 
     @SneakyThrows
+    @Generated
     private static synchronized ScriptEngine getEngine(String js) {
         if (js == null) {
             return null;
         }
-
         ScriptEngine cachedEngine = scriptEngineCache.get(js);
         if (cachedEngine != null) {
             return cachedEngine;
         } else {
-            ScriptEngine engine = engineManager.getEngineByName("nashorn");
+            ScriptEngine engine = scriptEngineSupplier.get();
             engine.eval("var test=" + js);
             scriptEngineCache.put(js, engine);
             return engine;
         }
-
     }
 
     public static Predicate<Fact> matchesAnyOf(@NonNull List<FactSpec> spec) {
@@ -151,5 +144,4 @@ public final class FactSpecMatcher implements Predicate<Fact> {
     public static Predicate<Fact> matches(@NonNull FactSpec spec) {
         return new FactSpecMatcher(spec);
     }
-
 }

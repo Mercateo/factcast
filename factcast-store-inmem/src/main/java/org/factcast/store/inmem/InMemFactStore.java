@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalLong;
 import java.util.Set;
@@ -50,11 +51,11 @@ import lombok.extern.slf4j.Slf4j;
  * PURPOSES ONLY
  *
  * @author uwe.schaefer@mercateo.com, joerg.adler@mercateo.com
- *
  */
 @Deprecated
 @Slf4j
 public class InMemFactStore implements FactStore {
+
     final AtomicLong highwaterMark = new AtomicLong(0);
 
     @VisibleForTesting
@@ -69,9 +70,9 @@ public class InMemFactStore implements FactStore {
     final ExecutorService executorService;
 
     @VisibleForTesting
+
     InMemFactStore(@NonNull ExecutorService es) {
         executorService = es;
-
     }
 
     public InMemFactStore() {
@@ -79,7 +80,8 @@ public class InMemFactStore implements FactStore {
     }
 
     @RequiredArgsConstructor
-    class AfterPredicate implements Predicate<Fact> {
+    static class AfterPredicate implements Predicate<Fact> {
+
         final UUID after;
 
         boolean flipSwitch = false;
@@ -89,14 +91,14 @@ public class InMemFactStore implements FactStore {
             if (flipSwitch) {
                 return true;
             }
-
             flipSwitch = after.equals(t.id());
             return false;
         }
     }
 
     private class InMemFollower implements Predicate<Fact>, Consumer<Fact>, AutoCloseable {
-        Predicate<Fact> matcher;
+
+        final Predicate<Fact> matcher;
 
         final SubscriptionImpl<Fact> subscription;
 
@@ -127,22 +129,19 @@ public class InMemFactStore implements FactStore {
         public void accept(Fact t) {
             subscription.notifyElement(t);
         }
-
     }
 
     @Override
     public synchronized Optional<Fact> fetchById(@NonNull UUID id) {
         Stream<Entry<Long, Fact>> stream = store.entrySet().stream();
-        return stream.filter(e -> e.getValue().id().equals(id)).findFirst().map(e -> e.getValue());
+        return stream.filter(e -> e.getValue().id().equals(id)).findFirst().map(Entry::getValue);
     }
 
     @Override
     public synchronized void publish(@NonNull List<? extends Fact> factsToPublish) {
-
         if (factsToPublish.stream().anyMatch(f -> ids.contains(f.id()))) {
             throw new IllegalArgumentException("duplicate ids - ids must be unique!");
         }
-
         // test on unique idents in batch
         if (factsToPublish.stream()
                 .filter(f -> f.meta("unique_identifier") != null)
@@ -153,24 +152,18 @@ public class InMemFactStore implements FactStore {
             throw new IllegalArgumentException(
                     "duplicate unique_identifier in factsToPublish - unique_identifier must be unique!");
         }
-
         // test on unique idents in log
-        if (factsToPublish.stream()
-                .anyMatch(f -> uniqueIdentifiers.contains(f.meta(
-                        "unique_identifier")))) {
+        if (factsToPublish.stream().anyMatch(f -> uniqueIdentifiers.contains(f.meta(
+                "unique_identifier")))) {
             throw new IllegalArgumentException(
                     "duplicate unique_identifier - unique_identifier must be unique!");
         }
-
         factsToPublish.forEach(f -> {
             long ser = highwaterMark.incrementAndGet();
-
             Fact inMemFact = new InMemFact(ser, f);
-
             store.put(ser, inMemFact);
             ids.add(inMemFact.id());
             Optional.ofNullable(f.meta("unique_identifier")).ifPresent(uniqueIdentifiers::add);
-
             List<InMemFollower> subscribers = activeFollowers.stream()
                     .filter(s -> s.test(inMemFact))
                     .collect(Collectors.toList());
@@ -181,43 +174,56 @@ public class InMemFactStore implements FactStore {
     @Override
     public synchronized Subscription subscribe(SubscriptionRequestTO request,
             FactObserver observer) {
-
         SubscriptionImpl<Fact> subscription = SubscriptionImpl.on(observer);
         InMemFollower s = new InMemFollower(request, subscription);
-
         executorService.submit(() -> {
-
             // catchup
+            AtomicLong ser = new AtomicLong(-1);
             if (!request.ephemeral()) {
-                store.values().stream().filter(s).forEachOrdered(s);
+                // this could take some time, so we dont waant to lock the store here
+                doCatchUp(s, ser);
             }
 
-            if (request.continuous()) {
-                activeFollowers.add(s);
+            synchronized (InMemFactStore.this) {
+                if (!request.ephemeral()) {
+                    // pick up the late ones
+                    doCatchUp(s, ser);
+                }
+                // and connect
+                if (request.continuous()) {
+                    activeFollowers.add(s);
+                }
             }
-
             subscription.notifyCatchup();
 
             // follow
             if (!request.continuous()) {
                 subscription.notifyComplete();
             }
-
         });
-
         return subscription.onClose(s::close);
     }
 
-    public synchronized void shutdown() throws Exception {
+    private void doCatchUp(InMemFollower s, AtomicLong highwater) {
+        store.values()
+                .stream()
+                .filter(f -> f.serial() > highwater.get() && s.test(f))
+                .forEachOrdered(f -> {
+                    highwater.set(f.serial());
+                    s.accept(f);
+                });
+    }
+
+    public synchronized void shutdown() {
         executorService.shutdown();
     }
 
     @Override
-    public OptionalLong serialOf(UUID l) {
+    public synchronized OptionalLong serialOf(UUID l) {
         // hilariously inefficient
         for (Map.Entry<Long, Fact> e : store.entrySet()) {
             if (l.equals(e.getValue().id())) {
-                return OptionalLong.of(e.getKey().longValue());
+                return OptionalLong.of(e.getKey());
             }
         }
         return OptionalLong.empty();
@@ -225,10 +231,7 @@ public class InMemFactStore implements FactStore {
 
     @Override
     public Set<String> enumerateNamespaces() {
-        return store.values()
-                .stream()
-                .map(Fact::ns)
-                .collect(Collectors.toSet());
+        return store.values().stream().map(Fact::ns).collect(Collectors.toSet());
     }
 
     @Override
@@ -237,8 +240,7 @@ public class InMemFactStore implements FactStore {
                 .stream()
                 .filter(f -> f.ns().equals(ns))
                 .map(Fact::type)
-                .filter(t -> t != null)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
     }
-
 }

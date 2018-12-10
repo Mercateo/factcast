@@ -1,16 +1,134 @@
 # Change Log
 
-## [upcoming](https://github.com/Mercateo/factcast/tree/upcoming) (2018-10-26)
-[Full Changelog](https://github.com/Mercateo/factcast/compare/factcast-0.0.25...upcoming)
+## [factcast-0.0.34](https://github.com/Mercateo/factcast/tree/factcast-0.0.34) (2018-12-08)
+[Full Changelog](https://github.com/Mercateo/factcast/compare/factcast-0.0.33...factcast-0.0.34)
 
 **Closed issues:**
 
-- GenericObserver.next should guarantee to not be called with null parameter [\#185](https://github.com/Mercateo/factcast/issues/185)
-- replace use of powermock [\#183](https://github.com/Mercateo/factcast/issues/183)
-- Recheck pg store internal notification [\#180](https://github.com/Mercateo/factcast/issues/180)
+- Create abstraction for Retryable Exceptions between Store and FactCast [\#260](https://github.com/Mercateo/factcast/issues/260)
 
 **Merged pull requests:**
 
+- Issue260 [\#263](https://github.com/Mercateo/factcast/pull/263) ([henningwendt](https://github.com/henningwendt))
+
+## [factcast-0.0.33](https://github.com/Mercateo/factcast/tree/factcast-0.0.33) (2018-12-04)
+[Full Changelog](https://github.com/Mercateo/factcast/compare/factcast-0.0.32...factcast-0.0.33)
+
+**Closed issues:**
+
+- Check formal requirements on CI [\#247](https://github.com/Mercateo/factcast/issues/247)
+- Flaky test in InMemStore  [\#246](https://github.com/Mercateo/factcast/issues/246)
+- Cleanup Tests [\#240](https://github.com/Mercateo/factcast/issues/240)
+- GRPC Client-\>Server communication regression [\#234](https://github.com/Mercateo/factcast/issues/234)
+- Fix 'Empty catch block.' issue in factcast-server-grpc\src\main\java\org\factcast\server\grpc\FactStoreGrpcService.java [\#226](https://github.com/Mercateo/factcast/issues/226)
+- Fix 'Empty catch block.' issue in factcast-server-grpc\src\main\java\org\factcast\server\grpc\FactStoreGrpcService.java [\#225](https://github.com/Mercateo/factcast/issues/225)
+
+**Merged pull requests:**
+
+- Fix scope of test dependencies and some order shuffling. [\#261](https://github.com/Mercateo/factcast/pull/261) ([mweirauch](https://github.com/mweirauch))
+- Bump spring-boot-dependencies from 2.1.0.RELEASE to 2.1.1.RELEASE [\#259](https://github.com/Mercateo/factcast/pull/259) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump postgresql from 1.10.1 to 1.10.2 [\#257](https://github.com/Mercateo/factcast/pull/257) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump junit-jupiter-api from 5.3.1 to 5.3.2 [\#256](https://github.com/Mercateo/factcast/pull/256) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump junit-platform-engine from 1.3.1 to 1.3.2 [\#255](https://github.com/Mercateo/factcast/pull/255) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump junit-jupiter-engine from 5.3.1 to 5.3.2 [\#253](https://github.com/Mercateo/factcast/pull/253) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Issue247 [\#252](https://github.com/Mercateo/factcast/pull/252) ([uweschaefer](https://github.com/uweschaefer))
+- \#246: more careful catchup mechanics [\#249](https://github.com/Mercateo/factcast/pull/249) ([uweschaefer](https://github.com/uweschaefer))
+- this should break the build due to formal incorrectnes [\#248](https://github.com/Mercateo/factcast/pull/248) ([uweschaefer](https://github.com/uweschaefer))
+- Issue240 make test methods package private [\#244](https://github.com/Mercateo/factcast/pull/244) ([uweschaefer](https://github.com/uweschaefer))
+- Issue240 Rename TestCases and limit test method scopes \(JUnit5\) [\#242](https://github.com/Mercateo/factcast/pull/242) ([uweschaefer](https://github.com/uweschaefer))
+- Issue122 [\#241](https://github.com/Mercateo/factcast/pull/241) ([uweschaefer](https://github.com/uweschaefer))
+
+## [factcast-0.0.32](https://github.com/Mercateo/factcast/tree/factcast-0.0.32) (2018-11-21)
+[Full Changelog](https://github.com/Mercateo/factcast/compare/factcast-0.0.31...factcast-0.0.32)
+
+**Implemented enhancements:**
+
+- Add TLS for communication encryption [\#122](https://github.com/Mercateo/factcast/issues/122)
+
+**Closed issues:**
+
+- Migrate copyright headers from javadoc to slashstar [\#235](https://github.com/Mercateo/factcast/issues/235)
+- Reconsider usage of spring-starter for grpc client [\#132](https://github.com/Mercateo/factcast/issues/132)
+
+**Merged pull requests:**
+
+- Issue122 TLS examples [\#238](https://github.com/Mercateo/factcast/pull/238) ([uweschaefer](https://github.com/uweschaefer))
+- Bump mockito.version from 2.23.0 to 2.23.4 [\#237](https://github.com/Mercateo/factcast/pull/237) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Issue235 copyright header migration from javadoc to slash-star [\#236](https://github.com/Mercateo/factcast/pull/236) ([uweschaefer](https://github.com/uweschaefer))
+
+## [factcast-0.0.31](https://github.com/Mercateo/factcast/tree/factcast-0.0.31) (2018-11-20)
+[Full Changelog](https://github.com/Mercateo/factcast/compare/factcast-0.0.30...factcast-0.0.31)
+
+**Merged pull requests:**
+
+- Bump guava from 27.0-jre to 27.0.1-jre [\#233](https://github.com/Mercateo/factcast/pull/233) ([dependabot[bot]](https://github.com/apps/dependabot))
+- fixed empty catch block [\#232](https://github.com/Mercateo/factcast/pull/232) ([uweschaefer](https://github.com/uweschaefer))
+- Bump docker-maven-plugin from 0.4.9 to 1.2.0 [\#230](https://github.com/Mercateo/factcast/pull/230) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump guava from 26.0-jre to 27.0-jre [\#229](https://github.com/Mercateo/factcast/pull/229) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump slf4j-api from 1.7.22 to 1.7.25 [\#228](https://github.com/Mercateo/factcast/pull/228) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump protobuf-maven-plugin from 0.5.1 to 0.6.1 [\#227](https://github.com/Mercateo/factcast/pull/227) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [factcast-0.0.30](https://github.com/Mercateo/factcast/tree/factcast-0.0.30) (2018-11-18)
+[Full Changelog](https://github.com/Mercateo/factcast/compare/factcast-0.0.26...factcast-0.0.30)
+
+**Fixed bugs:**
+
+- Update compilation problem with Java10 [\#139](https://github.com/Mercateo/factcast/issues/139)
+
+**Closed issues:**
+
+- Fix 'Trailing spaces' issue in .circleci\config.yml [\#218](https://github.com/Mercateo/factcast/issues/218)
+- Fix 'Overload methods should not be split. Previous overloaded method located at line '104'.' issue in factcast-grpc-api\src\main\java\org\factcast\grpc\api\conv\ProtoConverter.java [\#217](https://github.com/Mercateo/factcast/issues/217)
+- Add migration Guide to documentation [\#215](https://github.com/Mercateo/factcast/issues/215)
+- fix verson and scope for slf4j-simple dep. [\#211](https://github.com/Mercateo/factcast/issues/211)
+- Switch Server-side depenencies to boot2 [\#209](https://github.com/Mercateo/factcast/issues/209)
+- Introduce proper test categorization [\#208](https://github.com/Mercateo/factcast/issues/208)
+- Unify and enforce import order on java sources [\#205](https://github.com/Mercateo/factcast/issues/205)
+- Consider using testcontainers for local testing with postgres instead of flapdoodle [\#203](https://github.com/Mercateo/factcast/issues/203)
+- Consider IDEAs analysis suggestions [\#201](https://github.com/Mercateo/factcast/issues/201)
+- Upgrade dependencies to spring-grpc [\#192](https://github.com/Mercateo/factcast/issues/192)
+- Handle unavailable Nashorn engine [\#190](https://github.com/Mercateo/factcast/issues/190)
+- Migrate Tests to JUNIT5 [\#98](https://github.com/Mercateo/factcast/issues/98)
+- Move Spring code to spring boot 2.x [\#78](https://github.com/Mercateo/factcast/issues/78)
+
+**Merged pull requests:**
+
+- Bump build-helper-maven-plugin from 1.8 to 3.0.0 [\#223](https://github.com/Mercateo/factcast/pull/223) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump postgresql from 42.2.5.jre7 to 42.2.5 [\#222](https://github.com/Mercateo/factcast/pull/222) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump assertj-core from 2.6.0 to 3.11.1 [\#221](https://github.com/Mercateo/factcast/pull/221) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump oss-parent-pom from 1.0.0 to 1.0.4 [\#220](https://github.com/Mercateo/factcast/pull/220) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump os-maven-plugin from 1.4.1.Final to 1.6.1 [\#219](https://github.com/Mercateo/factcast/pull/219) ([dependabot[bot]](https://github.com/apps/dependabot))
+- migration guide [\#216](https://github.com/Mercateo/factcast/pull/216) ([uweschaefer](https://github.com/uweschaefer))
+- Issue98 JUNIT5, Spring Boot2, better example projects \(boot1.5 & boot2.1\) [\#213](https://github.com/Mercateo/factcast/pull/213) ([uweschaefer](https://github.com/uweschaefer))
+- \[Snyk\] Fix for 4 vulnerable dependencies [\#207](https://github.com/Mercateo/factcast/pull/207) ([snyk-bot](https://github.com/snyk-bot))
+- introduce impsort plugin and pre-commit hook [\#206](https://github.com/Mercateo/factcast/pull/206) ([uweschaefer](https://github.com/uweschaefer))
+- Issue203 [\#204](https://github.com/Mercateo/factcast/pull/204) ([uweschaefer](https://github.com/uweschaefer))
+- minor changes suggested by IDEA inspection [\#202](https://github.com/Mercateo/factcast/pull/202) ([uweschaefer](https://github.com/uweschaefer))
+- Issue78 integrated spring-boot-2 branch [\#200](https://github.com/Mercateo/factcast/pull/200) ([uweschaefer](https://github.com/uweschaefer))
+- Issue190 applied review comments [\#199](https://github.com/Mercateo/factcast/pull/199) ([uweschaefer](https://github.com/uweschaefer))
+- \[Snyk\] Fix for 6 vulnerable dependencies [\#198](https://github.com/Mercateo/factcast/pull/198) ([snyk-bot](https://github.com/snyk-bot))
+- \[Snyk\] Fix for 6 vulnerable dependencies [\#197](https://github.com/Mercateo/factcast/pull/197) ([snyk-bot](https://github.com/snyk-bot))
+- \#190: added log messages [\#196](https://github.com/Mercateo/factcast/pull/196) ([uweschaefer](https://github.com/uweschaefer))
+
+## [factcast-0.0.26](https://github.com/Mercateo/factcast/tree/factcast-0.0.26) (2018-11-10)
+[Full Changelog](https://github.com/Mercateo/factcast/compare/factcast-0.0.25...factcast-0.0.26)
+
+**Closed issues:**
+
+- Try to improve test flakyness by using different base image [\#194](https://github.com/Mercateo/factcast/issues/194)
+- Remove direct dependencies from parent pom [\#188](https://github.com/Mercateo/factcast/issues/188)
+- Extract dependency management to factcast-dependencies project [\#187](https://github.com/Mercateo/factcast/issues/187)
+- GenericObserver.next should guarantee to not be called with null parameter [\#185](https://github.com/Mercateo/factcast/issues/185)
+- replace use of powermock [\#183](https://github.com/Mercateo/factcast/issues/183)
+- Recheck pg store internal notification [\#180](https://github.com/Mercateo/factcast/issues/180)
+- Avoid unused local variables such as 'sub'. [\#178](https://github.com/Mercateo/factcast/issues/178)
+- Avoid unused imports such as 'org.factcast.grpc.compression.lz4.LZ4Codec' [\#177](https://github.com/Mercateo/factcast/issues/177)
+
+**Merged pull requests:**
+
+- Issue194 tried to limit memory usage again for use in circleci [\#195](https://github.com/Mercateo/factcast/pull/195) ([uweschaefer](https://github.com/uweschaefer))
+- minor changes [\#193](https://github.com/Mercateo/factcast/pull/193) ([uweschaefer](https://github.com/uweschaefer))
+- Issue188 dependency cleanup [\#191](https://github.com/Mercateo/factcast/pull/191) ([uweschaefer](https://github.com/uweschaefer))
 - \#185: added @NonNull contract to obserer.onNext [\#186](https://github.com/Mercateo/factcast/pull/186) ([uweschaefer](https://github.com/uweschaefer))
 - \#183 remove use of powermock [\#184](https://github.com/Mercateo/factcast/pull/184) ([uweschaefer](https://github.com/uweschaefer))
 

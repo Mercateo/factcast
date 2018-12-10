@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,7 @@ import org.factcast.core.store.FactStore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import lombok.Generated;
 import lombok.NonNull;
@@ -29,16 +30,17 @@ import lombok.NonNull;
 /**
  * Spring configuration class that provides a CachingFactCast by wrapping a
  * FactCast instance.
- * 
- * @author <uwe.schaefer@mercateo.com>
  *
+ * @author <uwe.schaefer@mercateo.com>
  */
 @Configuration
-@Generated // to exclude from coverage analysis
+// to exclude from coverage analysis
+@Generated
 @ConditionalOnClass(CachingFactCast.class)
 public class CachingFactCastAutoConfiguration {
 
     @Bean
+    @Primary
     public CachingFactCast cachingFactCast(FactCast fc, CachingFactLookup fl) {
         return new CachingFactCast(fc, fl);
     }

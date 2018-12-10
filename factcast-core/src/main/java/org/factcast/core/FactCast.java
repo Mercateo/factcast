@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,7 @@ package org.factcast.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,21 +27,19 @@ import lombok.NonNull;
 
 /**
  * Main interface to work against as a client.
- * 
+ *
  * FactCast provides methods to publish Facts in a sync/async fashion, as well
  * as a subscription mechanism to listen for changes and catching up.
- * 
- * @author uwe.schaefer@mercateo.com
  *
+ * @author uwe.schaefer@mercateo.com
  */
 public interface FactCast extends ReadFactCast {
 
     void publish(@NonNull List<? extends Fact> factsToPublish);
 
-    /// ---------- defaults
-
+    // / ---------- defaults
     default void publish(@NonNull Fact factToPublish) {
-        publish(Arrays.asList(factToPublish));
+        publish(Collections.singletonList(factToPublish));
     }
 
     default UUID publishWithMark(@NonNull Fact factToPublish) {
@@ -50,18 +49,14 @@ public interface FactCast extends ReadFactCast {
     }
 
     default UUID publishWithMark(@NonNull List<Fact> factsToPublish) {
-
         MarkFact mark = new MarkFact();
-
         List<Fact> factsWithMarkAdded = new ArrayList<>(factsToPublish);
         factsWithMarkAdded.add(mark);
         publish(factsWithMarkAdded);
-
         return mark.id();
     }
 
     // Factory
-
     static FactCast from(@NonNull FactStore store) {
         return new DefaultFactCast(store);
     }
@@ -70,4 +65,11 @@ public interface FactCast extends ReadFactCast {
         return new DefaultFactCast(store);
     }
 
+    default FactCast retry(int maxAttempts) {
+        return retry(maxAttempts, Retry.DEFAULT_WAIT_TIME_MILLIS);
+    }
+
+    default FactCast retry(int maxAttempts, long minimumWaitIntervalMillis) {
+        return Retry.wrap(this, maxAttempts, minimumWaitIntervalMillis);
+    }
 }

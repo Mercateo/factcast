@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,9 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * FactObserver implementation, that translates observer Events to transport
  * layer messages.
- * 
- * @author <uwe.schaefer@mercateo.com>
  *
+ * @author <uwe.schaefer@mercateo.com>
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -81,5 +80,4 @@ class GrpcObserverAdapter implements FactObserver {
     public void onNext(Fact element) {
         observer.onNext(projection.apply(element));
     }
-
 }

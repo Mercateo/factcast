@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,7 @@ import org.factcast.core.spec.FactSpec;
 import lombok.NonNull;
 
 public interface SpecBuilder {
+
     SpecBuilder or(@NonNull FactSpec specification);
 
     SpecBuilder skipMarks();
@@ -31,5 +32,4 @@ public interface SpecBuilder {
     SubscriptionRequest fromScratch();
 
     SubscriptionRequest fromNowOn();
-
 }

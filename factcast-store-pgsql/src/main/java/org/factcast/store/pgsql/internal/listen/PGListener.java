@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,57 +40,51 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Listens (sql LISTEN command) to a channel on Postgresql and passes a trigger
  * on an EventBus.
- * 
+ * <p>
  * This trigger then is supposed to "encourage" active subscriptions to query
  * for new Facts from PG.
- * 
- * @author uwe.schaefer@mercateo.com
  *
+ * @author uwe.schaefer@mercateo.com
  */
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class PGListener implements InitializingBean, DisposableBean {
 
-    final @NonNull PgConnectionSupplier pgConnectionSupplier;
+    @NonNull
+    final PgConnectionSupplier pgConnectionSupplier;
 
-    final @NonNull EventBus eventBus;
+    @NonNull
+    final EventBus eventBus;
 
-    final @NonNull Predicate<Connection> pgConnectionTester;
+    @NonNull
+    final Predicate<Connection> pgConnectionTester;
 
-    final AtomicBoolean running = new AtomicBoolean(true);
+    private final AtomicBoolean running = new AtomicBoolean(true);
 
     private Thread listenerThread;
 
-    private int blockingWaitTimeInMillis = 1000 * 60;
+    private final int blockingWaitTimeInMillis = 1000 * 60;
 
     private void listen() {
         log.trace("Starting instance Listener");
-
         CountDownLatch l = new CountDownLatch(1);
-
         listenerThread = new Thread(() -> {
             while (running.get()) {
                 // make sure, we did not miss anything while reconnecting
                 postEvent("scheduled-poll");
-
                 try (PgConnection pc = pgConnectionSupplier.get()) {
                     try (PreparedStatement ps = pc.prepareStatement(PGConstants.LISTEN_SQL)) {
                         log.trace("Running LISTEN command");
                         ps.execute();
                     }
-
                     while (running.get()) {
-
                         if (pgConnectionTester.test(pc)) {
-
                             log.trace("Waiting for notifications for {}ms",
                                     blockingWaitTimeInMillis);
-
                             l.countDown();
                             PGNotification[] notifications = pc.getNotifications(
                                     blockingWaitTimeInMillis);
-
                             if (notifications != null && notifications.length > 0) {
                                 final String name = notifications[0].getName();
                                 log.trace("notifying consumers for '{}'", name);
@@ -99,48 +93,31 @@ public class PGListener implements InitializingBean, DisposableBean {
                                 log.trace("No notifications yet. Looping.");
                             }
                         } else {
-                            log("Connection is failing test", null);
-                            sleepUnlessTest(1000);
-                            break;
+                            throw new SQLException("Connection is failing test");
                         }
                     }
-
                 } catch (SQLException e) {
-
-                    log("While waiting for Notifications", e);
-                    sleepUnlessTest(1000);
-
+                    log.warn("While waiting for Notifications", e);
+                    sleep();
                 }
             }
-
         }, "PG Instance Listener");
         listenerThread.setDaemon(true);
-        listenerThread.start();
         listenerThread.setUncaughtExceptionHandler((t, e) -> log.error("thread " + t
                 + " encountered an unhandled exception", e));
+        listenerThread.start();
         try {
             l.await(15, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
         }
     }
 
-    private void sleepUnlessTest(int i) {
+    private void sleep() {
         try {
-            Thread.sleep(inJunitTest() ? Math.min(50, i) : i);
-        } catch (InterruptedException e) {
+            Thread.sleep(1000);
+        } catch (InterruptedException ignore) {
         }
-    }
 
-    private void log(String msg, SQLException e) {
-        if (inJunitTest()) {
-            log.trace(msg, e);
-        } else {
-            log.warn(msg, e);
-        }
-    }
-
-    private boolean inJunitTest() {
-        return Package.getPackage("org.junit") != null;
     }
 
     private void postEvent(final String name) {
@@ -151,6 +128,7 @@ public class PGListener implements InitializingBean, DisposableBean {
 
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FactInsertionEvent {
+
         @SuppressWarnings("unused")
         final String name;
     }
@@ -167,5 +145,4 @@ public class PGListener implements InitializingBean, DisposableBean {
             listenerThread.interrupt();
         }
     }
-
 }

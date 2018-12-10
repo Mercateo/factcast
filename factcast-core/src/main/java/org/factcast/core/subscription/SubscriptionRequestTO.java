@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
@@ -36,17 +37,17 @@ import lombok.experimental.FieldDefaults;
 /**
  * Implementation of {@link SubscriptionRequest}, that is supposed to be used
  * when transfered on the wire to a remote store (for instance via GRPC or REST)
- * 
+ *
  * Note that FactSpec.forMark() is silently added to the list of specifications,
  * if marks is true.
- * 
- * @author uwe.schaefer@mercateo.com
  *
+ * @author uwe.schaefer@mercateo.com
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter
 @JsonIgnoreProperties
+@NoArgsConstructor
 public class SubscriptionRequestTO implements SubscriptionRequest {
 
     @JsonProperty
@@ -72,9 +73,6 @@ public class SubscriptionRequestTO implements SubscriptionRequest {
 
     @JsonProperty
     final List<FactSpec> specs = new LinkedList<>();
-
-    public SubscriptionRequestTO() {
-    }
 
     public boolean hasAnyScriptFilters() {
         return specs.stream().anyMatch(s -> s.jsFilterScript() != null);

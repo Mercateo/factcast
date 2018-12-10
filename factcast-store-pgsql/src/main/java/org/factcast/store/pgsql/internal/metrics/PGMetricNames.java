@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,14 +19,12 @@ import org.factcast.core.store.FactStoreMetricNames;
 
 /**
  * Constants for metrics-names.
- * 
- * @author <uwe.schaefer@mercateo.com>
  *
+ * @author <uwe.schaefer@mercateo.com>
  */
 public class PGMetricNames extends FactStoreMetricNames {
 
     public PGMetricNames() {
         super("pg");
     }
-
 }

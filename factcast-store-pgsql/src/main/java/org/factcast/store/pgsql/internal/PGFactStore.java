@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,12 +17,12 @@ package org.factcast.store.pgsql.internal;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalLong;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.factcast.core.Fact;
 import org.factcast.core.store.FactStore;
@@ -33,6 +33,7 @@ import org.factcast.store.pgsql.internal.metrics.PGMetricNames;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,13 +50,13 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * A PostgreSQL based FactStore implementation
- * 
- * @author uwe.schaefer@mercateo.com
  *
+ * @author uwe.schaefer@mercateo.com
  */
 @Slf4j
 @Component("factStore")
 public class PGFactStore implements FactStore {
+
     // is that interesting to configure?
     private static final int BATCH_SIZE = 500;
 
@@ -75,19 +76,19 @@ public class PGFactStore implements FactStore {
 
     final PGMetricNames names = new PGMetricNames();
 
-    private Meter publishMeter;
+    private final Meter publishMeter;
 
-    private Timer fetchLatency;
+    private final Timer fetchLatency;
 
-    private Timer seqLookupLatency;
+    private final Timer seqLookupLatency;
 
-    private Timer namespaceLatency;
+    private final Timer namespaceLatency;
 
-    private Timer typeLatency;
+    private final Timer typeLatency;
 
-    private Meter subscriptionCatchupMeter;
+    private final Meter subscriptionCatchupMeter;
 
-    private Meter subscriptionFollowMeter;
+    private final Meter subscriptionFollowMeter;
 
     @Autowired
     public PGFactStore(JdbcTemplate jdbcTemplate, PGSubscriptionFactory subscriptionFactory,
@@ -95,16 +96,13 @@ public class PGFactStore implements FactStore {
         this.jdbcTemplate = jdbcTemplate;
         this.subscriptionFactory = subscriptionFactory;
         this.registry = registry;
-
         publishFailedCounter = registry.counter(names.factPublishingFailed());
         publishLatency = registry.timer(names.factPublishingLatency());
         publishMeter = registry.meter(names.factPublishingMeter());
-
         fetchLatency = registry.timer(names.fetchLatency());
         namespaceLatency = registry.timer(names.namespaceLatency());
         typeLatency = registry.timer(names.typeLatency());
         seqLookupLatency = registry.timer(names.seqLookupLatency());
-
         subscriptionCatchupMeter = registry.meter(names.subscribeCatchup());
         subscriptionFollowMeter = registry.meter(names.subscribeFollow());
     }
@@ -112,30 +110,22 @@ public class PGFactStore implements FactStore {
     @Override
     @Transactional
     public void publish(@NonNull List<? extends Fact> factsToPublish) {
-        try (Context time = publishLatency.time();) {
-
+        try (Context time = publishLatency.time()) {
             List<Fact> copiedListOfFacts = Lists.newArrayList(factsToPublish);
             final int numberOfFactsToPublish = factsToPublish.size();
-
             log.trace("Inserting {} fact(s) in batches of {}", numberOfFactsToPublish, BATCH_SIZE);
-
-            jdbcTemplate.batchUpdate(PGConstants.INSERT_FACT, copiedListOfFacts,
-                    BATCH_SIZE, (
-                            statement, fact) -> {
-                        statement.setString(1, fact.jsonHeader());
-                        statement.setString(2, fact.jsonPayload());
-                    });
-
+            jdbcTemplate.batchUpdate(PGConstants.INSERT_FACT, copiedListOfFacts, BATCH_SIZE, (
+                    statement, fact) -> {
+                statement.setString(1, fact.jsonHeader());
+                statement.setString(2, fact.jsonPayload());
+            });
             // add serials to headers
-            jdbcTemplate.batchUpdate(PGConstants.UPDATE_FACT_SERIALS, copiedListOfFacts,
-                    BATCH_SIZE, (
-                            statement, fact) -> {
+            jdbcTemplate.batchUpdate(PGConstants.UPDATE_FACT_SERIALS, copiedListOfFacts, BATCH_SIZE,
+                    (statement, fact) -> {
                         final String idMatch = "{\"id\":\"" + fact.id() + "\"}";
                         statement.setString(1, idMatch);
                     });
-
             publishMeter.mark(numberOfFactsToPublish);
-
         } catch (DuplicateKeyException dupkey) {
             publishFailedCounter.inc();
             throw new IllegalArgumentException(dupkey.getMessage());
@@ -145,22 +135,18 @@ public class PGFactStore implements FactStore {
         }
     }
 
-    private Fact extractFactFromResultSet(ResultSet resultSet, int rowNum) throws SQLException {
+    private Fact extractFactFromResultSet(ResultSet resultSet, int rowNum) {
         return PGFact.from(resultSet);
     }
 
+    @NonNull
     private String extractStringFromResultSet(ResultSet resultSet, int rowNum) throws SQLException {
         return resultSet.getString(1);
-    }
-
-    private Long extractSerFromResultSet(ResultSet resultSet, int rowNum) throws SQLException {
-        return Long.valueOf(resultSet.getString(PGConstants.COLUMN_SER));
     }
 
     @Override
     public Subscription subscribe(@NonNull SubscriptionRequestTO request,
             @NonNull FactObserver observer) {
-
         if (request.continuous()) {
             subscriptionFollowMeter.mark();
         } else {
@@ -171,49 +157,43 @@ public class PGFactStore implements FactStore {
 
     @Override
     public Optional<Fact> fetchById(@NonNull UUID id) {
-        try (Context time = fetchLatency.time();) {
+        try (Context time = fetchLatency.time()) {
             return jdbcTemplate.query(PGConstants.SELECT_BY_ID, new Object[] { "{\"id\":\"" + id
-                    + "\"}" }, this::extractFactFromResultSet).stream().findFirst();
+                    + "\"}" },
+                    this::extractFactFromResultSet).stream().findFirst();
         }
     }
 
     @Override
     public OptionalLong serialOf(UUID l) {
-        try (Context time = seqLookupLatency.time();) {
-            List<Long> res = jdbcTemplate.query(PGConstants.SELECT_SER_BY_ID, new Object[] {
-                    "{\"id\":\"" + l + "\"}" }, this::extractSerFromResultSet);
+        try (Context time = seqLookupLatency.time()) {
+            Long res = jdbcTemplate.queryForObject(PGConstants.SELECT_SER_BY_ID,
+                    new Object[] { "{\"id\":\"" + l + "\"}" }, Long.class);
 
-            if (res.size() > 1) {
-                throw new IllegalStateException("Event ID appeared twice!?");
-            } else if (res.isEmpty()) {
-                return OptionalLong.empty();
+            if (res != null && res.longValue() > 0) {
+                return OptionalLong.of(res.longValue());
             }
 
-            Long ser = res.get(0);
-            if (ser != null && ser.longValue() > 0) {
-                return OptionalLong.of(ser.longValue());
-            } else {
-                return OptionalLong.empty();
-            }
-
+        } catch (EmptyResultDataAccessException ignore) {
         }
+        return OptionalLong.empty();
     }
 
     @Override
     public Set<String> enumerateNamespaces() {
-        try (Context time = namespaceLatency.time();) {
-            return jdbcTemplate.query(PGConstants.SELECT_DISTINCT_NAMESPACE,
-                    this::extractStringFromResultSet).stream().collect(Collectors.toSet());
+        try (Context time = namespaceLatency.time()) {
+            return new HashSet<>(
+                    jdbcTemplate.query(PGConstants.SELECT_DISTINCT_NAMESPACE,
+                            this::extractStringFromResultSet));
         }
     }
 
     @Override
     public Set<String> enumerateTypes(String ns) {
-        try (Context time = typeLatency.time();) {
-            return jdbcTemplate.query(PGConstants.SELECT_DISTINCT_TYPE_IN_NAMESPACE, new Object[] {
-                    ns },
-                    this::extractStringFromResultSet).stream().collect(Collectors.toSet());
+        try (Context time = typeLatency.time()) {
+            return new HashSet<>(jdbcTemplate.query(PGConstants.SELECT_DISTINCT_TYPE_IN_NAMESPACE,
+                    new Object[] { ns },
+                    this::extractStringFromResultSet));
         }
     }
-
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,11 +19,10 @@ import java.util.UUID;
 
 /**
  * An observer that provides Fact-Ids of type UUID.
- * 
- * see {@link GenericObserver}.
- * 
- * @author uwe.schaefer@mercateo.com
  *
+ * see {@link GenericObserver}.
+ *
+ * @author uwe.schaefer@mercateo.com
  */
 public interface IdObserver extends GenericObserver<UUID> {
 }

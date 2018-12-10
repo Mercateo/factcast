@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,19 +16,17 @@
 package org.factcast.store.pgsql;
 
 /**
- * 
  * Defines the catchup-Strategy to use, as well as the default, if none is
  * specified.
- * 
- * @author <uwe.schaefer@mercateo.com>
  *
+ * @author <uwe.schaefer@mercateo.com>
  */
 public enum CatchupStrategy {
 
-    PAGED, QUEUED;
+    PAGED;
 
+    @SuppressWarnings("SameReturnValue")
     public static CatchupStrategy getDefault() {
         return PAGED;
     }
-
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,5 +19,6 @@ import org.factcast.client.grpc.cli.util.Parser.Options;
 import org.factcast.core.FactCast;
 
 public interface Command {
-    public void runWith(FactCast fc, Options opt);
+
+    void runWith(FactCast fc, Options opt);
 }

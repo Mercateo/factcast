@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import lombok.AccessLevel;
+import lombok.Generated;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -32,12 +33,11 @@ import lombok.SneakyThrows;
 /**
  * Statically shared ObjectMapper reader & writer to be used within FactCast for
  * Headers and FactCast-specific objects.
- * 
+ *
  * You must not change the configuration of this mapper, and it should not be
  * used outside of FactCast.
- * 
- * @author uwe.schaefer@mercateo.com
  *
+ * @author uwe.schaefer@mercateo.com
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FactCastJson {
@@ -49,16 +49,14 @@ public final class FactCastJson {
     private static final ObjectWriter writer;
 
     static {
-
         objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-
         writer = objectMapper.writer();
         reader = objectMapper.reader();
     }
 
     @SneakyThrows
     public static <T> T copy(@NonNull T toCopy) {
-        Class<? extends Object> c = toCopy.getClass();
+        Class<?> c = toCopy.getClass();
         return reader.forType(c).readValue(writer.forType(c).writeValueAsString(toCopy));
     }
 
@@ -85,6 +83,7 @@ public final class FactCastJson {
     }
 
     @SneakyThrows
+    @Generated
     public static String writeValueAsPrettyString(ObjectNode objectNode) {
         return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(objectNode);
     }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,18 +15,18 @@
  */
 package org.factcast.grpc.api.conv;
 
-import java.util.Arrays;
-
-import com.google.common.base.Joiner;
+import java.util.StringJoiner;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.experimental.Wither;
 
 @RequiredArgsConstructor(staticName = "of")
-@Getter
 @Wither
+@Value
 public class ProtocolVersion {
+
     final int major;
 
     final int minor;
@@ -35,12 +35,13 @@ public class ProtocolVersion {
 
     public boolean isCompatibleTo(ProtocolVersion other) {
         // patch level must be irrelevant
-        return (major == other.major) &&
-                (minor <= other.minor);
+        return (major == other.major) && (minor <= other.minor);
     }
 
     @Override
     public String toString() {
-        return Joiner.on(".").join(Arrays.asList(major, minor, patch));
+        StringJoiner joiner = new StringJoiner(".");
+        joiner.add(String.valueOf(major)).add(String.valueOf(minor)).add(String.valueOf(patch));
+        return joiner.toString();
     }
 }

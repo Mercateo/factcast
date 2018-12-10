@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,15 +31,14 @@ import com.beust.jcommander.converters.CommaParameterSplitter;
 @Parameters(commandNames = "fetch", commandDescription = "fetch a particular fact by id")
 public class Fetch implements Command {
 
+    @SuppressWarnings("DefaultAnnotationParam")
     @Parameter(required = true, description = "id", splitter = CommaParameterSplitter.class)
     List<UUID> ids = new LinkedList<>();
 
     @Override
     public void runWith(FactCast fc, Options opt) {
         FactRenderer factRenderer = new FactRenderer(opt);
-        ids.forEach(id -> System.out.println(fc.fetchById(id)
-                .map(factRenderer::render)
-                .orElse("not found")));
+        ids.forEach(id -> System.out.println(fc.fetchById(id).map(factRenderer::render).orElse(
+                "not found")));
     }
-
 }

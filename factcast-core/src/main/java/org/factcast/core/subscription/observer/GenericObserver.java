@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,14 +26,13 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Callback interface to use when subscribing to Facts or Ids from a FactCast.
- * 
- * see {@link IdObserver}, {@link FactObserver}
- * 
- * @author uwe.schaefer@mercateo.com
  *
- * @param <T>
+ * see {@link IdObserver}, {@link FactObserver}
+ *
+ * @author uwe.schaefer@mercateo.com
  */
 public interface GenericObserver<I> {
+
     void onNext(@NonNull I element);
 
     default void onCatchup() {
@@ -49,11 +48,11 @@ public interface GenericObserver<I> {
     }
 
     default FactObserver map(@NonNull Function<Fact, I> projection) {
-        return new ObserverBridge<I>(this, projection);
+        return new ObserverBridge<>(this, projection);
     }
 
-    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-    class ObserverBridge<I> implements FactObserver {
+    @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+    static class ObserverBridge<I> implements FactObserver {
 
         private final GenericObserver<I> delegate;
 

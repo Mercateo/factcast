@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class PGCatchUpFetchPage {
+
     @NonNull
     final JdbcTemplate jdbc;
 
@@ -50,7 +51,7 @@ public class PGCatchUpFetchPage {
     // order to release Facts for GC asap.
     public LinkedList<Fact> fetchFacts(@NonNull AtomicLong serial) {
         Stopwatch sw = Stopwatch.createStarted();
-        final LinkedList<Fact> list = new LinkedList<Fact>(jdbc.query(
+        final LinkedList<Fact> list = new LinkedList<>(jdbc.query(
                 PGConstants.SELECT_FACT_FROM_CATCHUP, createSetter(serial, pageSize),
                 new PGFactExtractor(serial)));
         sw.stop();
@@ -70,7 +71,6 @@ public class PGCatchUpFetchPage {
     // use LinkedLists so that we can use remove() rather than iteration, in
     // order to release Facts for GC asap.
     public LinkedList<Fact> fetchIdFacts(@NonNull AtomicLong serial) {
-
         Stopwatch sw = Stopwatch.createStarted();
         final LinkedList<Fact> list = new LinkedList<>(jdbc.query(
                 PGConstants.SELECT_ID_FROM_CATCHUP, createSetter(serial, pageSize),
@@ -78,8 +78,6 @@ public class PGCatchUpFetchPage {
         sw.stop();
         log.debug("{}  fetched next page of Ids for cid={}, limit={}, ser>{} in {}ms", req,
                 clientId, pageSize, serial.get(), sw.elapsed(TimeUnit.MILLISECONDS));
-
         return list;
     }
-
 }

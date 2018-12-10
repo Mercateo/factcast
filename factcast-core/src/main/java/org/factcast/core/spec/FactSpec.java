@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,9 +29,8 @@ import lombok.Setter;
 
 /**
  * Defines a Specification of facts to match for a subscription.
- * 
- * @author uwe.schaefer@mercateo.com
  *
+ * @author uwe.schaefer@mercateo.com
  */
 @Getter
 @Setter
@@ -41,6 +40,7 @@ public class FactSpec {
     @JsonProperty
     final String ns;
 
+    // type & aggId should probably be sets?
     @JsonProperty
     String type = null;
 

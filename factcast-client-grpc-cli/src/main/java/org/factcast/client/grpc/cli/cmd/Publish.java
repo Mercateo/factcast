@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,13 +29,15 @@ import com.beust.jcommander.Parameters;
 public class Publish implements Command {
 
     @Parameter(
-            names = { "--header", "-h" },
+            names = { "--header",
+                    "-h" },
             required = true,
             description = "Filename of an existing json file to read the header from")
     ExistingJsonFile headerFile;
 
     @Parameter(
-            names = { "--payload", "-p" },
+            names = { "--payload",
+                    "-p" },
             required = true,
             description = "Filename of an existing json file to read the payload from")
     ExistingJsonFile payloadFile;
@@ -46,8 +48,6 @@ public class Publish implements Command {
         Fact f = Fact.of(headerFile.read(), payloadFile.read());
         fc.publish(f);
         System.out.println("Published:");
-
         System.out.println(factRenderer.render(f));
     }
-
 }

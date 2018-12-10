@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,34 +23,33 @@ import org.springframework.stereotype.Component;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Fetches the latest SERIAL from the fact table.
- * 
- * @author uwe.schaefer@mercateo.com
  *
+ * @author uwe.schaefer@mercateo.com
  */
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class PGLatestSerialFetcher {
+
     @NonNull
     final JdbcTemplate jdbcTemplate;
 
     /**
-     * 
-     * @param id
-     * @return 0, if no Fact is found,
+     * @return 0, if no Fact is found, or exception is raised.
      */
     public long retrieveLatestSer() {
-
         try {
             SqlRowSet rs = jdbcTemplate.queryForRowSet(PGConstants.SELECT_LATEST_SER);
             if (rs.next()) {
                 return rs.getLong(1);
             }
-        } catch (EmptyResultDataAccessException meh) {
+        } catch (Exception ignored) {
+            log.warn("While retrieveLatestSer:", ignored);
         }
         return 0;
     }
-
 }

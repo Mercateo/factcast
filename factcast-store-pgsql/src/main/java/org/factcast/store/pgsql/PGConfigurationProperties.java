@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(fluent = false)
 public class PGConfigurationProperties {
+
     /**
      * defines the number of Facts being retrieved with one Page Query for
      * PageStrategy.PAGED
@@ -68,5 +69,4 @@ public class PGConfigurationProperties {
     public int getFetchSize() {
         return getQueueSize() / queueFetchRatio;
     }
-
 }

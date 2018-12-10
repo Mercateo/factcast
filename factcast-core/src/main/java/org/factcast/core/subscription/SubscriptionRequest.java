@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +30,6 @@ import lombok.NonNull;
  * see {@link FluentSubscriptionRequest}, {@link SubscriptionRequestTO}
  *
  * @author uwe.schaefer@mercateo.com
- *
  */
 public interface SubscriptionRequest {
 
@@ -49,7 +48,6 @@ public interface SubscriptionRequest {
     String debugInfo();
 
     // ------------
-
     static SpecBuilder follow(@NonNull FactSpec specification) {
         return new FluentSubscriptionRequest.Builder(new FluentSubscriptionRequest()).follow(
                 specification);
@@ -67,7 +65,6 @@ public interface SubscriptionRequest {
     }
 
     // convenience
-
     static SpecBuilder catchup(@NonNull Collection<FactSpec> specification) {
         return new FluentSubscriptionRequest.Builder(new FluentSubscriptionRequest()).catchup(
                 specification);
@@ -77,5 +74,4 @@ public interface SubscriptionRequest {
         return new FluentSubscriptionRequest.Builder(new FluentSubscriptionRequest()).follow(
                 specification);
     }
-
 }

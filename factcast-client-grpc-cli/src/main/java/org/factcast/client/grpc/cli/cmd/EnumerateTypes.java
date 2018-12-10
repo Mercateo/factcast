@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,5 +34,4 @@ public class EnumerateTypes implements Command {
     public void runWith(FactCast fc, Options opt) {
         fc.enumerateTypes(ns).forEach(System.out::println);
     }
-
 }

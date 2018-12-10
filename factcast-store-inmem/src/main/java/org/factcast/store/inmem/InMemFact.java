@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,9 @@ import org.factcast.core.util.FactCastJson;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 class InMemFact extends DefaultFact {
 
     public InMemFact(long ser, Fact toCopyFrom) {
@@ -28,7 +31,6 @@ class InMemFact extends DefaultFact {
     }
 
     private static String addSerToHeader(long ser, String jsonHeader) {
-
         ObjectNode json = FactCastJson.toObjectNode(jsonHeader);
         ObjectNode meta = (ObjectNode) json.get("meta");
         if (meta == null) {
@@ -36,11 +38,8 @@ class InMemFact extends DefaultFact {
             meta = FactCastJson.newObjectNode();
             json.set("meta", meta);
         }
-
         // set ser as attribute _ser
         meta.put("_ser", ser);
-
         return json.toString();
     }
-
 }

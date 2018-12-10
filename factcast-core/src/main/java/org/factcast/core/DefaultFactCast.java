@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,9 +33,8 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Default impl for FactCast used by FactCast.from* methods.
- * 
- * @author uwe.schaefer@mercateo.com
  *
+ * @author uwe.schaefer@mercateo.com
  */
 @RequiredArgsConstructor
 class DefaultFactCast implements FactCast {
@@ -65,6 +64,7 @@ class DefaultFactCast implements FactCast {
 
     @Override
     public void publish(@NonNull List<? extends Fact> factsToPublish) {
+        // TODO maybe we should test all and just throw one exception
         factsToPublish.forEach(f -> {
             if (lacksRequiredNamespace(f))
                 throw new IllegalArgumentException("Fact " + f.id() + " lacks required namespace.");
@@ -98,5 +98,4 @@ class DefaultFactCast implements FactCast {
     public Set<String> enumerateTypes(@NonNull String ns) {
         return store.enumerateTypes(ns);
     }
-
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,6 @@ import lombok.NonNull;
  * views.
  *
  * @author uwe.schaefer@mercateo.com
- *
  */
 @Getter
 public class MarkFact implements Fact {
@@ -63,5 +62,4 @@ public class MarkFact implements Fact {
     public String meta(String key) {
         return null;
     }
-
 }

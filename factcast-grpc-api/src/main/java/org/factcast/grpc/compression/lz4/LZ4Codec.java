@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,6 @@
  */
 package org.factcast.grpc.compression.lz4;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -24,9 +23,9 @@ import lombok.Generated;
 import net.jpountz.lz4.LZ4BlockInputStream;
 import net.jpountz.lz4.LZ4BlockOutputStream;
 
-// TODO add @GrpcCodec
 // waits for release of https://github.com/yidongnan/grpc-spring-boot-starter/issues/96
-@Generated // exclude from coverage analysis
+// exclude from coverage analysis
+@Generated
 public class LZ4Codec implements Codec {
 
     public static final String ENCODING = "lz4";
@@ -37,13 +36,12 @@ public class LZ4Codec implements Codec {
     }
 
     @Override
-    public OutputStream compress(OutputStream os) throws IOException {
+    public OutputStream compress(OutputStream os) {
         return new LZ4BlockOutputStream(os);
     }
 
     @Override
-    public InputStream decompress(InputStream is) throws IOException {
+    public InputStream decompress(InputStream is) {
         return new LZ4BlockInputStream(is);
     }
-
 }

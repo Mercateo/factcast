@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,6 +28,7 @@ import com.beust.jcommander.Parameter;
 import lombok.Getter;
 
 public class Parser {
+
     private static final String HOST_SYSPROP_NAME = "grpc.client.factstore.host";
 
     private static final String PORT_SYSPROP_NAME = "grpc.client.factstore.port";
@@ -38,14 +39,10 @@ public class Parser {
     final Options options = new Options();
 
     public Parser(Command... commands) {
-        Builder builder = JCommander.newBuilder()
-                .addConverterInstanceFactory(Converters.factory());
-
+        Builder builder = JCommander.newBuilder().addConverterInstanceFactory(Converters.factory());
         builder.addObject(options);
         builder.programName("fc-cli");
-
         Arrays.asList(commands).forEach(builder::addCommand);
-
         this.jc = builder.build();
     }
 
@@ -60,20 +57,18 @@ public class Parser {
         }
         jc.usage();
         return null;
-
     }
 
     private void init() {
         System.setProperty(HOST_SYSPROP_NAME, options.host);
         System.setProperty(PORT_SYSPROP_NAME, String.valueOf(options.port));
-
         if (options.debug) {
             System.setProperty("debug", Boolean.TRUE.toString());
         }
-
     }
 
     public static class Options {
+
         @Parameter(names = { "--help", "-help", "-?", "--?" }, help = true, hidden = true)
         boolean help;
 
@@ -111,11 +106,9 @@ public class Parser {
                 }
             }
         }
-
     }
 
     public void usage() {
         jc.usage();
     }
-
 }

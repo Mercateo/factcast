@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,25 +26,20 @@ public class ExistingJsonFile extends File {
 
     private static final long serialVersionUID = 1L;
 
-    private final static ObjectMapper om = new ObjectMapper();
+    private static final ObjectMapper om = new ObjectMapper();
 
     public ExistingJsonFile(String pathname) {
         super(pathname);
-
         if (!exists())
             throw new IllegalArgumentException(getAbsolutePath() + " does not exist");
-
         if (isDirectory())
             throw new IllegalArgumentException(getAbsolutePath() + " is a directory");
-
         if (!canRead())
             throw new IllegalArgumentException(getAbsolutePath() + " cannot be read");
-
     }
 
     @SneakyThrows
     public JsonNode read() {
         return om.readTree(this);
     }
-
 }

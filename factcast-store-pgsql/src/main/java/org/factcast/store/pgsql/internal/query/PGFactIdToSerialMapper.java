@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,18 +26,18 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Fetches a SER from a Fact-Id.
- * 
- * @author uwe.schaefer@mercateo.com
  *
+ * @author uwe.schaefer@mercateo.com
  */
 @Component
 @RequiredArgsConstructor
 public class PGFactIdToSerialMapper {
+
     final JdbcTemplate jdbcTemplate;
 
     /**
      * Fetches the SER of a particular Fact identified by id
-     * 
+     *
      * @param id
      *            the FactId to look for
      * @return the corresponding SER, 0, if no Fact is found for the id given.
@@ -47,11 +47,10 @@ public class PGFactIdToSerialMapper {
             try {
                 // throws EmptyResultDataAccessException if is not found!
                 return jdbcTemplate.queryForObject(PGConstants.SELECT_BY_HEADER_JSON, new Object[] {
-                        "{\"id\":\"" + id + "\"}" }, Long.class).longValue();
-            } catch (EmptyResultDataAccessException meh) {
+                        "{\"id\":\"" + id + "\"}" }, Long.class);
+            } catch (EmptyResultDataAccessException ignored) {
             }
         }
         return 0;
     }
-
 }

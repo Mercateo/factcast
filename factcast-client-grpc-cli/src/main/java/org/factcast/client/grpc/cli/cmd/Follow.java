@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,7 +46,6 @@ public class Follow implements Command {
     public void runWith(FactCast fc, Options opt) {
         ConsoleFactObserver obs = new ConsoleFactObserver(opt);
         SpecBuilder catchup = SubscriptionRequest.follow(FactSpec.ns(ns));
-
         if (fromNow)
             fc.subscribeToFacts(catchup.fromNowOn(), obs);
         else {
@@ -55,8 +54,6 @@ public class Follow implements Command {
             else
                 fc.subscribeToFacts(catchup.from(from), obs);
         }
-
         obs.awaitTermination();
     }
-
 }

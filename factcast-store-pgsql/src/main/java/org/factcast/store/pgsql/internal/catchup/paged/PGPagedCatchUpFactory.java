@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018 Mercateo AG (http://www.mercateo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,8 +31,10 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@Generated // not code in here, just generated @nonnull checks
+// no code in here, just generated @nonnull checks
+@Generated
 public class PGPagedCatchUpFactory implements PGCatchupFactory {
+
     @NonNull
     final JdbcTemplate jdbc;
 
@@ -42,15 +44,10 @@ public class PGPagedCatchUpFactory implements PGCatchupFactory {
     @NonNull
     final PGFactIdToSerialMapper serMapper;
 
-    public PGPagedCatchup create(
-
-            @NonNull SubscriptionRequestTO request,
+    public PGPagedCatchup create(@NonNull SubscriptionRequestTO request,
             @NonNull PGPostQueryMatcher postQueryMatcher,
-            @NonNull SubscriptionImpl<Fact> subscription,
-            @NonNull AtomicLong serial) {
-
+            @NonNull SubscriptionImpl<Fact> subscription, @NonNull AtomicLong serial) {
         return new PGPagedCatchup(jdbc, props, serMapper, request, postQueryMatcher, subscription,
                 serial);
     }
-
 }
