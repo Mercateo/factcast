@@ -13,31 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.factcast.store.pgsql.internal.query;
+package org.factcast.client.grpc.cli.cmd;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.UUID;
+
+import org.factcast.client.grpc.cli.util.ConsoleFactObserver;
+import org.factcast.client.grpc.cli.util.Parser.Options;
+import org.factcast.core.FactCast;
+import org.factcast.core.spec.FactSpec;
+import org.factcast.core.store.FactStore;
+import org.factcast.core.subscription.SubscriptionRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @ExtendWith(MockitoExtension.class)
-public class PGLatestSerialFetcherTest {
-    @InjectMocks
-    PGLatestSerialFetcher uut;
-
+public class CatchupTest {
     @Mock
-    JdbcTemplate jdbc;
+    FactStore fs;
+
+    FactCast fc;
 
     @Test
-    public void testRetrieveLatestSerRetuns0WhenExceptionThrown() throws Exception {
-        when(jdbc.queryForRowSet(anyString())).thenThrow(UnsupportedOperationException.class);
-        assertEquals(0, uut.retrieveLatestSer());
-    }
+    void testCatchup() throws Exception {
+        Catchup cmd = new Catchup();
+        String ns = "foo";
+        UUID startId = new UUID(0, 1);
 
+        cmd.from = startId;
+        cmd.ns = ns;
+
+        fc = spy(FactCast.from(fs));
+        Options opt = new Options();
+
+        cmd.runWith(fc, opt);
+
+        SubscriptionRequest r = SubscriptionRequest.catchup(FactSpec.ns(cmd.ns)).from(startId);
+        verify(fc).subscribeToFacts(eq(r), any(ConsoleFactObserver.class));
+    }
 }
