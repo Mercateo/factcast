@@ -15,9 +15,12 @@
  */
 package org.factcast.client.grpc.cli.cmd;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.factcast.client.grpc.cli.util.ConsoleFactObserver;
@@ -26,10 +29,13 @@ import org.factcast.core.FactCast;
 import org.factcast.core.spec.FactSpec;
 import org.factcast.core.store.FactStore;
 import org.factcast.core.subscription.SubscriptionRequest;
+import org.factcast.core.subscription.observer.GenericObserver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 
 @ExtendWith(MockitoExtension.class)
 public class CatchupTest {
@@ -40,19 +46,33 @@ public class CatchupTest {
 
     @Test
     void testCatchup() throws Exception {
-        Catchup cmd = new Catchup();
         String ns = "foo";
         UUID startId = new UUID(0, 1);
-
-        cmd.from = startId;
-        cmd.ns = ns;
+        Catchup cmd = new Catchup(ns, startId);
 
         fc = spy(FactCast.from(fs));
         Options opt = new Options();
 
+        when(fs.subscribe(any(), any(ConsoleFactObserver.class))).thenAnswer(new Answer<Object>() {
+            public Object answer(InvocationOnMock invocation) {
+                Object[] args = invocation.getArguments();
+                GenericObserver<?> o = (GenericObserver<?>) args[1];
+                o.onCatchup();
+                o.onComplete();
+
+                SubscriptionRequest r = (SubscriptionRequest) args[0];
+
+                List<FactSpec> specs = new ArrayList<FactSpec>(r.specs());
+                specs.remove(FactSpec.forMark());
+
+                assertEquals(startId, r.startingAfter().get());
+                assertEquals(ns, specs.iterator().next().ns());
+
+                return null;
+            }
+        });
         cmd.runWith(fc, opt);
 
-        SubscriptionRequest r = SubscriptionRequest.catchup(FactSpec.ns(cmd.ns)).from(startId);
-        verify(fc).subscribeToFacts(eq(r), any(ConsoleFactObserver.class));
+        verify(fc).subscribeToFacts(any(SubscriptionRequest.class), any(ConsoleFactObserver.class));
     }
 }

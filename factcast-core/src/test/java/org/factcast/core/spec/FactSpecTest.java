@@ -88,8 +88,7 @@ public class FactSpecTest {
     void testFactSpecEquality() {
         FactSpec f1 = FactSpec.ns("x");
         FactSpec f2 = FactSpec.ns("x");
-        // do not compare FactSpecs!
-        assertNotEquals(f1, f2);
+        assertEquals(f1, f2);
         assertNotSame(f1, f2);
     }
 }
