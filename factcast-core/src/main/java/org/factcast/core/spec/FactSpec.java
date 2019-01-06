@@ -24,10 +24,7 @@ import org.factcast.core.MarkFact;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * Defines a Specification of facts to match for a subscription.
