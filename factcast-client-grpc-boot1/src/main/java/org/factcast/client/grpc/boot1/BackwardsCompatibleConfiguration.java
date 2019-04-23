@@ -16,10 +16,12 @@
 package org.factcast.client.grpc.boot1;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.factcast.client.grpc.FactCastGrpcChannelFactory;
 import org.factcast.client.grpc.GrpcFactStore;
 import org.factcast.core.store.FactStore;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -29,13 +31,15 @@ import io.grpc.Channel;
 import io.grpc.ClientInterceptor;
 import net.devh.springboot.autoconfigure.grpc.client.GrpcChannelFactory;
 
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 @Configuration
 @ConditionalOnClass(GrpcChannelFactory.class)
 public class BackwardsCompatibleConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(FactStore.class)
-    public FactStore factStore(GrpcChannelFactory af) {
+    public FactStore factStore(GrpcChannelFactory af,
+            @Value("${grpc.client.factstore.credentials:#{null}}") Optional<String> credentials) {
         FactCastGrpcChannelFactory f = new FactCastGrpcChannelFactory() {
 
             @Override
@@ -53,6 +57,6 @@ public class BackwardsCompatibleConfiguration {
                 af.close();
             }
         };
-        return new GrpcFactStore(f);
+        return new GrpcFactStore(f, credentials);
     }
 }
