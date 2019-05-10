@@ -19,7 +19,8 @@ import java.sql.Connection;
 import java.util.concurrent.Executors;
 import java.util.function.Predicate;
 
-import org.apache.tomcat.jdbc.pool.DataSource;
+import javax.sql.DataSource;
+
 import org.factcast.core.store.FactStore;
 import org.factcast.store.pgsql.PgConfigurationProperties;
 import org.factcast.store.pgsql.internal.catchup.PgCatchupFactory;
@@ -42,6 +43,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import lombok.NonNull;
 
 /**
@@ -74,8 +77,8 @@ public class PgFactStoreInternalConfiguration {
 
     @Bean
     public FactStore factStore(JdbcTemplate jdbcTemplate, PgSubscriptionFactory subscriptionFactory,
-            PgTokenStore tokenStore, FactTableWriteLock lock) {
-        return new PgFactStore(jdbcTemplate, subscriptionFactory, tokenStore, lock);
+            PgTokenStore tokenStore, FactTableWriteLock lock, MeterRegistry registry) {
+        return new PgFactStore(jdbcTemplate, subscriptionFactory, tokenStore, lock, registry);
     }
 
     @Bean
@@ -124,8 +127,17 @@ public class PgFactStoreInternalConfiguration {
     }
 
     @Bean
-
     public PlatformTransactionManager txManager(DataSource ds) {
         return new DataSourceTransactionManager(ds);
     }
+
+    /**
+     * @return A fallback {@code MeterRegistry} in case none is configured.
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public MeterRegistry meterRegistry() {
+        return new SimpleMeterRegistry();
+    }
+
 }

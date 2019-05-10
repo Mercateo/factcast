@@ -70,14 +70,14 @@
     </developer>
   </developers>
   <properties>
-    <spotless.version>1.22.0</spotless.version>
+    <spotless.version>1.23.0</spotless.version>
     <assertj.version>3.12.2</assertj.version>
     <mockito.version>2.27.0</mockito.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <formatter.config>${session.executionRootDirectory}/src/eclipse/config</formatter.config>
     <etc>${session.executionRootDirectory}/src/etc</etc>
-    <lombok.version>1.18.6</lombok.version>
+    <lombok.version>1.18.8</lombok.version>
   </properties>
   <dependencies>
     <dependency>
@@ -167,7 +167,7 @@
             </licenseHeader>
             <eclipse>
               <file>file://${formatter.config}/eclipse_code_formatter.xml</file>
-              <version>4.7.1</version>
+              <version>4.11.0</version>
             </eclipse>
             <trimTrailingWhitespace />
             <removeUnusedImports />
