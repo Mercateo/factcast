@@ -13,38 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.factcast.client.cache;
+package org.factcast.core.lock;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.List;
 
 import org.factcast.core.Fact;
-import org.factcast.core.store.FactStore;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Component;
 
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-/**
- * A cacheable wrapper for a lookup of facts by their id.
- *
- * Not intended for direct usage from with application code. This is used by the
- * CachingFactCast wrapper as a strategy to lookup facts.
- *
- * @author <uwe.schaefer@mercateo.com>
- */
-@Component
 @RequiredArgsConstructor
-public class CachingFactLookup {
-
-    public static final String CACHE_NAME = "factcast.lookup.fact";
-
+public class PublishingResult {
+    @Getter
     @NonNull
-    final FactStore store;
+    private final List<Fact> publishedFacts;
 
-    @Cacheable(CACHE_NAME)
-    public Optional<Fact> lookup(UUID id) {
-        return store.fetchById(id);
-    }
 }

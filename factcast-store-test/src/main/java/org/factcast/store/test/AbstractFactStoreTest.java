@@ -21,24 +21,38 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import java.time.*;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.*;
+import java.time.Duration;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
-import org.assertj.core.util.*;
-import org.factcast.core.*;
-import org.factcast.core.lock.*;
-import org.factcast.core.lock.WithOptimisticLock.*;
-import org.factcast.core.spec.*;
-import org.factcast.core.store.*;
-import org.factcast.core.subscription.*;
-import org.factcast.core.subscription.observer.*;
+import org.assertj.core.util.Lists;
+import org.factcast.core.Fact;
+import org.factcast.core.FactCast;
+import org.factcast.core.lock.Attempt;
+import org.factcast.core.lock.AttemptAbortedException;
+import org.factcast.core.lock.ExceptionAfterPublish;
+import org.factcast.core.lock.PublishingResult;
+import org.factcast.core.lock.WithOptimisticLock.OptimisticRetriesExceededException;
+import org.factcast.core.spec.FactSpec;
+import org.factcast.core.store.FactStore;
+import org.factcast.core.subscription.Subscription;
+import org.factcast.core.subscription.SubscriptionRequest;
+import org.factcast.core.subscription.SubscriptionRequestTO;
+import org.factcast.core.subscription.observer.FactObserver;
 import org.junit.jupiter.api.*;
-import org.mockito.*;
-import org.springframework.test.annotation.*;
+import org.mockito.Mockito;
+import org.springframework.test.annotation.DirtiesContext;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.SneakyThrows;
 
 @SuppressWarnings("ALL")
 public abstract class AbstractFactStoreTest {
@@ -304,28 +318,6 @@ public abstract class AbstractFactStoreTest {
 
     @DirtiesContext
     @Test
-    protected void testFetchById() {
-        Assertions.assertTimeout(Duration.ofMillis(30000), () -> {
-            uut.publish(
-                    Fact.of("{\"id\":\"" + UUID.randomUUID()
-                            + "\",\"type\":\"someType\",\"ns\":\"default\"}", "{}"));
-            UUID id = UUID.randomUUID();
-            uut.publish(
-                    Fact.of("{\"id\":\"" + UUID.randomUUID()
-                            + "\",\"type\":\"someType\",\"ns\":\"default\"}", "{}"));
-            Optional<Fact> f = uut.fetchById(id);
-            assertFalse(f.isPresent());
-            uut.publish(Fact.of("{\"id\":\"" + id
-                    + "\",\"type\":\"someType\",\"ns\":\"default\"}",
-                    "{}"));
-            f = uut.fetchById(id);
-            assertTrue(f.isPresent());
-            assertEquals(id, f.map(Fact::id).orElse(null));
-        });
-    }
-
-    @DirtiesContext
-    @Test
     protected void testRequiredMetaAttribute() {
         Assertions.assertTimeout(Duration.ofMillis(30000), () -> {
             FactObserver observer = mock(FactObserver.class);
@@ -549,29 +541,22 @@ public abstract class AbstractFactStoreTest {
         });
     }
 
-    @DirtiesContext
-    @Test
-    protected void testSerialHeader() {
-        Assertions.assertTimeout(Duration.ofMillis(30000), () -> {
-            UUID id = UUID.randomUUID();
-            uut.publish(Fact.of(
-                    "{\"id\":\"" + id
-                            + "\",\"type\":\"someType\",\"ns\":\"default\",\"aggIds\":[\""
-                            + id + "\"]}",
-                    "{}"));
-            UUID id2 = UUID.randomUUID();
-            uut.publish(Fact.of("{\"id\":\"" + id2
-                    + "\",\"type\":\"someType\",\"meta\":{\"foo\":\"bar\"},\"ns\":\"default\",\"aggIds\":[\""
-                    + id2
-                    + "\"]}", "{}"));
-            OptionalLong serialOf = uut.serialOf(id);
-            assertTrue(serialOf.isPresent());
-            Fact f = uut.fetchById(id).get();
-            Fact fact2 = uut.fetchById(id2).get();
-            assertEquals(serialOf.getAsLong(), f.serial());
-            assertTrue(f.before(fact2));
-        });
-    }
+    // TODO: implement alternative
+    /*
+     * @DirtiesContext
+     *
+     * @Test protected void testSerialHeader() {
+     * Assertions.assertTimeout(Duration.ofMillis(30000), () -> { UUID id =
+     * UUID.randomUUID(); uut.publish(Fact.of( "{\"id\":\"" + id +
+     * "\",\"type\":\"someType\",\"ns\":\"default\",\"aggIds\":[\"" + id +
+     * "\"]}", "{}")); UUID id2 = UUID.randomUUID();
+     * uut.publish(Fact.of("{\"id\":\"" + id2 +
+     * "\",\"type\":\"someType\",\"meta\":{\"foo\":\"bar\"},\"ns\":\"default\",\"aggIds\":[\""
+     * + id2 + "\"]}", "{}")); OptionalLong serialOf = uut.serialOf(id);
+     * assertTrue(serialOf.isPresent()); Fact f = uut.fetchById(id).get(); Fact
+     * fact2 = uut.fetchById(id2).get(); assertEquals(serialOf.getAsLong(),
+     * f.serial()); assertTrue(f.before(fact2)); }); }
+     */
 
     @Test
     protected void testChecksMandatoryNamespaceOnPublish() {
@@ -738,14 +723,6 @@ public abstract class AbstractFactStoreTest {
     }
 
     @Test
-    public void testSubscribeToIdsParameterContract() throws Exception {
-        IdObserver observer = mock(IdObserver.class);
-        assertThrows(NullPointerException.class, () -> uut.subscribeToIds(null, observer));
-        assertThrows(NullPointerException.class, () -> uut.subscribeToIds(mock(
-                SubscriptionRequestTO.class), null));
-    }
-
-    @Test
     public void testSubscribeToFactsParameterContract() throws Exception {
         FactObserver observer = mock(FactObserver.class);
         assertThrows(NullPointerException.class, () -> uut.subscribeToFacts(null, observer));
@@ -785,7 +762,9 @@ public abstract class AbstractFactStoreTest {
         UUID agg1 = UUID.randomUUID();
         uut.publish(fact(agg1));
 
-        UUID ret = uut.lock(NS).on(agg1).attempt(() -> Attempt.publish(fact(agg1)));
+        PublishingResult ret = uut.lock(NS).on(agg1).attempt(() -> {
+            return Attempt.publish(fact(agg1));
+        });
 
         verify(store).publishIfUnchanged(any(), any());
         assertThat(catchup()).hasSize(2);
@@ -799,7 +778,9 @@ public abstract class AbstractFactStoreTest {
         // setup
         UUID agg1 = UUID.randomUUID();
 
-        UUID ret = uut.lock(NS).on(agg1).attempt(() -> Attempt.publish(fact(agg1)));
+        PublishingResult ret = uut.lock(NS).on(agg1).attempt(() -> {
+            return Attempt.publish(fact(agg1));
+        });
 
         verify(store).publishIfUnchanged(any(), any());
         assertThat(catchup()).hasSize(1);
@@ -844,7 +825,9 @@ public abstract class AbstractFactStoreTest {
         UUID agg2 = UUID.randomUUID();
         uut.publish(fact(agg1));
 
-        UUID ret = uut.lockGlobally().on(agg1, agg2).attempt(() -> Attempt.publish(fact(agg1)));
+        PublishingResult ret = uut.lockGlobally().on(agg1, agg2).attempt(() -> {
+            return Attempt.publish(fact(agg1));
+        });
 
         verify(store).publishIfUnchanged(any(), any());
         assertThat(catchup()).hasSize(2);
@@ -860,7 +843,9 @@ public abstract class AbstractFactStoreTest {
         UUID agg2 = UUID.randomUUID();
         uut.publish(fact(agg1));
 
-        UUID ret = uut.lock(NS).on(agg1, agg2).attempt(() -> Attempt.publish(fact(agg1)));
+        PublishingResult ret = uut.lock(NS).on(agg1, agg2).attempt(() -> {
+            return Attempt.publish(fact(agg1));
+        });
 
         verify(store).publishIfUnchanged(any(), any());
         assertThat(catchup()).hasSize(2);
@@ -879,7 +864,7 @@ public abstract class AbstractFactStoreTest {
 
         CountDownLatch c = new CountDownLatch(8);
 
-        UUID ret = uut.lock(NS).on(agg1, agg2).optimistic().retry(100).attempt(() -> {
+        PublishingResult ret = uut.lock(NS).on(agg1, agg2).optimistic().retry(100).attempt(() -> {
 
             if (c.getCount() > 0) {
                 c.countDown();
@@ -914,20 +899,24 @@ public abstract class AbstractFactStoreTest {
 
         CountDownLatch c = new CountDownLatch(8);
 
-        UUID ret = uut.lockGlobally().on(agg1, agg2).optimistic().retry(100).attempt(() -> {
+        PublishingResult ret = uut.lockGlobally()
+                .on(agg1, agg2)
+                .optimistic()
+                .retry(100)
+                .attempt(() -> {
 
-            if (c.getCount() > 0) {
-                c.countDown();
+                    if (c.getCount() > 0) {
+                        c.countDown();
 
-                if (Math.random() < 0.5)
-                    uut.publish(fact(agg1));
-                else
-                    uut.publish(fact(agg2));
+                        if (Math.random() < 0.5)
+                            uut.publish(fact(agg1));
+                        else
+                            uut.publish(fact(agg2));
 
-            }
+                    }
 
-            return Attempt.publish(fact(agg2));
-        });
+                    return Attempt.publish(fact(agg2));
+                });
 
         assertThat(catchup()).hasSize(11); // 8 conflicting, 2 initial and 1
         // from Attempt
@@ -1106,7 +1095,7 @@ public abstract class AbstractFactStoreTest {
 
         UUID expected = UUID.randomUUID();
 
-        UUID lastFactId = uut.lock(NS).on(agg1).attempt(() -> {
+        PublishingResult ret = uut.lock(NS).on(agg1).attempt(() -> {
 
             Fact lastFact = Fact.builder().ns(NS).id(expected).build("{}");
             return Attempt.publish(fact(agg1), fact(agg1), fact(agg1), lastFact);
@@ -1116,7 +1105,8 @@ public abstract class AbstractFactStoreTest {
         List<Fact> all = catchup();
         assertThat(all).hasSize(4);
         assertThat(all.get(all.size() - 1).id()).isEqualTo(expected);
-        assertThat(lastFactId).isEqualTo(expected);
+        assertThat(ret.publishedFacts().stream().map(Fact::id).collect(Collectors.toList()))
+                .contains(expected);
 
     }
 
