@@ -77,7 +77,10 @@ public class PgFactStoreInternalConfiguration {
 
     @Bean
     public FactStore factStore(JdbcTemplate jdbcTemplate, PgSubscriptionFactory subscriptionFactory,
-            PgTokenStore tokenStore, FactTableWriteLock lock, MeterRegistry registry) {
+            PgTokenStore tokenStore, FactTableWriteLock lock, MeterRegistry registry,
+            PgListener pgListener) {
+        // even though the PgListener paramter is not used, it is needed to
+        // ensure that the respective Bean is initialized, before PgFactStore
         return new PgFactStore(jdbcTemplate, subscriptionFactory, tokenStore, lock, registry);
     }
 

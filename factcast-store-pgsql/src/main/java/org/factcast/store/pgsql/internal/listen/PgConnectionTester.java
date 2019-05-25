@@ -36,10 +36,7 @@ public class PgConnectionTester implements Predicate<Connection> {
 
     @Override
     public boolean test(@Nonnull Connection connection) {
-        return testSelectStatement(connection);
-        // disabled to see if responsible for concurrency problem manifested in
-        // flaky test
-        // && testNotificationRoundTrip(connection);
+        return testSelectStatement(connection) && testNotificationRoundTrip(connection);
     }
 
     @VisibleForTesting

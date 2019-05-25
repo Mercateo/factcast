@@ -34,6 +34,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.postgresql.PGNotification;
+import org.postgresql.core.Notification;
 import org.postgresql.jdbc.PgConnection;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,11 +61,10 @@ public class PgConnectionTesterTest {
         when(rs.next()).thenReturn(true, false);
         when(rs.getInt(1)).thenReturn(42);
 
-        // needed for notitfy alive roundtrip which is currently disabled.
-        // when(c.prepareCall(anyString())).thenReturn(mock(CallableStatement.class));
-        // when(c.getNotifications(anyInt())).thenReturn(new PGNotification[] {
-        // new Notification(
-        // "alive", 1) });
+        when(c.prepareCall(anyString())).thenReturn(mock(CallableStatement.class));
+        when(c.getNotifications(anyInt())).thenReturn(new PGNotification[] {
+                new Notification(
+                        "alive", 1) });
         boolean test = uut.test(c);
         assertTrue(test);
     }
