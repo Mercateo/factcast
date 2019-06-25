@@ -1,3 +1,8 @@
+# Announcement
+
+Please be aware that there is a friendly fork over at 
+https://github.com/factcast/factcast/ from 0.1.0 on, that may, or may diverge from this repo.
+
 # FactCast 
 
 #### is a 'good enough' event store using PostgreSQL for persistence, and offers remoting via GRPC.
